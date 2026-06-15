@@ -88,8 +88,9 @@ Stack: **Astro**, deployed to **Cloudflare Pages**. Domain `ladiesonthelinksgolf
 - Static **photo showcase grid (not a feed)**. The gallery is **photos only** — narrative member stories move to the **Blog / News** section (see below), leaving the gallery a clean visual archive.
 - **Astro content collection**, one Markdown file per gallery entry, validated by a schema. Fields: title, date, photo filename(s), caption, **optional** attribution.
 - **Consent model (applies to gallery AND blog):** member photos and stories published opt-in only; attribution defaults to **first name / initials**; standing photo-release understanding at registration; easy takedown path.
-- **Authoring:** Melissa edits via the **GitHub web UI** from a copy-paste template; photos drag-dropped into a repo folder in the browser. **Photos stored in the repo** (Astro optimizes at build). No local toolchain.
+- **Authoring:** Melissa edits via the **GitHub web UI** from a copy-paste template; photos drag-dropped into a repo folder in the browser. **Optimized photos stored in the repo** (Astro generates responsive variants at build). No local toolchain.
 - **Safety:** Cloudflare Pages keeps the last good deploy on a failed build, so a malformed entry can't take the live site down — it just doesn't publish until fixed. Curated, not publicly submitted (no live moderation needed).
+- **Asset handling:** raw photo originals (~249MB incl. `.mov` video) are staged **outside** the repo (parent `LOTL/` folder) and are **not** bulk-committed. Only curated, web-optimized derivatives enter the repo, added **per-slice** as images are actually used; videos are excluded from git (host externally if ever needed). This preserves the "optimized images in repo" intent without git-history bloat.
 
 **Blog / News (NEW)**
 - A read-only, dated **Blog / News** section: the league's browsable, indexed archive of event recaps, news, and member spotlights/stories. **Read-only** — no comments, reactions, or on-site subscriptions (subscribe = MailerLite). This does not reintroduce the interactive-feed features rejected in §Out of Scope.
