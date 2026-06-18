@@ -70,7 +70,7 @@ Stack: **Astro**, deployed to **Cloudflare Pages** (GitHub-connected, auto-deplo
 
 **Indexing / privacy posture (hybrid)**
 - Evergreen pages (Home, About/The Pro, FAQ, Register, Gallery, Merch) **and the Stories / Blog index + posts** are public and indexed; included in a sitemap.
-- The one PII-bearing surface — the **tee sheet link page** — emits `noindex` and is excluded from the sitemap / disallowed in robots. The launch gallery is **anonymous** so it is safe to index; Stories carry first-name-only, consented content and are indexed for recruiting.
+- **No on-site page carries member PII**, so the only `noindex` page is **Privacy** (low-value, footer-linked). The members' names live solely in the **external** Google tee sheet (link-only, never embedded), so the Schedule page that links to it is safe to index. The launch gallery is **anonymous** so it is safe to index; Stories carry first-name-only, consented content and are indexed for recruiting.
 - Cloudflare Web Analytics enabled (privacy-friendly, no cookie banner).
 
 **Navigation / IA**
@@ -85,7 +85,7 @@ Stack: **Astro**, deployed to **Cloudflare Pages** (GitHub-connected, auto-deplo
 - An intro above the tabs tells members to **register first**; come solo, with a friend, or sign up a full foursome at checkout; loaner clubs available via a checkbox at booking.
 
 **Tee sheet (Google Sheet, full names + bookings)**
-- **Link out, do not embed.** Matches today's "anyone with the link" exposure without increasing it (embedding would pull the roster into the indexed DOM). The link sits on the Schedule/Book page next to the Bookwhen embed; that page is `noindex`. **Sheet (view-only link):** `https://docs.google.com/spreadsheets/d/1QxwULZs7nSwiVBU6x3CSJo0McFHUbhtuL_Ufa0osAGU/edit?gid=1173477351`.
+- **Link out, do not embed.** Matches today's "anyone with the link" exposure without increasing it (embedding would pull the roster into the indexed DOM). The link sits on the Schedule/Book page next to the Bookwhen embed. Because it's a **link** (no names in our page's HTML), the Schedule page itself is **safe to index** — the roster stays private inside the external Google Sheet, exactly as today. **Sheet (view-only link):** `https://docs.google.com/spreadsheets/d/1QxwULZs7nSwiVBU6x3CSJo0McFHUbhtuL_Ufa0osAGU/edit?gid=1173477351`.
 
 **Registration (MailerLite)**
 - **Custom HTML embed** (not the JS snippet) lives in the repo at `design-reference/mailerlite-embed.html`; Josh places it. Keep the `<form>` action and all `name="fields[...]"` attributes; **restyle only** from the current pink (`#F8D5DE`/`#E891A4`) to brand. MailerLite retains bot protection, double opt-in, and field mapping.
