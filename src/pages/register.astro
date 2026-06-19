@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import MailerLiteForm from '../components/MailerLiteForm.astro';
+---
+
+<Layout
+  title="Register · Ladies on the Links"
+  description="Register for Season 2 of Ladies on the Links, the women's golf league at North Hill Country Club in Duxbury, MA. All skill levels welcome."
+>
+  <PageIntro
+    eyebrow="Join the league"
+    title="Register for Season 2"
+    lede="This is the front door. Register before you book a tee time so we can add you to the email list for updates, reminders, and tee-time releases. All skill levels welcome, no judgment, just joy."
+  />
+
+  <section class="mx-auto max-w-2xl px-6 pb-24">
+    <MailerLiteForm />
+    <p class="mt-6 text-center text-sm text-slate">
+      Already registered? Head to the <a href="/schedule" class="font-medium text-rose underline-offset-4 hover:underline">Schedule page</a> to book your Monday.
+    </p>
+  </section>
+</Layout>
