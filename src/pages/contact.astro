@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+// Formspree endpoint (confirmed) -> shared league inbox. No backend.
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mvznnvdv';
+---
+
+<Layout
+  title="Contact · Ladies on the Links"
+  description="Send a message to the Ladies on the Links women's golf league in Duxbury, MA. We'd love to hear from you."
+>
+  <PageIntro
+    eyebrow="Say hello"
+    title="Get in touch"
+    lede="Questions about the league, joining, or a Monday? Send us a note and we'll get back to you."
+  />
+
+  <section class="mx-auto max-w-xl px-6 pb-24">
+    <form
+      id="contact-form"
+      action={FORMSPREE_ENDPOINT}
+      method="POST"
+      class="rounded-[2rem] border border-forest/10 bg-cream-soft/60 p-7 shadow-[0_24px_60px_-36px_rgba(26,74,51,0.5)] sm:p-8"
+    >
+      <div class="space-y-5">
+        <div>
+          <label for="cf-name" class="mb-1.5 block text-sm font-medium text-forest">Name</label>
+          <input id="cf-name" name="name" type="text" required autocomplete="name"
+            class="w-full rounded-xl border border-forest/25 bg-white px-3.5 py-2.5 text-ink outline-none transition focus:border-rose focus:ring-2 focus:ring-rose/20" />
+        </div>
+        <div>
+          <label for="cf-email" class="mb-1.5 block text-sm font-medium text-forest">Email</label>
+          <input id="cf-email" name="email" type="email" required autocomplete="email"
+            class="w-full rounded-xl border border-forest/25 bg-white px-3.5 py-2.5 text-ink outline-none transition focus:border-rose focus:ring-2 focus:ring-rose/20" />
+        </div>
+        <div>
+          <label for="cf-message" class="mb-1.5 block text-sm font-medium text-forest">Message</label>
+          <textarea id="cf-message" name="message" rows="5" required
+            class="w-full rounded-xl border border-forest/25 bg-white px-3.5 py-2.5 text-ink outline-none transition focus:border-rose focus:ring-2 focus:ring-rose/20"></textarea>
+        </div>
+      </div>
+
+      <button type="submit"
+        class="zen-btn mt-6 w-full justify-center" data-submit>
+        Send message
+      </button>
+
+      <p data-form-success hidden role="status"
+        class="mt-4 rounded-xl bg-forest/10 px-4 py-3 text-center text-sm text-forest">
+        Thank you! Your message is on its way. We'll be in touch soon. 💚
+      </p>
+      <p data-form-error hidden role="alert"
+        class="mt-4 rounded-xl bg-rose/15 px-4 py-3 text-center text-sm text-rose">
+        Something went wrong sending your message. Please try again, or email stacey@ladiesonthelinksgolf.com.
+      </p>
+    </form>
+  </section>
+</Layout>
+
+<script is:inline>
+  (() => {
+    const form = document.getElementById('contact-form');
+    if (!form) return;
+    const success = form.querySelector('[data-form-success]');
+    const error = form.querySelector('[data-form-error]');
+    const button = form.querySelector('[data-submit]');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      success.setAttribute('hidden', '');
+      error.setAttribute('hidden', '');
+      button.setAttribute('disabled', '');
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (res.ok) {
+          form.reset();
+          success.removeAttribute('hidden');
+        } else {
+          error.removeAttribute('hidden');
+        }
+      } catch {
+        error.removeAttribute('hidden');
+      } finally {
+        button.removeAttribute('disabled');
+      }
+    });
+  })();
+</script>
