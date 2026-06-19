@@ -19,7 +19,7 @@ export const noteSchema = z.object({
 export type Note = z.infer<typeof noteSchema>;
 
 /**
- * Gallery entry — the first real collection built on the seam above.
+ * Gallery entry: the first real collection built on the seam above.
  *
  * The non-image fields live in `galleryFields` so the build collection
  * (`src/content.config.ts`) and this plain test-importable schema share one
@@ -48,7 +48,7 @@ export const galleryEntrySchema = z.object({
 export type GalleryEntry = z.infer<typeof galleryEntrySchema>;
 
 /**
- * Story entry — the dated, indexed Stories/Blog archive.
+ * Story entry: the dated, indexed Stories/Blog archive.
  *
  * Same seam as the gallery: the non-cover fields live in `storyFields` so the
  * build collection (`src/content.config.ts`) and this node-importable schema
@@ -68,7 +68,7 @@ export const storyFields = {
   date: z.coerce.date(),
   /** Byline, e.g. "Ladies on the Links", "Stacey", or "Christian Grace". */
   author: z.string().min(1),
-  /** Optional spotlighted member — FIRST NAME ONLY, opt-in. */
+  /** Optional spotlighted member, FIRST NAME ONLY, opt-in. */
   attribution: z.string().min(1).optional(),
   draft: z.boolean().default(false),
 };
