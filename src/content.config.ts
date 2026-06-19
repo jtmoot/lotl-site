@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
-import { noteSchema } from './content/schemas';
+import { noteSchema, galleryFields } from './content/schemas';
 
 // Foundation sample collection. It exists to wire the schema seam end-to-end:
 // a malformed entry here fails `astro build`. Real collections (gallery #7,
@@ -10,4 +11,18 @@ const notes = defineCollection({
   schema: noteSchema,
 });
 
-export const collections = { notes };
+// Gallery: one Markdown file per entry, an anonymous photo grid at launch.
+// `image()` resolves each path to an optimized ImageMetadata (build-time
+// responsive variants) AND fails the build on a missing/bad image reference.
+// The non-image fields mirror `galleryEntrySchema` in ./content/schemas, which
+// the node schema tests parse against (image() is Astro-context-only).
+const gallery = defineCollection({
+  loader: glob({ base: './src/content/gallery', pattern: '**/*.md' }),
+  schema: ({ image }) =>
+    z.object({
+      images: z.array(image()).min(1, 'a gallery entry needs at least one image'),
+      ...galleryFields,
+    }),
+});
+
+export const collections = { notes, gallery };
