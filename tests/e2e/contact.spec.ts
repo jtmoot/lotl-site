@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
-async function fill(page) {
+async function fill(page: Page) {
   await page.fill('input[name="name"]', 'Jane Golfer');
   await page.fill('input[name="email"]', 'jane@example.com');
   await page.fill('textarea[name="message"]', 'How do I join?');

@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+---
+
+<Layout
+  title="Privacy · Ladies on the Links"
+  description="How Ladies on the Links handles your information and photos."
+  noindex
+>
+  <PageIntro eyebrow="The fine print" title="Privacy" />
+
+  <section class="mx-auto max-w-2xl px-6 pb-24">
+    <div class="space-y-5 text-lg leading-relaxed text-slate">
+      <p>
+        Ladies on the Links keeps things simple. When you register, your details (name, email, phone,
+        and your answers) are stored in our email system (MailerLite) so we can send you league
+        updates and reminders.
+      </p>
+      <p>
+        Messages from our contact form reach us through Formspree and land in our league inbox.
+      </p>
+      <p>
+        Our live tee sheet shows the names of women signed up for each tee time so members can see
+        who is playing; it is shared by link, not posted to the open web.
+      </p>
+      <p>
+        We share photos from our Mondays and events in the gallery and in member stories, with first
+        names only and only with permission, and we will gladly take down any photo or story on
+        request.
+      </p>
+      <p>
+        <strong class="font-medium text-forest">We do not sell your information.</strong>
+        To update or remove your information, email
+        <a href="mailto:stacey@ladiesonthelinksgolf.com" class="font-medium text-rose underline-offset-4 hover:underline">stacey@ladiesonthelinksgolf.com</a>.
+      </p>
+    </div>
+  </section>
+</Layout>
