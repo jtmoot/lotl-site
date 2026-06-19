@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import wordmark from '../assets/brand/wordmark.jpg';
+
+// The nine primary destinations, in order. The live tee sheet is deliberately
+// NOT here; it is a contextual link beside the Bookwhen embed on /schedule.
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/schedule', label: 'Schedule' },
+  { href: '/about', label: 'About' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/stories', label: 'Stories' },
+  { href: '/merch', label: 'Merch' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/contact', label: 'Contact' },
+];
+const register = { href: '/register', label: 'Register' };
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="fixed inset-x-0 top-0 z-40 px-3 pt-3">
+  <nav
+    aria-label="Primary"
+    class="liquid-glass mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full px-4 py-2.5 shadow-[0_8px_30px_-12px_rgba(26,74,51,0.25)]"
+  >
+    <a href="/" class="flex items-center gap-2 shrink-0" aria-label="Ladies on the Links home">
+      <Image
+        src={wordmark}
+        alt="Ladies on the Links"
+        width={132}
+        height={44}
+        class="h-9 w-auto rounded-md object-contain"
+        loading="eager"
+      />
+    </a>
+
+    <!-- Desktop links -->
+    <ul data-nav="primary" class="hidden items-center gap-1 lg:flex">
+      {links.map((l) => (
+        <li>
+          <a
+            href={l.href}
+            aria-current={isActive(l.href) ? 'page' : undefined}
+            class:list={[
+              'relative px-3 py-2 text-sm tracking-wide text-ink/80 transition-colors hover:text-forest',
+              'after:absolute after:inset-x-3 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-forest after:transition-transform hover:after:scale-x-100',
+              isActive(l.href) && 'text-forest after:scale-x-100',
+            ]}
+          >
+            {l.label}
+          </a>
+        </li>
+      ))}
+      <li>
+        <a href={register.href} data-cta class="zen-btn ml-1 px-5 py-2 text-sm">
+          {register.label}
+        </a>
+      </li>
+    </ul>
+
+    <!-- Mobile toggle -->
+    <button
+      type="button"
+      class="lg:hidden inline-flex items-center justify-center rounded-full p-2 text-forest"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <line x1="4" y1="7" x2="20" y2="7" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="17" x2="20" y2="17" />
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile menu panel -->
+  <div
+    id="mobile-menu"
+    data-nav="mobile"
+    hidden
+    class="liquid-glass mx-auto mt-2 max-w-6xl rounded-3xl p-4 lg:hidden"
+  >
+    <ul class="flex flex-col gap-1">
+      {[...links, register].map((l) => (
+        <li>
+          <a
+            href={l.href}
+            aria-current={isActive(l.href) ? 'page' : undefined}
+            class="block rounded-xl px-4 py-3 text-base text-ink/90 transition-colors hover:bg-forest/5 hover:text-forest"
+          >
+            {l.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</header>
+<!-- spacer so fixed nav doesn't overlap content -->
+<div aria-hidden="true" class="h-20"></div>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    const open = menu?.hasAttribute('hidden');
+    if (open) {
+      menu?.removeAttribute('hidden');
+      toggle.setAttribute('aria-expanded', 'true');
+    } else {
+      menu?.setAttribute('hidden', '');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>
