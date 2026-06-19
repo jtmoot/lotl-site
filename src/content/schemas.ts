@@ -46,3 +46,36 @@ export const galleryEntrySchema = z.object({
 });
 
 export type GalleryEntry = z.infer<typeof galleryEntrySchema>;
+
+/**
+ * Story entry — the dated, indexed Stories/Blog archive.
+ *
+ * Same seam as the gallery: the non-cover fields live in `storyFields` so the
+ * build collection (`src/content.config.ts`) and this node-importable schema
+ * share one source of truth. The build collection swaps the string `cover`
+ * validator below for Astro's `image()` helper, which additionally fails the
+ * build on a bad cover reference. `image()` only exists inside the Astro content
+ * context, so this string mirror is what the node schema tests parse against.
+ *
+ * Unlike the anonymous gallery, stories are attributed (author + date). Member
+ * spotlights set the optional `attribution` field, which carries a FIRST NAME
+ * ONLY under the consent model (opt-in, takedown on request).
+ */
+export const storyFields = {
+  /** Display title; also the page <h1>. */
+  title: z.string().min(1),
+  /** Publish date; sorts the index newest-first. */
+  date: z.coerce.date(),
+  /** Byline, e.g. "Ladies on the Links", "Stacey", or "Christian Grace". */
+  author: z.string().min(1),
+  /** Optional spotlighted member — FIRST NAME ONLY, opt-in. */
+  attribution: z.string().min(1).optional(),
+  draft: z.boolean().default(false),
+};
+
+export const storyEntrySchema = z.object({
+  cover: z.string().min(1),
+  ...storyFields,
+});
+
+export type Story = z.infer<typeof storyEntrySchema>;

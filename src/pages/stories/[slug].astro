@@ -1,0 +1,59 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+// One page per non-draft story. The body Markdown is rendered through Astro's
+// content pipeline (<Content />). Public and indexable: no noindex.
+export async function getStaticPaths() {
+  const posts = await getCollection('stories', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const dateFmt = new Intl.DateTimeFormat('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+---
+
+<Layout
+  title={`${post.data.title} · Stories · Ladies on the Links`}
+  description={`${post.data.title}. A story from the Ladies on the Links women's golf league in Duxbury, MA.`}
+>
+  <article class="mx-auto max-w-3xl px-6 pt-16 pb-24 sm:pt-20">
+    <header class="text-center">
+      <p class="eyebrow">
+        {dateFmt.format(post.data.date)}
+        {post.data.attribution && <span> · Featuring {post.data.attribution}</span>}
+      </p>
+      <h1 class="mt-4 font-serif text-4xl font-light leading-tight text-forest sm:text-5xl">
+        {post.data.title}
+      </h1>
+      <p class="mt-5 text-sm text-slate">By {post.data.author}</p>
+    </header>
+
+    <Image
+      src={post.data.cover}
+      alt={`Cover image for ${post.data.title}`}
+      widths={[600, 1000, 1400]}
+      sizes="(min-width: 768px) 768px, 100vw"
+      class="mt-10 aspect-[16/9] w-full rounded-[1.5rem] border border-forest/10 object-cover"
+      loading="eager"
+    />
+
+    <div
+      data-story-body
+      class="prose prose-lg mx-auto mt-10 max-w-none text-ink/85 [&_a]:text-forest [&_a]:underline [&_p]:mt-5 [&_p]:leading-relaxed"
+    >
+      <Content />
+    </div>
+
+    <p class="mt-14 text-center">
+      <a href="/stories" class="text-sm text-forest underline">Back to all stories</a>
+    </p>
+  </article>
+</Layout>
