@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+// Foundation placeholder. The full Home (hero, welcome, feature cards, stats bar)
+// is built in issue #3; this proves the shell + build pipeline end-to-end.
+---
+
+<Layout>
+  <section class="relative mx-auto flex min-h-[70vh] max-w-4xl flex-col items-center justify-center px-6 py-24 text-center">
+    <p class="eyebrow">For the love of golf</p>
+    <h1 class="mt-4 font-serif text-5xl font-light leading-[1.05] text-forest sm:text-6xl">
+      The league that <em class="italic text-rose">plays together</em>.
+    </h1>
+    <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate">
+      Welcome to North Hill Country Club’s women’s golf league in Duxbury. Every Monday, all season
+      long, all skill levels. Come sip, swing, and make some new friends.
+    </p>
+    <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+      <a href="/register" class="zen-btn">Register for Season 2</a>
+      <a href="/schedule" class="ghost-btn">Book a Tee Time</a>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+/*
+  Ladies on the Links design tokens.
+  Garden-Industrial aesthetic: deep course green + warm cream + soft rose accents.
+  Inspiration from design-reference/DESIGN.md, not a literal copy.
+*/
+@theme {
+  --color-forest: #1a4a33;
+  --color-forest-deep: #123425;
+  --color-cream: #f6efdf;
+  --color-cream-soft: #fbf6ec;
+  --color-rose: #de809f;
+  --color-blush: #eba9be;
+  --color-ink: #1c1c22;
+  --color-slate: rgba(30, 41, 59, 0.7);
+
+  --font-serif: "Newsreader", ui-serif, Georgia, serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.5rem;
+  --radius-block: 2rem;
+  --radius-section: 2.5rem;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-cream);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  color: var(--color-ink);
+  background-color: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-serif);
+}
+
+/* Warm selection color per the brand. */
+::selection {
+  background: var(--color-rose);
+  color: white;
+}
+
+/* Subtle film-grain texture across the whole viewport (1.8% opacity). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer components {
+  /* Liquid-glass surface: blur + low-opacity fill, soft border. */
+  .liquid-glass {
+    background: color-mix(in srgb, var(--color-cream-soft) 72%, transparent);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid color-mix(in srgb, var(--color-forest) 14%, transparent);
+  }
+
+  /* Primary pill CTA with a forest->rose gradient surface. */
+  .zen-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.85rem 1.75rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--color-cream-soft);
+    background-image: linear-gradient(120deg, var(--color-forest), var(--color-rose));
+    box-shadow: 0 10px 30px -12px color-mix(in srgb, var(--color-forest) 60%, transparent);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, letter-spacing 0.3s ease;
+  }
+  .zen-btn:hover {
+    transform: translateY(-2px);
+    letter-spacing: 0.06em;
+    box-shadow: 0 18px 40px -14px color-mix(in srgb, var(--color-forest) 70%, transparent);
+  }
+
+  /* Ghost pill: transparent with a sage border. */
+  .ghost-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.85rem 1.75rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--color-forest);
+    background: color-mix(in srgb, var(--color-forest) 3%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-forest) 22%, transparent);
+    backdrop-filter: blur(6px);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .ghost-btn:hover {
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--color-forest) 8%, transparent);
+  }
+
+  /* Uppercase tracked eyebrow label. */
+  .eyebrow {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-weight: 500;
+    color: var(--color-rose);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

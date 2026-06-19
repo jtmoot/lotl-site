@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+// A real 404 page that also exercises the Layout `noindex` prop (a 404 should
+// never be indexed). This is the foundation proof that the noindex mechanism
+// #11 (Privacy) relies on actually emits the directive.
+---
+
+<Layout title="Page not found · Ladies on the Links" noindex>
+  <section class="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center px-6 py-24 text-center">
+    <p class="eyebrow">Lost ball</p>
+    <h1 class="mt-4 font-serif text-5xl font-light text-forest">This page is off the fairway.</h1>
+    <p class="mt-5 max-w-md text-lg text-slate">
+      We could not find that page. Let’s get you back to the clubhouse.
+    </p>
+    <a href="/" class="zen-btn mt-8">Back to Home</a>
+  </section>
+</Layout>

@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import wordmark from '../assets/brand/wordmark.jpg';
+
+const FACEBOOK_URL = 'https://www.facebook.com/Ladiesonthelinksgolfleague/';
+const explore = [
+  { href: '/schedule', label: 'Schedule & Book' },
+  { href: '/register', label: 'Register' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/stories', label: 'Stories' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/contact', label: 'Contact' },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 bg-forest-deep text-cream/90">
+  <div class="mx-auto grid max-w-6xl gap-10 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- Branding -->
+    <div class="lg:col-span-2">
+      <Image
+        src={wordmark}
+        alt="Ladies on the Links"
+        width={160}
+        height={54}
+        class="h-12 w-auto rounded-md bg-cream/95 p-1.5 object-contain"
+      />
+      <p class="mt-4 max-w-xs font-serif text-xl italic text-cream">For the love of golf.</p>
+      <a
+        href={FACEBOOK_URL}
+        rel="noopener noreferrer"
+        target="_blank"
+        class="mt-5 inline-flex items-center gap-2 rounded-full border border-cream/20 bg-cream/5 px-4 py-2 text-sm transition-colors hover:bg-cream/10"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z" />
+        </svg>
+        Find us on Facebook
+      </a>
+    </div>
+
+    <!-- Explore -->
+    <nav aria-label="Footer">
+      <h2 class="eyebrow text-blush">Explore</h2>
+      <ul class="mt-4 space-y-2 text-sm">
+        {explore.map((l) => (
+          <li><a href={l.href} class="text-cream/80 transition-colors hover:text-cream">{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- Visit + Legal -->
+    <div>
+      <h2 class="eyebrow text-blush">Visit</h2>
+      <address class="mt-4 not-italic text-sm leading-relaxed text-cream/80">
+        North Hill Country Club<br />
+        29 Merry Avenue<br />
+        Duxbury, MA 02332
+      </address>
+      <h2 class="eyebrow mt-6 text-blush">Legal</h2>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li><a href="/privacy" class="text-cream/80 transition-colors hover:text-cream">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-cream/10">
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-xs text-cream/60 sm:flex-row">
+      <p>&copy; {year} Ladies on the Links. Come sip &amp; swing with us.</p>
+      <p>Duxbury, Massachusetts</p>
+    </div>
+  </div>
+</footer>

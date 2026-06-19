@@ -10,6 +10,18 @@ build/
 out/
 .cache/
 
+# Astro
+.astro/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/.playwright/
+
+# Raw media originals stay outside the repo; never commit video
+*.mov
+
 # Env / secrets (managed via Doppler — local-only)
 .env
 .env.local
