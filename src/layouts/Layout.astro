@@ -1,0 +1,68 @@
+---
+import { getImage } from 'astro:assets';
+import ogSource from '../assets/brand/golf-ball-logo.png';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** When true the page emits a robots `noindex` directive (only /privacy uses this). */
+  noindex?: boolean;
+}
+
+const {
+  title = 'Ladies on the Links · Women’s Golf League in Duxbury, MA',
+  description = 'A women’s golf league at North Hill Country Club in Duxbury, MA. Every Monday, all skill levels. For the love of golf.',
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+// Optimized Open Graph image (the 1.7MB source is resized/compressed at build).
+const og = await getImage({ src: ogSource, width: 1200, height: 630, format: 'jpg' });
+const ogImage = new URL(og.src, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ladies on the Links" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Brand fonts: Newsreader (display serif) + Geist (body sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap"
+    />
+
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Nav />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
