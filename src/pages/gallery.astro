@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+// Anonymous photo grid (not a feed). Entries are curated Markdown files in the
+// `gallery` collection; each may carry one or more build-optimized images.
+// No member names or per-photo captions at launch.
+const entries = await getCollection('gallery', ({ data }) => !data.draft);
+
+// A generic, never-personal fallback so every tile keeps accessible alt text.
+const FALLBACK_ALT = 'North Hill Country Club course';
+
+// Flatten entries into a single ordered list of image tiles.
+const tiles = entries.flatMap((entry) =>
+  entry.data.images.map((image) => ({
+    image,
+    alt: entry.data.alt ?? FALLBACK_ALT,
+  }))
+);
+---
+
+<Layout
+  title="Gallery · Ladies on the Links"
+  description="Photos from the Ladies on the Links women's golf league at North Hill Country Club in Duxbury, MA."
+>
+  <PageIntro
+    eyebrow="On the course"
+    title="Gallery"
+    lede="Scenes from our Mondays at North Hill. A curated look at the course and the league. Want a photo of yours added or removed? Reach out on the Contact page."
+  />
+
+  <section class="mx-auto max-w-5xl px-6 pb-24">
+    {tiles.length === 0 ? (
+      <p class="text-center text-slate">Photos coming soon.</p>
+    ) : (
+      <ul data-gallery-grid class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
+        {tiles.map((tile) => (
+          <li class="overflow-hidden rounded-[1.5rem] border border-forest/10 bg-cream-soft/60">
+            <Image
+              src={tile.image}
+              alt={tile.alt}
+              widths={[400, 800, 1200]}
+              sizes="(min-width: 768px) 33vw, 50vw"
+              class="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+              loading="lazy"
+            />
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Layout>

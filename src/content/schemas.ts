@@ -17,3 +17,32 @@ export const noteSchema = z.object({
 });
 
 export type Note = z.infer<typeof noteSchema>;
+
+/**
+ * Gallery entry — the first real collection built on the seam above.
+ *
+ * The non-image fields live in `galleryFields` so the build collection
+ * (`src/content.config.ts`) and this plain test-importable schema share one
+ * source of truth. The build collection swaps the string `images` validator
+ * below for Astro's `image()` helper, which additionally fails the build on a
+ * bad image reference. `image()` only exists inside the Astro content context,
+ * so this string mirror is what the node schema tests parse against.
+ *
+ * Anonymous at launch: no member-name or attribution field exists by design.
+ */
+export const galleryFields = {
+  /** Optional alt text; the page falls back to a generic course description. */
+  alt: z.string().min(1).optional(),
+  /** Optional event/date grouping label, e.g. "North Hill Country Club". */
+  event: z.string().min(1).optional(),
+  /** Optional date for grouping/sorting. */
+  date: z.coerce.date().optional(),
+  draft: z.boolean().default(false),
+};
+
+export const galleryEntrySchema = z.object({
+  images: z.array(z.string().min(1)).min(1, 'a gallery entry needs at least one image'),
+  ...galleryFields,
+});
+
+export type GalleryEntry = z.infer<typeof galleryEntrySchema>;
