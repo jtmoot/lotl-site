@@ -1,0 +1,135 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+const TEE_TIMES_SRC = 'https://bookwhen.com/ladiesonthelinks/iframe';
+const LESSONS_SRC = 'https://bookwhen.com/ladiesonthelinks-lessons/iframe';
+const TEE_SHEET_URL =
+  'https://docs.google.com/spreadsheets/d/1QxwULZs7nSwiVBU6x3CSJo0McFHUbhtuL_Ufa0osAGU/edit?gid=1173477351';
+---
+
+<Layout
+  title="Schedule & Book · Ladies on the Links"
+  description="Book a Monday tee time or a small-group lesson with our pro Christian Grace. Register first so you're on the email list for tee-time releases."
+>
+  <PageIntro eyebrow="Schedule & book" title="Book your Monday" />
+
+  <section class="mx-auto max-w-3xl px-6">
+    <div class="rounded-[2rem] border border-forest/10 bg-cream-soft/60 p-6 text-center sm:p-8">
+      <p class="leading-relaxed text-slate">
+        Book however you like. Come solo, grab a friend, or sign up your whole <strong class="font-medium text-forest">foursome</strong> at checkout.
+        Before booking, please <a href="/register" class="font-medium text-rose underline-offset-4 hover:underline">register</a>
+        so we can add you to the email list for updates, reminders, and event news.
+        New to golf or new to the league? Start with a lesson, then come back here to book your first Monday.
+      </p>
+      <p class="mt-3 text-sm text-slate">
+        No clubs of your own? Check the <strong class="font-medium text-forest">loaner clubs</strong> box when you book.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-6 py-10">
+    <!-- Tabs -->
+    <div role="tablist" aria-label="Booking type" class="mx-auto mb-6 flex max-w-md gap-1 rounded-full border border-forest/10 bg-cream-soft/70 p-1">
+      <button
+        role="tab"
+        id="tab-tee-times"
+        aria-controls="panel-tee-times"
+        aria-selected="true"
+        data-tab-btn="tee-times"
+        class="flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors"
+      >
+        Tee Times
+      </button>
+      <button
+        role="tab"
+        id="tab-lessons"
+        aria-controls="panel-lessons"
+        aria-selected="false"
+        data-tab-btn="lessons"
+        class="flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors"
+      >
+        Lessons with Christian Grace
+      </button>
+    </div>
+
+    <!-- Panels -->
+    <div role="tabpanel" id="panel-tee-times" aria-labelledby="tab-tee-times" data-panel="tee-times">
+      <iframe
+        data-tab="tee-times"
+        src={TEE_TIMES_SRC}
+        title="Book a tee time"
+        loading="eager"
+        style="display:block;border:none;width:100%;height:900px;"
+        scrolling="yes"
+      ></iframe>
+    </div>
+
+    <div role="tabpanel" id="panel-lessons" aria-labelledby="tab-lessons" data-panel="lessons" hidden>
+      <!-- Lazy: src is assigned only when this tab is first opened, so only one Bookwhen app loads on arrival. -->
+      <iframe
+        data-tab="lessons"
+        data-src={LESSONS_SRC}
+        title="Book a lesson with Christian Grace"
+        loading="lazy"
+        style="display:block;border:none;width:100%;height:900px;"
+        scrolling="yes"
+      ></iframe>
+    </div>
+  </section>
+
+  <!-- Tee sheet: link out, never embedded (keeps member names off the indexed page). -->
+  <section class="mx-auto max-w-3xl px-6 pb-24">
+    <div class="flex flex-col items-center gap-3 rounded-[2rem] border border-forest/10 bg-blush/10 p-7 text-center">
+      <h2 class="font-serif text-2xl text-forest">See who is playing</h2>
+      <p class="max-w-xl leading-relaxed text-slate">
+        The live tee sheet shows who is signed up for each time. It opens in Google Sheets.
+      </p>
+      <a
+        href={TEE_SHEET_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="ghost-btn"
+      >
+        Open the live tee sheet &rarr;
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<script is:inline>
+  (() => {
+    const buttons = document.querySelectorAll('[data-tab-btn]');
+    const panels = document.querySelectorAll('[data-panel]');
+    const activeClasses = ['bg-forest', 'text-cream-soft', 'shadow-sm'];
+    const idleClasses = ['text-ink/70'];
+
+    function select(name) {
+      buttons.forEach((btn) => {
+        const isActive = btn.getAttribute('data-tab-btn') === name;
+        btn.setAttribute('aria-selected', String(isActive));
+        btn.classList.toggle('bg-forest', isActive);
+        btn.classList.toggle('text-cream-soft', isActive);
+        btn.classList.toggle('shadow-sm', isActive);
+      });
+      panels.forEach((panel) => {
+        const isActive = panel.getAttribute('data-panel') === name;
+        if (isActive) panel.removeAttribute('hidden');
+        else panel.setAttribute('hidden', '');
+      });
+      // Lazy-load the panel's iframe the first time it is shown.
+      const iframe = document.querySelector(`iframe[data-tab="${name}"]`);
+      if (iframe && !iframe.getAttribute('src')) {
+        const lazy = iframe.getAttribute('data-src');
+        if (lazy) iframe.setAttribute('src', lazy);
+      }
+    }
+
+    buttons.forEach((btn) => {
+      btn.classList.add(...idleClasses);
+      btn.addEventListener('click', () => select(btn.getAttribute('data-tab-btn')));
+    });
+    // Set initial active styling.
+    select('tee-times');
+  })();
+</script>
