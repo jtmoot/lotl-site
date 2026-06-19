@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+// Drafted copy (build inputs §4), used verbatim:
+//  - League story  = the Welcome / About paragraph.
+//  - Meet the Pro  = the About / Meet the Pro paragraph.
+// Hard copy constraint: our pro is "Christian Grace" (PGA Associate).
+// Never "our PGA pro", never "Class A". No em dashes anywhere.
+---
+
+<Layout
+  title="About · Ladies on the Links"
+  description="The story behind Ladies on the Links, a women's golf league at North Hill Country Club in Duxbury, MA, and our pro Christian Grace who runs small-group lessons all season."
+>
+  <PageIntro
+    eyebrow="Our story"
+    title="About Ladies on the Links"
+    lede="A women's golf league built on good Mondays, new friends, and no judgment, just joy."
+  />
+
+  <!-- League story -->
+  <section class="mx-auto max-w-2xl px-6 pb-16">
+    <div class="space-y-5 text-lg leading-relaxed text-slate">
+      <p>
+        Welcome to Ladies on the Links, a women's golf league at <strong class="font-medium text-forest"
+          >North Hill Country Club in Duxbury, MA</strong
+        >. We tee off <strong class="font-medium text-forest">every Monday from June through the end of September</strong>, with
+        special events like Glow Golf along the way and a season-ending tournament in early October. Nine holes, scramble
+        format, golf cart included, weekly contests, and a wonderful group of women to share the course with. The whole point
+        of this league is meeting new women, learning the game together, and having fun.
+        <strong class="font-medium text-forest">All skill levels welcome. No judgment, just joy.</strong> 💚
+      </p>
+    </div>
+  </section>
+
+  <!-- Meet the Pro -->
+  <section class="mx-auto max-w-3xl px-6 pb-24">
+    <div
+      class="overflow-hidden rounded-[2rem] border border-forest/10 bg-cream-soft/60 p-8 sm:p-10"
+    >
+      <p class="eyebrow">Meet the pro</p>
+      <h2 class="mt-3 font-serif text-3xl font-light text-forest">Christian Grace</h2>
+      <p class="mt-1 text-sm tracking-wide text-slate">PGA Associate</p>
+
+      <div class="mt-8 flex flex-col gap-8 sm:flex-row sm:items-start">
+        <!--
+          Placeholder headshot. Swap-later: replace this <figure> block with
+          <Image src={...} alt="Christian Grace" ... /> once the real photo is supplied.
+          The SVG below is a tasteful on-brand silhouette so the layout is final now.
+        -->
+        <figure class="shrink-0">
+          <div
+            class="flex h-40 w-40 items-center justify-center rounded-3xl border border-forest/10 bg-forest/5"
+            aria-hidden="true"
+          >
+            <svg
+              width="88"
+              height="88"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-forest/40"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
+            </svg>
+          </div>
+          <figcaption class="mt-2 text-center text-xs italic text-rose/80">Photo coming soon</figcaption>
+        </figure>
+
+        <div class="space-y-4 text-lg leading-relaxed text-slate">
+          <p>
+            Meet our pro, <strong class="font-medium text-forest">Christian Grace</strong>. Christian runs small-group
+            lessons for Ladies on the Links all season long, and he is exactly who you want if you are nervous about getting
+            started. Patient, encouraging, and never the type to make you feel like you are slowing anyone down. Lessons are
+            <strong class="font-medium text-forest">$35 per person, 50 minutes, capped at six women</strong>, so there is
+            plenty of personal attention.
+          </p>
+          <p>
+            New to golf? Start with a lesson before your first Monday. Once Christian gives you the green light, you are ready
+            to play.
+          </p>
+          <p class="pt-2">
+            <a href="/schedule" data-cta class="zen-btn px-6 py-2.5 text-sm">Book a lesson</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
