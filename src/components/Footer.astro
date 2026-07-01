@@ -1,7 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-import wordmark from '../assets/brand/wordmark.jpg';
-
 const FACEBOOK_URL = 'https://www.facebook.com/Ladiesonthelinksgolfleague/';
 const explore = [
   { href: '/schedule', label: 'Schedule & Book' },
@@ -18,14 +15,8 @@ const year = new Date().getFullYear();
   <div class="mx-auto grid max-w-6xl gap-10 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
     <!-- Branding -->
     <div class="lg:col-span-2">
-      <Image
-        src={wordmark}
-        alt="Ladies on the Links"
-        width={160}
-        height={54}
-        class="h-12 w-auto rounded-md bg-cream/95 p-1.5 object-contain"
-      />
-      <p class="mt-4 max-w-xs font-serif text-xl italic text-cream">For the love of golf.</p>
+      <p class="font-serif text-2xl text-cream">Ladies on the Links</p>
+      <p class="mt-3 max-w-xs font-serif text-xl italic text-cream/85">For the love of golf.</p>
       <a
         href={FACEBOOK_URL}
         rel="noopener noreferrer"
