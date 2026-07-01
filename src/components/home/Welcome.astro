@@ -1,5 +1,7 @@
 ---
 // Drafted welcome copy (build inputs §4), used verbatim.
+import { Image } from 'astro:assets';
+import welcome from '../../assets/photos/home-welcome.jpg';
 ---
 
 <section class="mx-auto max-w-3xl px-6 py-20 text-center sm:py-24">
@@ -15,4 +17,13 @@
     point of this league is meeting new women, learning the game together, and having fun. All skill
     levels welcome. <strong class="font-medium text-forest">No judgment, just joy.</strong> 💚
   </p>
+
+  <Image
+    src={welcome}
+    alt="Ladies on the Links members together on the course at North Hill Country Club"
+    widths={[600, 900, 1400]}
+    sizes="(min-width: 768px) 48rem, 100vw"
+    class="mt-12 aspect-[4/3] w-full rounded-[2rem] border border-forest/10 object-cover shadow-[0_18px_50px_-24px_rgba(26,74,51,0.5)]"
+    loading="lazy"
+  />
 </section>

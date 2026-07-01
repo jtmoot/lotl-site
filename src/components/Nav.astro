@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import wordmark from '../assets/brand/wordmark.jpg';
+import logo from '../assets/brand/logo.png';
 
 // The nine primary destinations, in order. The live tee sheet is deliberately
 // NOT here; it is a contextual link beside the Bookwhen embed on /schedule.
@@ -26,15 +26,16 @@ const isActive = (href: string) =>
     aria-label="Primary"
     class="liquid-glass mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full px-4 py-2.5 shadow-[0_8px_30px_-12px_rgba(26,74,51,0.25)]"
   >
-    <a href="/" class="flex items-center gap-2 shrink-0" aria-label="Ladies on the Links home">
+    <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="Ladies on the Links home">
       <Image
-        src={wordmark}
+        src={logo}
         alt="Ladies on the Links"
-        width={132}
-        height={44}
-        class="h-9 w-auto rounded-md object-contain"
+        class="h-12 w-auto"
         loading="eager"
       />
+      <span class="hidden font-serif text-lg leading-none text-forest sm:inline lg:hidden xl:inline">
+        Ladies on the Links
+      </span>
     </a>
 
     <!-- Desktop links -->

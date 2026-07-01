@@ -108,6 +108,9 @@ const TEE_SHEET_URL =
         btn.classList.toggle('bg-forest', isActive);
         btn.classList.toggle('text-cream-soft', isActive);
         btn.classList.toggle('shadow-sm', isActive);
+        // Drop the idle dark text on the active tab so it stays cream-on-green
+        // (otherwise text-ink wins over text-cream-soft and the label is unreadable).
+        btn.classList.toggle('text-ink/70', !isActive);
       });
       panels.forEach((panel) => {
         const isActive = panel.getAttribute('data-panel') === name;
