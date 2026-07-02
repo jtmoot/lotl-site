@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+// The active-members showcase (community landing pattern): a wall of real member
+// photos, then the join CTA. Photos are anonymous (no name captions) per the PRD.
+const photos = Object.values(
+  import.meta.glob<ImageMetadata>('../../assets/photos/gallery/league-*.jpg', {
+    eager: true,
+    import: 'default',
+  })
+);
+---
+
+<section class="border-t border-forest/12 bg-cream-soft/50 py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="max-w-2xl reveal">
+      <p class="eyebrow eyebrow-mark">The women, the Mondays</p>
+      <h2 class="mt-4 font-serif text-4xl font-light leading-[1.05] text-forest sm:text-5xl">
+        A real community, out on the course.
+      </h2>
+    </div>
+
+    <!-- Staggered wall: on large screens, every other column drops for an editorial rhythm. -->
+    <ul class="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5 lg:pb-10">
+      {photos.map((photo, i) => (
+        <li
+          class:list={[
+            'overflow-hidden rounded-lg border border-forest/10 bg-cream reveal',
+            i % 2 === 1 && 'lg:translate-y-10',
+          ]}
+          style={`transition-delay:${(i % 5) * 70}ms`}
+        >
+          <Image
+            src={photo}
+            alt="Ladies on the Links members on a Monday at North Hill Country Club"
+            widths={[300, 600]}
+            sizes="(min-width: 1024px) 18vw, 45vw"
+            class="aspect-[4/5] w-full object-cover transition-transform duration-500 hover:scale-[1.04]"
+            loading="lazy"
+          />
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-16 flex flex-col items-center gap-6 text-center reveal">
+      <div class="flex w-full max-w-sm items-center gap-4" aria-hidden="true">
+        <span class="rule flex-1"></span>
+        <span class="h-1.5 w-1.5 rotate-45 bg-rose"></span>
+        <span class="rule flex-1"></span>
+      </div>
+      <p class="font-serif text-3xl italic text-forest sm:text-4xl">Come sip &amp; swing with us.</p>
+      <a href="/register" class="zen-btn">Register for Season 2</a>
+    </div>
+  </div>
+</section>

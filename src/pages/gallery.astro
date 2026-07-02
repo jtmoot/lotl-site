@@ -35,9 +35,16 @@ const tiles = entries.flatMap((entry) =>
     {tiles.length === 0 ? (
       <p class="text-center text-slate">Photos coming soon.</p>
     ) : (
-      <ul data-gallery-grid class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
-        {tiles.map((tile) => (
-          <li class="aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-forest/10 bg-cream-soft/60">
+      <!-- Staggered wall: on md+, the middle column drops for an editorial rhythm. -->
+      <ul data-gallery-grid class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:pb-8">
+        {tiles.map((tile, i) => (
+          <li
+            class:list={[
+              'aspect-[4/5] overflow-hidden rounded-lg border border-forest/10 bg-cream-soft/60 reveal',
+              i % 3 === 1 && 'md:translate-y-8',
+            ]}
+            style={`transition-delay:${(i % 3) * 70}ms`}
+          >
             <Image
               src={tile.image}
               alt={tile.alt}

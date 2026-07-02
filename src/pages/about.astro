@@ -21,8 +21,8 @@ import PageIntro from '../components/PageIntro.astro';
 
   <!-- League story -->
   <section class="mx-auto max-w-2xl px-6 pb-16">
-    <div class="space-y-5 text-lg leading-relaxed text-slate">
-      <p>
+    <div class="space-y-5 text-lg leading-relaxed text-slate reveal">
+      <p class="drop-cap">
         Welcome to Ladies on the Links, a women's golf league at <strong class="font-medium text-forest"
           >North Hill Country Club in Duxbury, MA</strong
         >. We tee off <strong class="font-medium text-forest">every Monday from June through the end of September</strong>, with
@@ -34,12 +34,19 @@ import PageIntro from '../components/PageIntro.astro';
     </div>
   </section>
 
+  <!-- Diamond divider (accent motif shared with Home). -->
+  <div class="mx-auto flex max-w-xs items-center gap-4 px-6 pb-16" aria-hidden="true">
+    <span class="rule flex-1"></span>
+    <span class="h-1.5 w-1.5 rotate-45 bg-rose"></span>
+    <span class="rule flex-1"></span>
+  </div>
+
   <!-- Meet the Pro -->
   <section class="mx-auto max-w-3xl px-6 pb-24">
     <div
-      class="overflow-hidden rounded-[2rem] border border-forest/10 bg-cream-soft/60 p-8 sm:p-10"
+      class="overflow-hidden rounded-xl border border-forest/10 bg-cream-soft/60 p-8 sm:p-10 reveal"
     >
-      <p class="eyebrow">Meet the pro</p>
+      <p class="eyebrow eyebrow-mark">Meet the pro</p>
       <h2 class="mt-3 font-serif text-3xl font-light text-forest">Christian Grace</h2>
       <p class="mt-1 text-sm tracking-wide text-slate">PGA Associate</p>
 
@@ -51,7 +58,7 @@ import PageIntro from '../components/PageIntro.astro';
         -->
         <figure class="shrink-0">
           <div
-            class="flex h-40 w-40 items-center justify-center rounded-3xl border border-forest/10 bg-forest/5"
+            class="flex h-40 w-40 items-center justify-center rounded-xl border border-forest/10 bg-forest/5"
             aria-hidden="true"
           >
             <svg

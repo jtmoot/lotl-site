@@ -3,40 +3,45 @@ import { Image } from 'astro:assets';
 import hero from '../../assets/photos/hero-course.jpg';
 ---
 
-<section data-hero class="relative isolate overflow-hidden">
-  <!-- Scenic course backdrop with a warm forest wash for legibility -->
+<section data-hero class="relative isolate flex min-h-[88svh] items-end overflow-hidden border-b border-forest/12">
   <Image
     src={hero}
     alt="The North Hill golf course at golden hour"
-    width={2000}
-    height={1200}
-    class="absolute inset-0 -z-10 h-full w-full object-cover"
+    width={2200}
+    height={1400}
+    class="hero-settle absolute inset-0 -z-10 h-full w-full object-cover"
     loading="eager"
     fetchpriority="high"
   />
-  <div class="absolute inset-0 -z-10 bg-gradient-to-b from-forest-deep/70 via-forest/45 to-cream/95"></div>
+  <!-- Dual scrim: left band for headline legibility, base fade to ground the photo. -->
+  <div class="absolute inset-0 -z-10 bg-gradient-to-r from-forest-deep/90 via-forest-deep/45 to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 -z-10 h-2/3 bg-gradient-to-t from-forest-deep/85 to-transparent"></div>
 
-  <div class="mx-auto flex min-h-[88vh] max-w-4xl flex-col items-center justify-center px-6 py-28 text-center">
-    <p class="eyebrow text-blush">For the love of golf</p>
-    <h1 class="mt-5 font-serif text-5xl font-light leading-[1.04] text-cream drop-shadow-sm sm:text-6xl md:text-7xl">
-      The league that <em class="italic text-blush">plays together</em>.
-    </h1>
-    <p class="mt-7 max-w-2xl text-lg leading-relaxed text-cream/90">
-      Welcome to North Hill Country Club’s women’s golf league in Duxbury. Every Monday, all season
-      long, all skill levels. Come sip, swing, and make some new friends.
-    </p>
-
-    <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
-      <a href="/register" class="zen-btn">Register for Season 2</a>
-      <a href="/schedule" class="ghost-btn !border-cream/40 !bg-cream/10 !text-cream backdrop-blur">
-        Book a Tee Time
-      </a>
+  <div class="mx-auto w-full max-w-6xl px-6 pb-16 pt-32 sm:pb-20 lg:pb-24">
+    <div class="max-w-3xl">
+      <p class="eyebrow eyebrow-mark text-blush rise" style="animation-delay:80ms">For the love of golf</p>
+      <h1
+        class="mt-4 font-serif font-light leading-[0.95] tracking-[-0.02em] text-cream rise"
+        style="font-size:clamp(2.9rem,8vw,6.75rem);animation-delay:160ms"
+      >
+        The league that <em class="italic text-blush">plays</em> together.
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-cream/90 rise" style="animation-delay:260ms">
+        A women's golf league at North Hill Country Club in Duxbury. Every Monday, all season long,
+        all skill levels. Come sip, swing, and make some new friends.
+      </p>
+      <div class="mt-9 flex flex-wrap items-center gap-3 rise" style="animation-delay:360ms">
+        <a href="/register" class="hero-cta-light">Register for Season 2</a>
+        <a href="/schedule" class="hero-cta-ghost">Book a Tee Time</a>
+      </div>
+      <p class="mt-10 flex items-center gap-3 text-sm tracking-wide text-cream/70 rise" style="animation-delay:460ms">
+        <span class="h-px w-8 bg-cream/40"></span>
+        North Hill Country Club, Duxbury MA
+      </p>
     </div>
+  </div>
 
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-sm text-cream/75">
-      <a href="/register" class="underline-offset-4 hover:underline">New to the league? Start here.</a>
-      <span aria-hidden="true" class="hidden sm:inline">·</span>
-      <a href="/schedule" class="underline-offset-4 hover:underline">Already a member? Book your Monday.</a>
-    </div>
+  <div class="absolute bottom-10 right-10 hidden sm:block rise" style="animation-delay:700ms" aria-hidden="true">
+    <span class="scroll-cue block h-14 w-px bg-cream/50"></span>
   </div>
 </section>

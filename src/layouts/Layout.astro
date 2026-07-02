@@ -64,5 +64,25 @@ const ogImage = new URL(og.src, Astro.site).href;
       <slot />
     </main>
     <Footer />
+
+    <script>
+      // Arm scroll reveals only when JS runs and motion is allowed, so content is
+      // never hidden for no-JS visitors or reduced-motion users (see global.css).
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('reveal-armed');
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+        );
+        document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      }
+    </script>
   </body>
 </html>
