@@ -18,9 +18,10 @@
   --font-serif: "Newsreader", ui-serif, Georgia, serif;
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: 1.5rem;
-  --radius-block: 2rem;
-  --radius-section: 2.5rem;
+  /* Grounded, robust radii (was 1.5/2/2.5rem, which read as toy-like). */
+  --radius-card: 0.75rem;
+  --radius-block: 0.85rem;
+  --radius-section: 1rem;
 }
 
 :root {
@@ -51,6 +52,13 @@ h1, h2, h3, .font-display {
   color: white;
 }
 
+/* Visible keyboard focus in the brand rose (accessibility). */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-rose);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* Subtle film-grain texture across the whole viewport (1.8% opacity). */
 body::before {
   content: "";
@@ -71,46 +79,44 @@ body::before {
     border: 1px solid color-mix(in srgb, var(--color-forest) 14%, transparent);
   }
 
-  /* Primary pill CTA with a forest->rose gradient surface. */
+  /* Primary CTA: solid forest, moderate radius, grounded (was a gradient pill). */
   .zen-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 9999px;
-    padding: 0.85rem 1.75rem;
+    border-radius: 0.6rem;
+    padding: 0.8rem 1.6rem;
     font-weight: 500;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     color: var(--color-cream-soft);
-    background-image: linear-gradient(120deg, var(--color-forest), var(--color-rose));
-    box-shadow: 0 10px 30px -12px color-mix(in srgb, var(--color-forest) 60%, transparent);
-    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, letter-spacing 0.3s ease;
+    background: var(--color-forest);
+    box-shadow: 0 1px 2px rgba(18, 52, 37, 0.18);
+    transition: background 0.2s ease, transform 0.2s ease;
   }
   .zen-btn:hover {
-    transform: translateY(-2px);
-    letter-spacing: 0.06em;
-    box-shadow: 0 18px 40px -14px color-mix(in srgb, var(--color-forest) 70%, transparent);
+    background: var(--color-forest-deep);
+    transform: translateY(-1px);
   }
 
-  /* Ghost pill: transparent with a sage border. */
+  /* Secondary CTA: solid outline, same footprint, no glass blur. */
   .ghost-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 9999px;
-    padding: 0.85rem 1.75rem;
-    font-weight: 400;
-    letter-spacing: 0.02em;
+    border-radius: 0.6rem;
+    padding: 0.8rem 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
     color: var(--color-forest);
-    background: color-mix(in srgb, var(--color-forest) 3%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-forest) 22%, transparent);
-    backdrop-filter: blur(6px);
-    transition: transform 0.3s ease, background 0.3s ease;
+    background: transparent;
+    border: 1.5px solid color-mix(in srgb, var(--color-forest) 30%, transparent);
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
   .ghost-btn:hover {
-    transform: translateY(-2px);
-    background: color-mix(in srgb, var(--color-forest) 8%, transparent);
+    background: color-mix(in srgb, var(--color-forest) 6%, transparent);
+    border-color: color-mix(in srgb, var(--color-forest) 45%, transparent);
   }
 
   /* Uppercase tracked eyebrow label. */
@@ -121,6 +127,145 @@ body::before {
     font-weight: 500;
     color: var(--color-rose);
   }
+
+  /* Opt-in accent motif: a small rotated square before the eyebrow text. */
+  .eyebrow-mark::before {
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-right: 0.9em;
+    background: currentColor;
+    vertical-align: 0.08em;
+    transform: rotate(45deg);
+  }
+
+  /* Hairline rule in the forest ink, for editorial dividers. */
+  .rule {
+    height: 1px;
+    background: color-mix(in srgb, var(--color-forest) 18%, transparent);
+  }
+}
+
+/* Hero CTAs on the dark photograph: a light solid primary and a cream outline. */
+@layer components {
+  .hero-cta-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.6rem;
+    padding: 0.8rem 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--color-forest-deep);
+    background: var(--color-cream);
+    box-shadow: 0 1px 2px rgba(18, 52, 37, 0.25);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .hero-cta-light:hover {
+    background: #ffffff;
+    transform: translateY(-1px);
+  }
+  .hero-cta-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.6rem;
+    padding: 0.8rem 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--color-cream);
+    background: transparent;
+    border: 1.5px solid rgba(246, 239, 223, 0.45);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .hero-cta-ghost:hover {
+    background: rgba(246, 239, 223, 0.12);
+    border-color: rgba(246, 239, 223, 0.7);
+  }
+
+  /* A physical photo print: white matte, slight lift. Used for candid snapshots. */
+  .snapshot {
+    background: #ffffff;
+    padding: 0.5rem 0.5rem 0.75rem;
+    border-radius: 0.35rem;
+    box-shadow:
+      0 16px 34px -14px rgba(28, 28, 34, 0.4),
+      0 2px 6px rgba(28, 28, 34, 0.12);
+  }
+}
+
+/* One-time cinematic settle on the hero photograph. */
+@keyframes heroSettle {
+  from { transform: scale(1.05); }
+  to { transform: scale(1); }
+}
+.hero-settle {
+  animation: heroSettle 2.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-settle { animation: none; }
+}
+
+/* Staggered entrance reveal. Apply .rise and set an inline animation-delay. */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+.rise {
+  opacity: 0;
+  animation: riseIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise { opacity: 1; animation: none; }
+}
+
+/*
+  Scroll-triggered reveal. Elements marked .reveal stay fully visible unless the
+  page script arms them (html.reveal-armed), so content never hides without JS.
+  Stagger with an inline transition-delay.
+*/
+html.reveal-armed .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  /* box-shadow rides along so hover lifts on revealed cards stay smooth. */
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.3s ease;
+}
+html.reveal-armed .reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero scroll cue: a hairline that draws down, then releases. */
+@keyframes cueDraw {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-cue {
+  animation: cueDraw 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
+}
+
+/* Editorial drop cap for a lead paragraph (.drop-cap-first targets rendered
+   Markdown, where the first child paragraph cannot be classed directly). */
+.drop-cap-first > p:first-child::first-letter,
+.drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 3.3em;
+  line-height: 0.82;
+  padding-right: 0.14em;
+  color: var(--color-forest);
 }
 
 @media (prefers-reduced-motion: reduce) {

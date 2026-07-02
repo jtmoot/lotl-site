@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+
+// Story-forward pull quote (Stacey wants Home to lead with a member's voice).
+// FILLER: the quote text and season line below are placeholders until Stacey
+// supplies a real member quote. Swap the two constants; the layout is final.
+// The story link is live: it points at the newest non-draft post that features
+// a member (has `attribution`), so it follows the collection automatically.
+const QUOTE =
+  'I was so nervous I almost did not come. Three Mondays in, I had a standing foursome and a group chat that never stops. This league gave me my favorite day of the week.';
+const QUOTE_SEASON = 'Season 1 member';
+
+const posts = (await getCollection('stories', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const featured = posts.find((post) => post.data.attribution);
+const name = featured?.data.attribution ?? 'A member';
+const href = featured ? `/stories/${featured.id}` : '/stories';
+const linkLabel = featured ? `Read ${name}'s story` : 'Read the stories';
+---
+
+<section class="bg-forest-deep py-24 sm:py-28">
+  <div class="mx-auto max-w-4xl px-6 text-center">
+    <p class="eyebrow eyebrow-mark text-blush reveal">From the league</p>
+
+    <blockquote class="mt-8 reveal" style="transition-delay:120ms">
+      <p class="font-serif text-3xl font-light italic leading-[1.2] text-cream sm:text-4xl lg:text-[2.75rem]">
+        &ldquo;{QUOTE}&rdquo;
+      </p>
+    </blockquote>
+
+    <div class="mt-10 flex flex-col items-center gap-6 reveal" style="transition-delay:220ms">
+      <div class="flex w-full max-w-xs items-center gap-4" aria-hidden="true">
+        <span class="h-px flex-1 bg-cream/20"></span>
+        <span class="h-1.5 w-1.5 rotate-45 bg-rose"></span>
+        <span class="h-px flex-1 bg-cream/20"></span>
+      </div>
+      <p class="text-sm uppercase tracking-[0.18em] text-cream/70">
+        {name}, {QUOTE_SEASON}
+      </p>
+      <a
+        href={href}
+        class="inline-flex items-center gap-2 text-sm font-medium tracking-wide text-blush underline-offset-4 transition-colors hover:text-cream hover:underline"
+      >
+        {linkLabel}
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>

@@ -21,16 +21,16 @@ const isActive = (href: string) =>
   href === '/' ? path === '/' : path.startsWith(href);
 ---
 
-<header class="fixed inset-x-0 top-0 z-40 px-3 pt-3">
+<header class="fixed inset-x-0 top-0 z-40 border-b border-forest/12 bg-cream/90 backdrop-blur-md">
   <nav
     aria-label="Primary"
-    class="liquid-glass mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full px-4 py-2.5 shadow-[0_8px_30px_-12px_rgba(26,74,51,0.25)]"
+    class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3"
   >
     <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="Ladies on the Links home">
       <Image
         src={logo}
         alt="Ladies on the Links"
-        class="h-12 w-auto"
+        class="h-10 w-auto"
         loading="eager"
       />
       <span class="hidden font-serif text-lg leading-none text-forest sm:inline lg:hidden xl:inline">
@@ -82,7 +82,7 @@ const isActive = (href: string) =>
     id="mobile-menu"
     data-nav="mobile"
     hidden
-    class="liquid-glass mx-auto mt-2 max-w-6xl rounded-3xl p-4 lg:hidden"
+    class="border-t border-forest/12 bg-cream px-5 py-4 lg:hidden"
   >
     <ul class="flex flex-col gap-1">
       {[...links, register].map((l) => (
@@ -100,7 +100,7 @@ const isActive = (href: string) =>
   </div>
 </header>
 <!-- spacer so fixed nav doesn't overlap content -->
-<div aria-hidden="true" class="h-20"></div>
+<div aria-hidden="true" class="h-16"></div>
 
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
