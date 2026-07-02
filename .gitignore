@@ -44,3 +44,7 @@ __pycache__/
 .idea/
 .vscode/
 *.swp
+
+# Internal planning docs — kept local, not published to the public repo
+/prd.md
+/lotl-build-inputs.md
