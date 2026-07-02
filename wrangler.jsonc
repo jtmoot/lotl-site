@@ -1,0 +1,11 @@
+{
+  // Deploy config for Cloudflare Workers (static-assets site).
+  // `npm run build` emits the site to ./dist, then `npx wrangler deploy`
+  // uploads that folder as static assets. No server-side Worker code.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lotl-site",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "./dist"
+  }
+}
