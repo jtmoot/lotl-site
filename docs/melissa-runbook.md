@@ -17,6 +17,13 @@ Stacey. Anything outside these three tasks is not yours to worry about.
 > Screenshots are coming. Anywhere you see `[screenshot: ...]`, a picture will be
 > added later so you can match what is on your screen.
 
+> **Stuck at any point? Ask an AI.** Open ChatGPT or Claude in another tab, paste
+> this whole guide in, and tell it what you are trying to do (for example, "I am
+> on the step about uploading a photo and I cannot find the Add file button").
+> It can walk you through it in plain language, any time of day, without needing
+> to reach Josh or Stacey. This guide is written so an AI can pick up right where
+> you are.
+
 ---
 
 ## How the site updates (the 30-second version)
@@ -252,3 +259,27 @@ update with confidence. 💚
 
 Every task ends the same way: click the green **Commit changes** button. That is
 your save. Welcome aboard, and thank you for keeping the site alive. ⛳
+
+---
+
+## For Josh (or whoever runs the repo): giving Melissa access
+
+Melissa needs a free GitHub account and **write access** to the repo before any
+of the above works. One-time setup, about two minutes:
+
+1. Ask Melissa to make a free account at **github.com** and send you her username.
+2. Go to the repo on GitHub.com, then **Settings** (top of the repo) then
+   **Collaborators and teams** in the left sidebar. (You may be asked for your
+   password or a 2FA code.)
+3. Click **Add people**, type her GitHub username, and pick the **Write** role.
+   Write lets her edit files and commit; it does **not** let her change repo
+   settings, manage access, or delete the repo.
+4. She gets an email invite. Once she clicks **Accept**, send her the repo link
+   and this guide. She is ready.
+
+To remove access later, the same Collaborators page has a **Remove** button next
+to her name.
+
+> **Note if the repo is public:** anyone can *view* the code and *fork* it, but
+> only invited collaborators like Melissa can actually change the live site. Being
+> public does not give strangers edit access.
