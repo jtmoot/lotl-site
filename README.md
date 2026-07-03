@@ -18,6 +18,23 @@ web browser on GitHub.com. See the step-by-step guide:
 
 ---
 
+## Editing with an AI coding agent (advanced)
+
+Every push to the `main` branch **automatically rebuilds and redeploys the live
+site** on Cloudflare, usually within about two minutes. There are no servers or
+deploy steps to manage: the whole pipeline is `git push` to `main` -> Cloudflare
+build -> live at ladiesonthelinksgolf.com.
+
+That means you can make changes with an AI coding tool and see them go live just
+by pushing. Clone this repo, open it in something like
+[Claude Code](https://claude.com/claude-code), OpenAI Codex, or Cursor, and
+describe the change in plain language ("add a new FAQ about parking", "swap the
+hero photo for this one", "start a new member spotlight"). The agent edits the
+files; you commit and push to `main`, and Cloudflare handles the rest. Run
+`npm run dev` first if you want to preview locally before pushing.
+
+---
+
 ## Developer setup
 
 Requires [Node.js](https://nodejs.org) 20+.
