@@ -1,0 +1,205 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+// League policies, transcribed from Stacey's Weather and Cancellation policy
+// docs (2026-07-03). Substance preserved as written; normalizations applied
+// per the design spec: official email everywhere, the Lessons "after 24 hours"
+// typo corrected to "within", no em dashes, brand-green hearts.
+const EMAIL = 'ladiesonthelinks.league@gmail.com';
+const FACEBOOK_URL = 'https://www.facebook.com/Ladiesonthelinksgolfleague/';
+const BOOKWHEN_URL = 'https://bookwhen.com/ladiesonthelinks';
+---
+
+<Layout
+  title="Policies · Ladies on the Links"
+  description="Weather and cancellation policies for the Ladies on the Links women's golf league at North Hill Country Club in Duxbury, MA."
+>
+  <PageIntro
+    eyebrow="The fine print, with love"
+    title="League policies"
+    lede="How we handle weather calls and booking cancellations. For the quick version, see the FAQ."
+  />
+
+  <!-- Weather policy -->
+  <section id="weather" class="mx-auto max-w-2xl scroll-mt-24 px-6 pb-16">
+    <div class="space-y-5 leading-relaxed text-slate reveal">
+      <h2 class="font-serif text-3xl font-light text-forest">Weather policy</h2>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">Our philosophy</h3>
+      <p>
+        <strong class="font-medium text-forest">We play in the rain.</strong> Golf is an outdoor sport, and a little
+        drizzle is part of the game. That said, we will never ask you to play in unsafe conditions. Lightning, severe
+        storms, or truly unplayable weather are a different story. Our goal is to give you as much notice as possible
+        while still enjoying every Monday we can.
+      </p>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">League play: when we cancel</h3>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>
+          League play is cancelled only if conditions are dangerous: lightning, severe thunderstorms, or course closure
+          by North Hill Country Club.
+        </li>
+        <li>Light or steady rain alone is not a cancellation. People play golf in the rain, and we will too.</li>
+        <li>
+          The final call is made by our pro, <strong class="font-medium text-forest">Christian Grace</strong>, in
+          coordination with North Hill Country Club. His decision is final.
+        </li>
+      </ul>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">How and when you will hear from us</h3>
+      <p>We know last-minute calls are stressful. Here is our commitment to you:</p>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>
+          <strong class="font-medium text-forest">Decision deadline:</strong> a go or no-go decision will be
+          communicated no later than 1 hour before your scheduled tee time.
+        </li>
+        <li>
+          <strong class="font-medium text-forest">Where to look:</strong> all weather updates are sent by league email
+          and posted to our
+          <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-rose underline-offset-4 hover:underline">Facebook page</a>.
+          These are the only official channels, so there is no need to check anywhere else.
+        </li>
+        <li>
+          <strong class="font-medium text-forest">What if it changes after you have left?</strong> Christian will make
+          the call at the course if conditions deteriorate after play begins.
+        </li>
+      </ul>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">Clinics and lessons</h3>
+      <p>
+        Clinics have a lower threshold for cancellation. We want beginners and developing players to have the best
+        possible learning experience, and rain makes that harder. If your clinic is cancelled:
+      </p>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>You will be offered a makeup slot.</li>
+        <li>
+          If neither makeup date works for you, please email us at
+          <a href={`mailto:${EMAIL}`} class="font-medium text-rose underline-offset-4 hover:underline">{EMAIL}</a>
+          and we will find a solution.
+        </li>
+      </ul>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">Refunds and makeup sessions</h3>
+      <p>We do not offer cash refunds for weather-related cancellations. Here is what we do offer:</p>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>
+          <strong class="font-medium text-forest">League play cancelled by the club:</strong> you receive credit toward
+          a future session or a designated makeup date.
+        </li>
+        <li>
+          <strong class="font-medium text-forest">League play proceeds but you choose not to play:</strong> no refund
+          or credit is issued. We understand, everyone has their limit! But we cannot hold spots for weather-preference
+          opt-outs.
+        </li>
+        <li>
+          <strong class="font-medium text-forest">Clinic or tee times cancelled by the club:</strong> full makeup
+          session offered at no additional cost.
+        </li>
+      </ul>
+      <p>We will always do right by our members. If something feels off, reach out to us directly.</p>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">What to bring on a rainy day</h3>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>Rain jacket or poncho (golf-specific ones let you swing freely)</li>
+        <li>Extra golf gloves, wet grips are slippery</li>
+        <li>Waterproof golf shoes or extra socks</li>
+        <li>A good attitude. Some of the best rounds happen in the rain 💚</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Diamond divider (accent motif shared with Home). -->
+  <div class="mx-auto flex max-w-xs items-center gap-4 px-6 pb-16" aria-hidden="true">
+    <span class="rule flex-1"></span>
+    <span class="h-1.5 w-1.5 rotate-45 bg-rose"></span>
+    <span class="rule flex-1"></span>
+  </div>
+
+  <!-- Cancellation policy -->
+  <section id="cancellation" class="mx-auto max-w-2xl scroll-mt-24 px-6 pb-16">
+    <div class="space-y-5 leading-relaxed text-slate reveal">
+      <h2 class="font-serif text-3xl font-light text-forest">Cancellation policy</h2>
+      <p class="text-sm tracking-wide text-rose">Tee times, lessons, and clinics</p>
+
+      <p>
+        <strong class="font-medium text-forest">Book your spot, and you have 24 hours to cancel. After that, you are
+        locked in.</strong> Your booking holds your spot and supports the league so we keep all of our designated tee
+        times, so please book with intention. We would love to see you every Monday, or as often as you can commit!
+        🏌️‍♀️💚
+      </p>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">League tee times</h3>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>
+          <strong class="font-medium text-forest">Within 24 hours of booking:</strong> cancel directly through your
+          Bookwhen confirmation email. Your spot is automatically released to the waitlist.
+        </li>
+        <li>
+          <strong class="font-medium text-forest">No-shows:</strong> if you do not show and do not reach out, your spot
+          is forfeited and cannot be offered to anyone on the waitlist. For this reason, we ask you to cancel whenever
+          possible.
+        </li>
+      </ul>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">Lessons and clinics</h3>
+      <p>The same 24-hour policy applies to all lessons and clinics booked through Ladies on the Links:</p>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>
+          <strong class="font-medium text-forest">Within 24 hours of booking:</strong> cancel through your booking
+          confirmation. Your spot is released to others on the waitlist.
+        </li>
+        <li><strong class="font-medium text-forest">No-shows:</strong> your session is forfeited.</li>
+      </ul>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">How to cancel</h3>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>
+          <strong class="font-medium text-forest">Through Bookwhen:</strong> open your original booking confirmation
+          email and click the cancellation link. This is the fastest way and automatically opens your spot.
+        </li>
+        <li><strong class="font-medium text-forest">Text Stacey:</strong> for clarification or anything urgent.</li>
+        <li>
+          <strong class="font-medium text-forest">Email:</strong>
+          <a href={`mailto:${EMAIL}`} class="font-medium text-rose underline-offset-4 hover:underline">{EMAIL}</a>
+        </li>
+      </ul>
+      <p>
+        Please do not cancel by posting on Facebook or by DM on social media. Those messages can be missed. Text or
+        email is always the right move.
+      </p>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">Want to swap your tee time?</h3>
+      <p>
+        If you need to move to a different time slot rather than cancel outright, Bookwhen supports transfers. Open
+        your confirmation email and look for the transfer option. You can move to any available future slot. This is a
+        much better option than cancelling and losing your spot, especially if the session is sold out.
+      </p>
+      <p>Transfers are available once per booking. If you need help with this, reach out and we will walk you through it.</p>
+
+      <h3 class="pt-2 font-serif text-xl text-forest">Why no refunds?</h3>
+      <p>
+        We keep our pricing accessible because we run lean. Every session fee goes directly toward the course, the
+        cart, league activities, and making Monday nights something worth showing up for. When a spot goes unfilled at
+        the last minute, that cost is absorbed. There is no way to recover it.
+      </p>
+      <p>
+        This is standard practice across golf leagues. We appreciate your understanding and your commitment to the
+        league.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-2xl px-6 pb-24">
+    <div class="rounded-xl border border-forest/10 bg-blush/10 p-7 text-center reveal">
+      <p class="leading-relaxed text-slate">
+        Questions? Reach us at
+        <a href={`mailto:${EMAIL}`} class="font-medium text-rose underline-offset-4 hover:underline">{EMAIL}</a>.
+        Book your spot at
+        <a href={BOOKWHEN_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-rose underline-offset-4 hover:underline">bookwhen.com/ladiesonthelinks</a>
+        and <a href="/register" class="font-medium text-rose underline-offset-4 hover:underline">register</a> so you
+        never miss a tee-time release.
+      </p>
+    </div>
+  </section>
+</Layout>
