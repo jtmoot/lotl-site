@@ -16,6 +16,7 @@ import hero from '../../assets/photos/hero-course.jpg';
   <!-- Dual scrim: left band for headline legibility, base fade to ground the photo. -->
   <div class="absolute inset-0 -z-10 bg-gradient-to-r from-forest-deep/90 via-forest-deep/45 to-transparent"></div>
   <div class="absolute inset-x-0 bottom-0 -z-10 h-2/3 bg-gradient-to-t from-forest-deep/85 to-transparent"></div>
+  <div data-spotlight class="hero-spotlight pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
 
   <div class="mx-auto w-full max-w-6xl px-6 pb-16 pt-32 sm:pb-20 lg:pb-24">
     <div class="max-w-3xl">
@@ -45,3 +46,37 @@ import hero from '../../assets/photos/hero-course.jpg';
     <span class="scroll-cue block h-14 w-px bg-cream/50"></span>
   </div>
 </section>
+
+<script>
+  // Cursor spotlight: lerp a soft light toward the pointer (see .hero-spotlight
+  // in global.css). Mouse-only and motion-gated; touch and reduced-motion
+  // visitors keep the plain photograph.
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const spot = document.querySelector<HTMLElement>('[data-spotlight]');
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
+  const motionOk = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (hero && spot && finePointer && motionOk) {
+    let targetX = 0.5, targetY = 0.4;
+    let x = targetX, y = targetY;
+    let raf = 0;
+
+    const tick = () => {
+      x += (targetX - x) * 0.08;
+      y += (targetY - y) * 0.08;
+      spot.style.setProperty('--spot-x', `${(x * 100).toFixed(2)}%`);
+      spot.style.setProperty('--spot-y', `${(y * 100).toFixed(2)}%`);
+      const settled = Math.abs(targetX - x) < 0.001 && Math.abs(targetY - y) < 0.001;
+      raf = settled ? 0 : requestAnimationFrame(tick);
+    };
+
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      targetX = (e.clientX - r.left) / r.width;
+      targetY = (e.clientY - r.top) / r.height;
+      spot.classList.add('is-lit');
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+    hero.addEventListener('pointerleave', () => spot.classList.remove('is-lit'));
+  }
+</script>
