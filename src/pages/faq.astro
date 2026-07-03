@@ -2,8 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import PageIntro from '../components/PageIntro.astro';
 
-// Drafted Q&A (build inputs §4), used verbatim. The weather answer is
-// provisional (confirm with Stacey) and flagged as such.
+// Drafted Q&A (build inputs §4), used verbatim, except the cancellation and
+// weather answers, which follow Stacey's published policies (see /policies).
+// An optional `link` renders a "Read the full policy" line after the answer.
 const faqs = [
   {
     q: 'Who is this league for?',
@@ -27,7 +28,8 @@ const faqs = [
   },
   {
     q: 'Can I cancel, and how?',
-    a: 'Yes. Cancel up to 24 hours before your tee time through your booking link, and your spot goes to the waitlist automatically. Within 24 hours, text or email Stacey. All sales are final, but life happens and we handle true emergencies case by case.',
+    a: 'You have 24 hours after booking to cancel through your Bookwhen confirmation email, and your spot goes to the waitlist automatically. After that you are locked in, and no-shows forfeit their spot. Need a different time instead? Bookwhen lets you transfer your booking to another open slot, once per booking. For anything urgent, text Stacey or email ladiesonthelinks.league@gmail.com. Please do not cancel through Facebook posts or DMs, those can be missed.',
+    link: '/policies#cancellation',
   },
   {
     q: 'Can I see who is golfing?',
@@ -43,8 +45,8 @@ const faqs = [
   },
   {
     q: 'What if it rains?',
-    a: 'Golf is a rain-or-shine sport, and we play through light weather. If conditions are truly unsafe (thunder, lightning, heavy storms), Stacey will email the group as early as possible to cancel or move that Monday. When in doubt, check your inbox before heading to the course. Weather cancellations called by the league are handled case by case.',
-    provisional: true,
+    a: 'We play in the rain. Light or steady rain is not a cancellation, and league play is called off only when conditions are dangerous or the course closes. Our pro, Christian Grace, makes the final call with North Hill Country Club, and you will hear from us by league email and Facebook no later than 1 hour before your tee time. Clinics cancel more readily, and you will always be offered a makeup slot.',
+    link: '/policies#weather',
   },
 ];
 ---
@@ -70,8 +72,10 @@ const faqs = [
             </summary>
             <div class="px-6 pb-6 leading-relaxed text-slate">
               <p>{f.a}</p>
-              {f.provisional && (
-                <p class="mt-2 text-xs italic text-rose/80">This policy is being finalized; check your email for the latest.</p>
+              {f.link && (
+                <p class="mt-2 text-sm">
+                  <a href={f.link} class="font-medium text-rose underline-offset-4 hover:underline">Read the full policy &rarr;</a>
+                </p>
               )}
             </div>
           </details>

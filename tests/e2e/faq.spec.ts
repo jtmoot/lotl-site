@@ -16,7 +16,20 @@ test('FAQ covers tee-time cadence, register-first, and costs', async ({ page }) 
   await expect(main).toContainText('$35 per lesson');
 });
 
-test('the weather answer is present (provisional placeholder)', async ({ page }) => {
+test('cancellation answer states the strict 24-hours-after-booking rule', async ({ page }) => {
   await page.goto('/faq');
-  await expect(page.locator('main')).toContainText('rain', { ignoreCase: true });
+  const main = page.locator('main');
+  await expect(main).toContainText('24 hours after booking');
+  await expect(main).toContainText('locked in');
+  // The old, contradictory rule must be gone.
+  await expect(main).not.toContainText('24 hours before your tee time');
+});
+
+test('weather answer matches the published policy', async ({ page }) => {
+  await page.goto('/faq');
+  const main = page.locator('main');
+  await expect(main).toContainText('We play in the rain');
+  await expect(main).toContainText('Christian Grace');
+  await expect(main).not.toContainText('rain-or-shine sport');
+  await expect(page.locator('main a[href^="/policies"]').first()).toBeAttached();
 });
