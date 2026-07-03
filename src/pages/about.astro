@@ -1,12 +1,53 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import Layout from '../layouts/Layout.astro';
 import PageIntro from '../components/PageIntro.astro';
+import joshPhoto from '../assets/photos/team/josh.jpg';
+import melissaPhoto from '../assets/photos/team/melissa.jpg';
+import staceyPhoto from '../assets/photos/team/stacey.jpg';
 
 // Drafted copy (build inputs §4), used verbatim:
 //  - League story  = the Welcome / About paragraph.
 //  - Meet the Pro  = the About / Meet the Pro paragraph.
 // Hard copy constraint: our pro is "Christian Grace" (PGA Associate).
 // Never "our PGA pro", never "Class A". No em dashes anywhere.
+
+// Meet the Team. Titles and bios are drafts for Stacey to edit. A null photo
+// renders the swap-later placeholder treatment (same as Christian's below).
+type TeamMember = {
+  name: string;
+  title: string;
+  bio: string;
+  photo: ImageMetadata | null;
+};
+
+const team: TeamMember[] = [
+  {
+    name: 'Stacey',
+    title: 'Founder & League Director',
+    photo: staceyPhoto,
+    bio: 'Stacey built this league on a simple idea: women, golf, and a Monday worth looking forward to. If you got a warm welcome at the first tee, that was probably her.',
+  },
+  {
+    name: 'Melissa',
+    title: 'Co-Organizer',
+    photo: melissaPhoto,
+    bio: 'Melissa keeps Monday nights humming, from tee sheets to contests to making sure no one ever plays alone.',
+  },
+  {
+    name: 'Phoebe Huff',
+    title: 'League Team',
+    photo: null,
+    bio: 'Phoebe brings the energy and the extra hands that make every league night feel easy.',
+  },
+  {
+    name: 'Josh',
+    title: 'Web & Technology',
+    photo: joshPhoto,
+    bio: 'Josh builds and runs this website, keeping tee times, events, and league news one click away.',
+  },
+];
 ---
 
 <Layout
@@ -32,6 +73,61 @@ import PageIntro from '../components/PageIntro.astro';
         <strong class="font-medium text-forest">All skill levels welcome. No judgment, just joy.</strong> 💚
       </p>
     </div>
+  </section>
+
+  <!-- Meet the Team -->
+  <section data-section="team" class="mx-auto max-w-4xl px-6 pb-16">
+    <h2 class="eyebrow eyebrow-mark reveal">Meet the team</h2>
+    <p class="mt-3 max-w-2xl font-serif text-3xl font-light text-forest reveal">
+      The women (and one webmaster) behind your Mondays.
+    </p>
+    <ul class="mt-8 grid gap-8 sm:grid-cols-2">
+      {team.map((member, i) => (
+        <li
+          class="overflow-hidden rounded-xl border border-forest/10 bg-cream-soft/60 reveal"
+          style={`transition-delay:${(i % 2) * 90}ms`}
+        >
+          {member.photo ? (
+            <Image
+              src={member.photo}
+              alt={`${member.name}, ${member.title} at Ladies on the Links`}
+              widths={[320, 640]}
+              sizes="(min-width: 640px) 50vw, 100vw"
+              class="aspect-square w-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <figure class="m-0">
+              <div
+                class="flex aspect-square w-full items-center justify-center bg-forest/5"
+                aria-hidden="true"
+              >
+                <svg
+                  width="88"
+                  height="88"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-forest/40"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+              </div>
+              <figcaption class="mt-2 text-center text-xs italic text-rose/80">Photo coming soon</figcaption>
+            </figure>
+          )}
+          <div class="p-6">
+            <h3 class="font-serif text-2xl font-light text-forest">{member.name}</h3>
+            <p class="mt-1 text-sm tracking-wide text-rose">{member.title}</p>
+            <p class="mt-3 text-sm leading-relaxed text-slate">{member.bio}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
   </section>
 
   <!-- Diamond divider (accent motif shared with Home). -->

@@ -26,3 +26,15 @@ test('the league story and a swappable placeholder headshot are present', async 
   await expect(main).toContainText('No judgment, just joy');
   await expect(main).toContainText('Photo coming soon'); // placeholder, swapped for real photo later
 });
+
+test('Meet the Team lists the four organizers with titles', async ({ page }) => {
+  await page.goto('/about');
+  const team = page.locator('[data-section="team"]');
+  await expect(team).toContainText('Stacey');
+  await expect(team).toContainText('Founder & League Director');
+  await expect(team).toContainText('Melissa');
+  await expect(team).toContainText('Phoebe');
+  await expect(team).toContainText('Josh');
+  // Phoebe has no photo yet; her card carries the placeholder treatment.
+  await expect(team).toContainText('Photo coming soon');
+});
