@@ -1,6 +1,7 @@
 ---
 title: A Women's Golf Trip Abroad
 tagline: Scotland or Ireland. Links golf, sea air, and a trip built for us.
+date: 2027-06-01
 dateLabel: Summer 2027
 status: teaser
 ---
