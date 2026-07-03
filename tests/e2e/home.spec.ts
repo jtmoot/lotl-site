@@ -7,13 +7,13 @@ test('hero renders the drafted pitch copy', async ({ page }) => {
   await expect(page.locator('main')).toContainText('Every Monday', { ignoreCase: true });
 });
 
-test('the three feature cards link to Register, Schedule, and Gallery', async ({ page }) => {
+test('the three feature cards link to Register, Schedule, and League Life', async ({ page }) => {
   await page.goto('/');
   const cards = page.locator('[data-feature-cards] a[href]');
   await expect(cards).toHaveCount(3);
   await expect(page.locator('[data-feature-cards] a[href="/register"]')).toBeVisible();
   await expect(page.locator('[data-feature-cards] a[href="/schedule"]')).toBeVisible();
-  await expect(page.locator('[data-feature-cards] a[href="/gallery"]')).toBeVisible();
+  await expect(page.locator('[data-feature-cards] a[href="/league-life"]')).toBeVisible();
 });
 
 test('the four-stat bar shows the four exact stats', async ({ page }) => {

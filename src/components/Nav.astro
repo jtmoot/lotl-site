@@ -2,17 +2,16 @@
 import { Image } from 'astro:assets';
 import logo from '../assets/brand/logo.png';
 
-// The ten primary destinations, in order. The live tee sheet is deliberately
-// NOT here; it is a contextual link beside the Bookwhen embed on /schedule.
+// The eight primary destinations, in order (2026-07 consolidation: Stories +
+// Gallery live under League Life, FAQ lives under Contact). The live tee sheet
+// is deliberately NOT here; it is a contextual link on /schedule.
 const links = [
   { href: '/', label: 'Home' },
   { href: '/schedule', label: 'Schedule' },
   { href: '/events', label: 'Events' },
   { href: '/about', label: 'About' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/stories', label: 'Stories' },
+  { href: '/league-life', label: 'League Life' },
   { href: '/merch', label: 'Merch' },
-  { href: '/faq', label: 'FAQ' },
   { href: '/contact', label: 'Contact' },
 ];
 const register = { href: '/register', label: 'Register' };

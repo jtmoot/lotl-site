@@ -15,7 +15,7 @@ const posts = (await getCollection('stories', ({ data }) => !data.draft)).sort(
 );
 const featured = posts.find((post) => post.data.attribution);
 const name = featured?.data.attribution ?? 'A member';
-const href = featured ? `/stories/${featured.id}` : '/stories';
+const href = featured ? `/stories/${featured.id}` : '/league-life';
 const linkLabel = featured ? `Read ${name}'s story` : 'Read the stories';
 ---
 
