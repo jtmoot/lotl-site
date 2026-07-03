@@ -145,6 +145,17 @@ body::before {
     height: 1px;
     background: color-mix(in srgb, var(--color-forest) 18%, transparent);
   }
+
+  /* Card hover: gentle lift + deepened shadow. */
+  .card-lift {
+    transition:
+      translate 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.3s ease;
+  }
+  .card-lift:hover {
+    translate: 0 -4px;
+    box-shadow: 0 24px 50px -32px rgba(26, 74, 51, 0.45);
+  }
 }
 
 /* Hero CTAs on the dark photograph: a light solid primary and a cream outline. */
@@ -197,6 +208,22 @@ body::before {
   }
 }
 
+/* Cursor spotlight on the hero photograph: a soft cream light that lerps
+   toward the pointer. Armed by the Hero script only on fine-pointer devices
+   with motion allowed; otherwise the overlay stays transparent. */
+.hero-spotlight {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  background: radial-gradient(
+    520px circle at var(--spot-x, 50%) var(--spot-y, 40%),
+    rgba(246, 239, 223, 0.16),
+    transparent 70%
+  );
+}
+.hero-spotlight.is-lit {
+  opacity: 1;
+}
+
 /* One-time cinematic settle on the hero photograph. */
 @keyframes heroSettle {
   from { transform: scale(1.05); }
@@ -230,10 +257,13 @@ body::before {
 html.reveal-armed .reveal {
   opacity: 0;
   transform: translateY(20px);
-  /* box-shadow rides along so hover lifts on revealed cards stay smooth. */
+  /* box-shadow and translate ride along so .card-lift hovers on revealed
+     cards stay smooth (the lift uses `translate`, which composes with the
+     reveal's `transform` instead of fighting it). */
   transition:
     opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
     transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    translate 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.3s ease;
 }
 html.reveal-armed .reveal.revealed {

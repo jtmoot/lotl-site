@@ -54,8 +54,7 @@ const tiles = entries.flatMap((entry) =>
         {posts.map((post, i) => (
           <li
             class:list={[
-              'group overflow-hidden rounded-xl border border-forest/10 bg-cream-soft/60 reveal',
-              'transition-shadow duration-300 hover:shadow-[0_24px_50px_-32px_rgba(26,74,51,0.45)]',
+              'group overflow-hidden rounded-xl border border-forest/10 bg-cream-soft/60 reveal card-lift',
             ]}
             style={`transition-delay:${(i % 2) * 90}ms`}
           >
