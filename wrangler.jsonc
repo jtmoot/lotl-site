@@ -7,5 +7,14 @@
   "compatibility_date": "2025-01-01",
   "assets": {
     "directory": "./dist"
-  }
+  },
+  // Serve on the custom domain directly, not workers.dev. `custom_domain: true`
+  // makes wrangler create the Cloudflare custom domain + DNS + SSL on deploy.
+  // The placeholder apex A record (192.0.2.1) must be removed first or the apex
+  // domain creation conflicts.
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "ladiesonthelinksgolf.com", "custom_domain": true },
+    { "pattern": "www.ladiesonthelinksgolf.com", "custom_domain": true }
+  ]
 }
