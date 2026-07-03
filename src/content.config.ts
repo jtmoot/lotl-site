@@ -1,7 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
-import { noteSchema, galleryFields, storyFields } from './content/schemas';
+import { noteSchema, galleryFields, storyFields, eventFields } from './content/schemas';
 
 // Foundation sample collection. It exists to wire the schema seam end-to-end:
 // a malformed entry here fails `astro build`. Real collections (gallery #7,
@@ -38,4 +38,17 @@ const stories = defineCollection({
     }),
 });
 
-export const collections = { notes, gallery, stories };
+// Events: special happenings beyond weekly league play (Glo Golf, tournaments,
+// winter pop ups). No detail pages; the Events page renders each body inline.
+// The non-image fields mirror `eventEntrySchema` in ./content/schemas, which
+// the node schema tests parse against (image() is Astro-context-only).
+const events = defineCollection({
+  loader: glob({ base: './src/content/events', pattern: '**/*.md' }),
+  schema: ({ image }) =>
+    z.object({
+      image: image().optional(),
+      ...eventFields,
+    }),
+});
+
+export const collections = { notes, gallery, stories, events };

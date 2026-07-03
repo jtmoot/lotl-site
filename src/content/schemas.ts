@@ -79,3 +79,35 @@ export const storyEntrySchema = z.object({
 });
 
 export type Story = z.infer<typeof storyEntrySchema>;
+
+/**
+ * Event entry: the Events page (special events, not weekly league play).
+ *
+ * Same seam as gallery/stories: non-image fields live in `eventFields` so the
+ * build collection (`src/content.config.ts`) and this node-importable schema
+ * share one source of truth. The build collection swaps the string `image`
+ * validator for Astro's `image()` helper. Events have no detail pages; the
+ * Events page renders each entry's body inline on its card.
+ */
+export const eventFields = {
+  /** Display title, e.g. "Evening Glo Golf". */
+  title: z.string().min(1),
+  /** Event date. Omit while unannounced; the page shows "Date coming soon". */
+  date: z.coerce.date().optional(),
+  /** Free-text date override, e.g. "Summer 2027". Wins over `date` display. */
+  dateLabel: z.string().min(1).optional(),
+  /** One-line hook for the card. */
+  tagline: z.string().min(1),
+  /** Booking CTA target (Bookwhen URL or /schedule). Teasers omit it. */
+  bookingUrl: z.string().min(1).optional(),
+  /** upcoming = announced/bookable; teaser = dream stage; past = archived. */
+  status: z.enum(['upcoming', 'teaser', 'past']).default('upcoming'),
+  draft: z.boolean().default(false),
+};
+
+export const eventEntrySchema = z.object({
+  image: z.string().min(1).optional(),
+  ...eventFields,
+});
+
+export type EventEntry = z.infer<typeof eventEntrySchema>;
