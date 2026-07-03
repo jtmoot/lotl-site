@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 const PRIMARY_NAV = [
   'Home',
   'Schedule',
+  'Events',
   'About',
   'Gallery',
   'Stories',
@@ -19,7 +20,7 @@ test('home renders through the shell', async ({ page }) => {
   await expect(page.locator('main')).toContainText('all skill levels', { ignoreCase: true });
 });
 
-test('primary nav has exactly the nine destinations and excludes the tee sheet', async ({ page }) => {
+test('primary nav has exactly the ten destinations and excludes the tee sheet', async ({ page }) => {
   await page.goto('/');
   const items = page.locator('[data-nav="primary"] a');
   await expect(items).toHaveCount(PRIMARY_NAV.length);
