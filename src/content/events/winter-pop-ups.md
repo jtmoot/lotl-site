@@ -4,6 +4,7 @@ tagline: Indoor golf, clinics, and ways to keep swinging through the off season.
 date: 2026-12-01
 dateLabel: This winter
 status: teaser
+image: ../../assets/photos/events/winter.jpg
 ---
 
 Golf season does not have to end when New England says so. We are planning

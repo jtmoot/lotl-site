@@ -71,7 +71,7 @@ const dateLabel = (event: (typeof all)[number]) =>
                 {event.data.image && (
                   <Image
                     src={event.data.image}
-                    alt={`${event.data.title} at Ladies on the Links`}
+                    alt={`${event.data.title} event poster`}
                     widths={[480, 960]}
                     sizes="(min-width: 640px) 40vw, 100vw"
                     class="h-full min-h-56 w-full object-cover"
@@ -110,14 +110,28 @@ const dateLabel = (event: (typeof all)[number]) =>
         {teasers.map((event) => {
           const Content = rendered.get(event.id);
           return (
-            <li class="rounded-xl border border-dashed border-forest/20 bg-blush/10 p-7 sm:p-9 reveal">
-              <p class="eyebrow">{dateLabel(event)}</p>
-              <h3 class="mt-2 font-serif text-3xl font-light leading-snug text-forest">
-                {event.data.title}
-              </h3>
-              <p class="mt-2 font-serif text-lg italic text-rose">{event.data.tagline}</p>
-              <div class="mt-4 max-w-2xl space-y-3 leading-relaxed text-slate">
-                <Content />
+            <li class="overflow-hidden rounded-xl border border-dashed border-forest/20 bg-blush/10 reveal">
+              <div class:list={['grid', event.data.image && 'sm:grid-cols-[2fr_3fr]']}>
+                {event.data.image && (
+                  <Image
+                    src={event.data.image}
+                    alt={`${event.data.title} event poster`}
+                    widths={[480, 960]}
+                    sizes="(min-width: 640px) 40vw, 100vw"
+                    class="h-full min-h-56 w-full object-cover"
+                    loading="lazy"
+                  />
+                )}
+                <div class="p-7 sm:p-9">
+                  <p class="eyebrow">{dateLabel(event)}</p>
+                  <h3 class="mt-2 font-serif text-3xl font-light leading-snug text-forest">
+                    {event.data.title}
+                  </h3>
+                  <p class="mt-2 font-serif text-lg italic text-rose">{event.data.tagline}</p>
+                  <div class="mt-4 max-w-2xl space-y-3 leading-relaxed text-slate">
+                    <Content />
+                  </div>
+                </div>
               </div>
             </li>
           );

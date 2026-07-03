@@ -4,7 +4,7 @@ tagline: One last hurrah on the course to close out our summer season.
 dateLabel: Early October
 status: upcoming
 bookingUrl: /schedule
-image: ../../assets/photos/gallery/league-04.jpg
+image: ../../assets/photos/events/tournament.jpg
 ---
 
 The grand finale of Season 2. We are closing out the summer with a

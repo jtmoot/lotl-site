@@ -3,7 +3,7 @@ title: Evening Glo Golf
 tagline: Nine holes after dark with glow balls, lit fairways, and a whole lot of laughing.
 status: upcoming
 bookingUrl: /schedule
-image: ../../assets/photos/gallery/league-02.jpg
+image: ../../assets/photos/events/glo-golf.jpg
 ---
 
 Golf, but make it glow. We are lighting up North Hill for a night of glow-ball

@@ -1,0 +1,340 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --forest: #1a4a33;
+    --forest-deep: #123425;
+    --cream: #f6efdf;
+    --rose: #de809f;
+    --blush: #eba9be;
+    --glow: #f2dfae;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #333; display: grid; place-items: center; min-height: 100vh; }
+
+  .poster {
+    position: relative;
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 50% 108%, rgba(242, 223, 174, 0.14) 0%, rgba(242, 223, 174, 0) 55%),
+      radial-gradient(140% 100% at 50% -10%, #1d5239 0%, var(--forest-deep) 58%, #0c281c 100%);
+    font-family: 'Newsreader', Georgia, serif;
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stars i {
+    position: absolute; display: block; border-radius: 50%;
+    background: rgba(246, 239, 223, 0.7);
+  }
+
+  svg.lights { position: absolute; top: 0; left: 0; width: 100%; }
+
+  .logo {
+    margin-top: 150px;
+    width: 190px;
+    /* Recolor the dark-green logo to warm cream so it reads on the deep green. */
+    filter: brightness(0) invert(1) sepia(0.22) saturate(1.4) brightness(0.97);
+    opacity: 0.96;
+  }
+
+  .eyebrow {
+    margin-top: 92px;
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 21px;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em; /* balance the tracking so it centers optically */
+    color: rgba(246, 239, 223, 0.78);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin-top: 30px;
+    font-weight: 300;
+    font-size: 118px;
+    line-height: 1.04;
+    letter-spacing: 0.01em;
+    max-width: 900px;
+  }
+
+  .subline {
+    margin-top: 26px;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 46px;
+    color: var(--blush);
+  }
+
+  .hero { position: absolute; bottom: 118px; left: 0; right: 0; display: flex; justify-content: center; }
+
+  .bottomline {
+    position: absolute;
+    bottom: 64px; left: 0; right: 0;
+    font-size: 29px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: rgba(246, 239, 223, 0.88);
+  }
+  .bottomline .dot { color: var(--rose); padding: 0 12px; }
+</style>
+</head>
+<body>
+<div class="poster" id="poster">
+  <div class="stars" id="stars"></div>
+  <svg class="lights" id="lights" viewBox="0 0 1080 320" fill="none"></svg>
+
+  <img class="logo" src="logo.png" alt="" />
+  <div class="eyebrow" id="eyebrow"></div>
+  <h1 id="headline"></h1>
+  <div class="subline" id="subline"></div>
+
+  <div class="hero" id="hero"></div>
+  <div class="bottomline" id="bottomline"></div>
+</div>
+
+<script>
+  const EVENTS = {
+    'glo-golf': {
+      eyebrow: 'Ladies on the Links presents',
+      headline: 'Evening<br/>Glo Golf',
+      subline: 'nine holes under the lights',
+      bottom: ['North Hill Country Club', 'Date announced soon'],
+      lights: true,
+      hero: 'ball-glow',
+    },
+    'tournament': {
+      eyebrow: 'Ladies on the Links presents',
+      headline: 'Season-End<br/>Tournament',
+      subline: 'one last hurrah to close the season',
+      bottom: ['North Hill Country Club', 'Early October'],
+      lights: false,
+      hero: 'trophy',
+    },
+    'winter': {
+      eyebrow: 'Ladies on the Links presents',
+      headline: 'Winter<br/>Pop-Ups',
+      subline: 'indoor golf, clinics & off-season fun',
+      bottom: ['Dates rolling out all winter'],
+      lights: false,
+      hero: 'snow-ball',
+    },
+    'trip': {
+      eyebrow: 'A dream in the making',
+      headline: 'A Golf Trip<br/>Abroad',
+      subline: 'links golf, sea air, summer 2027',
+      bottom: ['Scotland or Ireland', 'Details to come'],
+      lights: false,
+      hero: 'dunes',
+    },
+  };
+
+  const key = new URLSearchParams(location.search).get('event') || 'glo-golf';
+  const cfg = EVENTS[key];
+
+  document.getElementById('eyebrow').textContent = cfg.eyebrow;
+  document.getElementById('headline').innerHTML = cfg.headline;
+  document.getElementById('subline').textContent = cfg.subline;
+  document.getElementById('bottomline').innerHTML = cfg.bottom
+    .map((s) => `<span>${s}</span>`)
+    .join('<span class="dot">·</span>');
+
+  /* Deterministic pseudo-random (seeded) so every render is identical. */
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  /* Stars */
+  const stars = document.getElementById('stars');
+  for (let i = 0; i < 46; i++) {
+    const s = document.createElement('i');
+    const size = 1.5 + rand() * 2.2;
+    s.style.width = s.style.height = size + 'px';
+    s.style.left = rand() * 1060 + 'px';
+    s.style.top = rand() * 760 + 'px';
+    s.style.opacity = 0.16 + rand() * 0.5;
+    stars.appendChild(s);
+  }
+
+  /* String lights: two sagging strands with glowing warm bulbs. */
+  if (cfg.lights) {
+    const svg = document.getElementById('lights');
+    svg.innerHTML = `
+      <defs>
+        <filter id="bulbGlow" x="-300%" y="-300%" width="700%" height="700%">
+          <feGaussianBlur stdDeviation="7" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>`;
+    const strand = (y0, sag, phase) => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M -20 ${y0} Q 540 ${y0 + sag} 1100 ${y0 - 14}`);
+      path.setAttribute('stroke', 'rgba(246,239,223,0.22)');
+      path.setAttribute('stroke-width', '2');
+      svg.appendChild(path);
+      for (let t = 0.045; t < 0.98; t += 0.062) {
+        const x = -20 + t * 1120;
+        const y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * (y0 + sag) + t * t * (y0 - 14);
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', x);
+        c.setAttribute('cy', y + 9);
+        c.setAttribute('r', 4.6 + ((t * 907 + phase) % 1) * 1.8);
+        c.setAttribute('fill', '#f7e3ae');
+        c.setAttribute('filter', 'url(#bulbGlow)');
+        c.setAttribute('opacity', 0.85);
+        svg.appendChild(c);
+      }
+    };
+    strand(58, 92, 0.2);
+    strand(128, 118, 0.7);
+  }
+
+  /* Hero graphics (SVG, all deterministic) */
+  const heroes = {
+    'ball-glow': `
+      <svg width="720" height="420" viewBox="0 0 720 420">
+        <defs>
+          <radialGradient id="halo" cx="50%" cy="46%" r="50%">
+            <stop offset="0%" stop-color="rgba(247,231,178,0.55)"/>
+            <stop offset="45%" stop-color="rgba(247,231,178,0.16)"/>
+            <stop offset="100%" stop-color="rgba(247,231,178,0)"/>
+          </radialGradient>
+          <radialGradient id="ball" cx="38%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#fffdf4"/>
+            <stop offset="55%" stop-color="#f7ecca"/>
+            <stop offset="100%" stop-color="#d9c58c"/>
+          </radialGradient>
+          <radialGradient id="ground" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(242,223,174,0.34)"/>
+            <stop offset="100%" stop-color="rgba(242,223,174,0)"/>
+          </radialGradient>
+          <pattern id="dimple" width="17" height="15" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+            <circle cx="4" cy="4" r="2.3" fill="rgba(160,140,90,0.20)"/>
+            <circle cx="12.5" cy="11" r="2.3" fill="rgba(160,140,90,0.16)"/>
+          </pattern>
+        </defs>
+        <ellipse cx="360" cy="358" rx="330" ry="52" fill="url(#ground)"/>
+        <circle cx="360" cy="168" r="150" fill="url(#halo)"/>
+        <rect x="349" y="258" width="22" height="66" rx="6" fill="#e8d9ae" opacity="0.9"/>
+        <path d="M 340 252 L 380 252 L 371 268 L 349 268 Z" fill="#efe2bd"/>
+        <circle cx="360" cy="168" r="92" fill="url(#ball)"/>
+        <circle cx="360" cy="168" r="92" fill="url(#dimple)"/>
+        <ellipse cx="330" cy="132" rx="34" ry="22" fill="rgba(255,255,248,0.65)"/>
+      </svg>`,
+    'trophy': `
+      <svg width="720" height="430" viewBox="0 0 720 430">
+        <defs>
+          <radialGradient id="halo2" cx="50%" cy="48%" r="52%">
+            <stop offset="0%" stop-color="rgba(247,224,160,0.4)"/>
+            <stop offset="100%" stop-color="rgba(247,224,160,0)"/>
+          </radialGradient>
+          <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f4dfa4"/>
+            <stop offset="45%" stop-color="#d9b96a"/>
+            <stop offset="100%" stop-color="#a8843c"/>
+          </linearGradient>
+          <radialGradient id="ground2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(242,223,174,0.30)"/>
+            <stop offset="100%" stop-color="rgba(242,223,174,0)"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="360" cy="372" rx="330" ry="48" fill="url(#ground2)"/>
+        <circle cx="360" cy="190" r="170" fill="url(#halo2)"/>
+        <!-- cup -->
+        <path d="M 285 96 L 435 96 L 424 208 Q 415 258 360 258 Q 305 258 296 208 Z" fill="url(#brass)"/>
+        <path d="M 283 108 Q 232 112 238 158 Q 243 196 296 200 L 292 172 Q 262 168 260 148 Q 258 128 286 126 Z" fill="url(#brass)" opacity="0.92"/>
+        <path d="M 437 108 Q 488 112 482 158 Q 477 196 424 200 L 428 172 Q 458 168 460 148 Q 462 128 434 126 Z" fill="url(#brass)" opacity="0.92"/>
+        <rect x="346" y="256" width="28" height="34" fill="url(#brass)"/>
+        <path d="M 316 290 L 404 290 L 412 322 L 308 322 Z" fill="url(#brass)"/>
+        <rect x="298" y="322" width="124" height="16" rx="4" fill="#8a6c30"/>
+        <ellipse cx="330" cy="128" rx="26" ry="42" fill="rgba(255,250,230,0.35)"/>
+        <!-- drifting leaves -->
+        <g opacity="0.85">
+          <path d="M 150 120 q 16 -20 34 -8 q -10 24 -34 8" fill="#c98a4b"/>
+          <path d="M 560 170 q 14 -18 30 -7 q -9 21 -30 7" fill="#b9743f" opacity="0.8"/>
+          <path d="M 505 60 q 12 -15 26 -6 q -8 18 -26 6" fill="#d8a05a" opacity="0.7"/>
+        </g>
+      </svg>`,
+    'snow-ball': `
+      <svg width="1080" height="430" viewBox="0 0 1080 430">
+        <defs>
+          <radialGradient id="warm" cx="50%" cy="52%" r="46%">
+            <stop offset="0%" stop-color="rgba(247,231,178,0.34)"/>
+            <stop offset="55%" stop-color="rgba(247,231,178,0.10)"/>
+            <stop offset="100%" stop-color="rgba(247,231,178,0)"/>
+          </radialGradient>
+          <radialGradient id="ball2" cx="38%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="60%" stop-color="#f3f0e4"/>
+            <stop offset="100%" stop-color="#cfc9b4"/>
+          </radialGradient>
+          <radialGradient id="drift" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(250,250,246,0.85)"/>
+            <stop offset="60%" stop-color="rgba(240,240,232,0.45)"/>
+            <stop offset="100%" stop-color="rgba(240,240,232,0)"/>
+          </radialGradient>
+          <pattern id="dimple2" width="17" height="15" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+            <circle cx="4" cy="4" r="2.3" fill="rgba(140,140,125,0.18)"/>
+            <circle cx="12.5" cy="11" r="2.3" fill="rgba(140,140,125,0.14)"/>
+          </pattern>
+        </defs>
+        <circle cx="540" cy="224" r="210" fill="url(#warm)"/>
+        <ellipse cx="540" cy="352" rx="360" ry="58" fill="url(#drift)"/>
+        <circle cx="540" cy="252" r="86" fill="url(#ball2)"/>
+        <circle cx="540" cy="252" r="86" fill="url(#dimple2)"/>
+        <ellipse cx="512" cy="220" rx="30" ry="20" fill="rgba(255,255,255,0.75)"/>
+        <g fill="rgba(250,250,248,0.55)">
+          <circle cx="200" cy="80" r="4"/><circle cx="340" cy="150" r="3"/><circle cx="150" cy="240" r="3.5"/>
+          <circle cx="700" cy="70" r="3"/><circle cx="840" cy="140" r="4"/><circle cx="920" cy="250" r="3"/>
+          <circle cx="280" cy="320" r="3"/><circle cx="780" cy="210" r="3.5"/><circle cx="620" cy="120" r="2.5"/>
+          <circle cx="480" cy="70" r="2.5"/><circle cx="820" cy="340" r="3"/><circle cx="120" cy="150" r="2.5"/>
+        </g>
+      </svg>`,
+    'dunes': `
+      <svg width="1080" height="430" viewBox="0 0 1080 430">
+        <defs>
+          <linearGradient id="duneA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(210,200,164,0.34)"/>
+            <stop offset="100%" stop-color="rgba(210,200,164,0.04)"/>
+          </linearGradient>
+          <linearGradient id="duneB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(233,222,186,0.5)"/>
+            <stop offset="100%" stop-color="rgba(233,222,186,0.08)"/>
+          </linearGradient>
+          <radialGradient id="break" cx="50%" cy="30%" r="42%">
+            <stop offset="0%" stop-color="rgba(247,236,200,0.30)"/>
+            <stop offset="60%" stop-color="rgba(247,236,200,0.08)"/>
+            <stop offset="100%" stop-color="rgba(247,236,200,0)"/>
+          </radialGradient>
+        </defs>
+        <circle cx="540" cy="245" r="235" fill="url(#break)"/>
+        <path d="M 0 300 Q 220 240 410 282 Q 620 328 840 272 Q 970 242 1080 268 L 1080 430 L 0 430 Z" fill="url(#duneA)"/>
+        <path d="M 0 356 Q 260 300 520 338 Q 770 374 1080 322 L 1080 430 L 0 430 Z" fill="url(#duneB)"/>
+        <!-- distant flag on the far dune -->
+        <g opacity="0.95">
+          <rect x="773" y="216" width="3.5" height="58" fill="#f6efdf" opacity="0.9"/>
+          <path d="M 776 216 L 818 227 L 776 238 Z" fill="#de809f"/>
+        </g>
+        <!-- sea line fading toward the edges -->
+        <path d="M 60 254 L 1020 238" stroke="rgba(246,239,223,0.22)" stroke-width="2" stroke-linecap="round"/>
+      </svg>`,
+  };
+  document.getElementById('hero').innerHTML = heroes[cfg.hero];
+
+  /* Winter + trip don't use the night-sky stars as heavily; soften them. */
+  if (key === 'trip') document.getElementById('stars').style.opacity = 0.35;
+</script>
+</body>
+</html>
