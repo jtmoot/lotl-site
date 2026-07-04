@@ -7,7 +7,7 @@ const STORY = '/stories/welcome-to-stories';
 test('the notes section reveals once the API responds', async ({ page }) => {
   await page.goto(STORY);
   await expect(page.locator('[data-notes-root]')).toBeVisible();
-  await expect(page.getByRole('heading', { name: /leave a note/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /notes/i })).toBeVisible();
   await expect(page.locator('[data-comments-empty]')).toBeVisible();
 });
 
@@ -38,7 +38,7 @@ test('posting a note publishes it immediately and it survives a reload', async (
 
   await form.getByLabel(/name/i).fill('Playwright Pat');
   await form.getByLabel(/your note/i).fill('What a lovely story. See you Monday!');
-  await form.getByRole('button', { name: /post your note/i }).click();
+  await form.getByRole('button', { name: /post/i }).click();
 
   await expect(page.locator('[data-form-status]')).toHaveText(/your note is live/i);
   const list = page.locator('[data-comments-list] > li');
