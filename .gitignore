@@ -48,3 +48,13 @@ __pycache__/
 # Internal planning docs — kept local, not published to the public repo
 /prd.md
 /lotl-build-inputs.md
+
+# Doppler / secrets (managed by doppler-init)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Wrangler local state (miniflare sqlite, logs)
+.wrangler/

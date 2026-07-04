@@ -68,9 +68,17 @@ const tiles = entries.flatMap((entry) =>
                 loading="lazy"
               />
               <div class="p-6">
-                <p class="eyebrow">
-                  {dateFmt.format(post.data.date)}
-                  {post.data.attribution && <span> · Featuring {post.data.attribution}</span>}
+                <p class="eyebrow flex items-center justify-between gap-3">
+                  <span>
+                    {dateFmt.format(post.data.date)}
+                    {post.data.attribution && <span> · Featuring {post.data.attribution}</span>}
+                  </span>
+                  <span data-like-chip data-slug={post.id} class="hidden items-center gap-1 normal-case tracking-normal text-rose" aria-label="Likes">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M12 21c-4.8-3.6-8.4-6.8-8.4-10.4C3.6 7.6 5.9 5.6 8.5 5.6c1.5 0 2.8.7 3.5 1.8.7-1.1 2-1.8 3.5-1.8 2.6 0 4.9 2 4.9 5 0 3.6-3.6 6.8-8.4 10.4z"/>
+                    </svg>
+                    <span data-like-chip-count></span>
+                  </span>
                 </p>
                 <h3 class="mt-2 font-serif text-2xl font-light leading-snug text-forest">
                   {post.data.title}
@@ -125,3 +133,26 @@ const tiles = entries.flatMap((entry) =>
     )}
   </section>
 </Layout>
+
+<script>
+  // Fill the ♥ chips on story cards from one batched call. Chips only appear
+  // for stories with at least one like; failures leave the page as-is.
+  const chips = [...document.querySelectorAll<HTMLElement>('[data-like-chip]')];
+  const slugs = chips.map((c) => c.dataset.slug).filter(Boolean);
+  if (slugs.length > 0) {
+    fetch(`/api/likes?slugs=${slugs.join(',')}`)
+      .then((res) => (res.ok ? (res.json() as Promise<Record<string, number>>) : null))
+      .then((counts) => {
+        if (!counts) return;
+        for (const chip of chips) {
+          const n = counts[chip.dataset.slug ?? ''] ?? 0;
+          if (n > 0) {
+            chip.querySelector('[data-like-chip-count]')!.textContent = String(n);
+            chip.classList.remove('hidden');
+            chip.classList.add('inline-flex');
+          }
+        }
+      })
+      .catch(() => {});
+  }
+</script>

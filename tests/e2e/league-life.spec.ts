@@ -14,11 +14,16 @@ test('League Life renders both sections and is indexable', async ({ page }) => {
   await expect(tiles.first()).toHaveAttribute('srcset', /.+/);
 });
 
-test('League Life is read-only: no comments, reactions, or subscribe UI', async ({ page }) => {
+test('the League Life index stays calm: like chips only, no forms or subscribe UI', async ({ page }) => {
+  // Interaction happens on story pages (2026-07 decision reversing the old
+  // read-only rule); the index shows at most a ♥ count per card.
   await page.goto('/league-life');
   await expect(page.getByRole('textbox')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: /subscribe|comment|like|react/i })).toHaveCount(0);
   await expect(page.locator('form')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /subscribe/i })).toHaveCount(0);
+  // Every story card carries a (possibly hidden) like chip wired to a slug.
+  const chips = page.locator('[data-stories-list] [data-like-chip]');
+  expect(await chips.count()).toBeGreaterThanOrEqual(2);
 });
 
 test('the photo grid stays anonymous: no captions, alt on every tile', async ({ page }) => {
@@ -42,10 +47,11 @@ test('A story page still renders at its /stories/<slug> URL', async ({ page }) =
 });
 
 test('old /stories and /gallery URLs redirect to /league-life', async ({ page }) => {
+  // Trailing slash optional: the asset server normalizes to /league-life/.
   await page.goto('/stories');
-  await page.waitForURL('**/league-life');
+  await page.waitForURL(/\/league-life\/?$/);
   await expect(page.locator('h1')).toContainText(/league life/i);
   await page.goto('/gallery');
-  await page.waitForURL('**/league-life');
+  await page.waitForURL(/\/league-life\/?$/);
   await expect(page.locator('h1')).toContainText(/league life/i);
 });

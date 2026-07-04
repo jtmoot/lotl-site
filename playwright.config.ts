@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Smoke tests run against the built + previewed static site, so they verify the
-// real production output (not the dev server).
+// Smoke tests run against `wrangler dev` serving the built static output PLUS
+// the real Worker (/api/* with a fresh local D1) — the same shape as
+// production, not just the static half.
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
@@ -16,9 +17,10 @@ export default defineConfig({
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
   ],
   webServer: {
-    command: 'npm run preview',
+    command: 'npx wrangler dev --port 4321 --persist-to .wrangler/e2e-state',
     url: 'http://localhost:4321',
-    reuseExistingServer: !process.env.CI,
+    // Never reuse: each run gets the fresh D1 seeded by test:e2e's migration step.
+    reuseExistingServer: false,
     timeout: 60_000,
   },
 });
