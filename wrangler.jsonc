@@ -1,13 +1,28 @@
 {
-  // Deploy config for Cloudflare Workers (static-assets site).
-  // `npm run build` emits the site to ./dist, then `npx wrangler deploy`
-  // uploads that folder as static assets. No server-side Worker code.
+  // Deploy config for Cloudflare Workers. `npm run build` emits the static
+  // site to ./dist; the Worker (worker/index.ts) serves /api/* (story likes
+  // + comments, backed by D1) and every other request falls through to the
+  // static assets.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "lotl-site",
   "compatibility_date": "2025-01-01",
+  "main": "worker/index.ts",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Only /api/* hits the Worker; static pages keep zero-Worker latency.
+    "run_worker_first": ["/api/*"]
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lotl-comments",
+      // Placeholder until `wrangler d1 create lotl-comments` (needs auth);
+      // local dev/tests use miniflare's local sqlite and ignore this id.
+      "database_id": "REPLACE_AFTER_D1_CREATE",
+      "migrations_dir": "worker/migrations"
+    }
+  ],
   // Serve on the custom domain directly, not workers.dev. `custom_domain: true`
   // makes wrangler create the Cloudflare custom domain + DNS + SSL on deploy.
   // The placeholder apex A record (192.0.2.1) must be removed first or the apex
