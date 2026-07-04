@@ -1,8 +1,10 @@
-/// <reference types="@cloudflare/workers-types" />
 // Story-notes API: likes + comments for /stories/<slug>, backed by D1.
 // Only /api/* reaches this Worker (run_worker_first); everything else is
 // served as static assets by the platform.
 
+// Workers types are imported (not globally referenced) so they can't clash
+// with the DOM lib used by the Astro pages in the same TS program.
+import type { D1Database, Fetcher, ExecutionContext } from '@cloudflare/workers-types';
 import { validateComment, signDeleteToken, verifyDeleteToken } from './lib';
 
 export interface Env {
@@ -230,4 +232,4 @@ export default {
 
     return json({ error: 'not found' }, 404);
   },
-} satisfies ExportedHandler<Env>;
+};
