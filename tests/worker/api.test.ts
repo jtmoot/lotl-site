@@ -23,7 +23,7 @@ function postComment(slug: string, fields: Record<string, string>) {
 test('a fresh story has zero likes and no comments', async () => {
   const res = await fetch(`${BASE}/api/stories/${SLUG}`);
   assert.equal(res.status, 200);
-  const data = await res.json();
+  const data = await res.json() as any;
   assert.deepEqual(data, { likes: 0, comments: [] });
 });
 
@@ -35,10 +35,10 @@ test('unknown or malformed slugs 404', async () => {
 test('liking a story increments its count', async () => {
   const res = await fetch(`${BASE}/api/stories/${SLUG}/like`, { method: 'POST' });
   assert.equal(res.status, 200);
-  assert.deepEqual(await res.json(), { likes: 1 });
+  assert.deepEqual(await res.json() as any, { likes: 1 });
 
   await fetch(`${BASE}/api/stories/${SLUG}/like`, { method: 'POST' });
-  const data = await (await fetch(`${BASE}/api/stories/${SLUG}`)).json();
+  const data = await (await fetch(`${BASE}/api/stories/${SLUG}`)).json() as any;
   assert.equal(data.likes, 2);
 });
 
@@ -61,7 +61,7 @@ test('posting a comment stores it and returns it in reading order — even thoug
   });
   assert.equal(second.status, 201);
 
-  const data = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json();
+  const data = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json() as any;
   assert.equal(data.comments.length, 2);
   assert.equal(data.comments[0].name, 'Melissa');
   assert.equal(data.comments[1].body, 'So proud of you.');
@@ -72,14 +72,14 @@ test('posting a comment stores it and returns it in reading order — even thoug
 });
 
 test('a honeypotted comment returns 200 but is never stored', async () => {
-  const before = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json();
+  const before = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json() as any;
   const res = await postComment(SLUG2, {
     name: 'Bot',
     body: 'casino time',
     website: 'https://spam.example',
   });
   assert.equal(res.status, 200); // the bot is told "success"
-  const after = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json();
+  const after = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json() as any;
   assert.equal(after.comments.length, before.comments.length);
 });
 
@@ -102,7 +102,7 @@ test('a fourth comment inside a minute from one IP is rate-limited', async () =>
 
 test('the emailed delete link removes the comment; reuse and bad signatures are safe', async () => {
   const { signDeleteToken } = await import('../../worker/lib.ts');
-  const data = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json();
+  const data = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json() as any;
   const target = data.comments[data.comments.length - 1];
 
   // Wrong signature: comment survives.
@@ -116,7 +116,7 @@ test('the emailed delete link removes the comment; reuse and bad signatures are 
   assert.equal(res.status, 200);
   assert.match(await res.text(), /removed/i);
 
-  const after = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json();
+  const after = await (await fetch(`${BASE}/api/stories/${SLUG2}`)).json() as any;
   assert.equal(after.comments.some((c: { id: string }) => c.id === target.id), false);
 
   // Clicking the link again (email links get re-clicked) stays a calm 200.
@@ -127,7 +127,7 @@ test('the emailed delete link removes the comment; reuse and bad signatures are 
 test('batched like counts come back as a slug→count map (unknown slugs = 0)', async () => {
   const res = await fetch(`${BASE}/api/likes?slugs=${SLUG},${SLUG2},never-heard-of-it`);
   assert.equal(res.status, 200);
-  const data = await res.json();
+  const data = await res.json() as any;
   assert.equal(data[SLUG], 2); // liked twice in the like test
   assert.equal(data[SLUG2], 0);
   assert.equal(data['never-heard-of-it'], 0);
@@ -136,6 +136,6 @@ test('batched like counts come back as a slug→count map (unknown slugs = 0)', 
 test('invalid fields get a 400 with a friendly message', async () => {
   const res = await postComment(SLUG2, { name: '', body: 'hi' });
   assert.equal(res.status, 400);
-  const data = await res.json();
+  const data = await res.json() as any;
   assert.match(data.error, /name/i);
 });

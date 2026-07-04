@@ -53,8 +53,204 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
       <Content />
     </div>
 
+    <!-- Hearts + notes are progressive enhancement: everything below stays
+         hidden unless the script can reach the API, so no-JS visitors just
+         see the story. -->
+    <div data-notes-root data-slug={post.id} hidden>
+      <div class="mt-12 flex items-center justify-center gap-3">
+        <button
+          data-like-btn
+          type="button"
+          class="group inline-flex items-center gap-2 rounded-full border border-forest/20 px-5 py-2.5 text-sm text-forest transition-colors hover:bg-rose/10 disabled:cursor-default"
+          aria-label="Like this story"
+        >
+          <svg data-heart width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M12 21c-4.8-3.6-8.4-6.8-8.4-10.4C3.6 7.6 5.9 5.6 8.5 5.6c1.5 0 2.8.7 3.5 1.8.7-1.1 2-1.8 3.5-1.8 2.6 0 4.9 2 4.9 5 0 3.6-3.6 6.8-8.4 10.4z"/>
+          </svg>
+          <span data-like-count>0</span>
+        </button>
+      </div>
+
+      <section class="mt-16" aria-label="Notes from readers">
+        <h2 class="eyebrow eyebrow-mark">Leave a note</h2>
+        <ul data-comments-list class="mt-6 space-y-6"></ul>
+        <p data-comments-empty class="mt-6 text-slate" hidden>No notes yet — be the first.</p>
+
+        <form data-comment-form class="mt-10 space-y-4 rounded-xl border border-forest/10 bg-cream-soft/60 p-6" novalidate>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="block text-sm text-slate">
+              Name
+              <input name="name" required maxlength="80" autocomplete="name"
+                class="mt-1 w-full rounded-md border border-forest/20 bg-white px-3 py-2 text-base text-ink" />
+            </label>
+            <label class="block text-sm text-slate">
+              Email <span class="text-slate/70">(optional, never shown)</span>
+              <input name="email" type="email" autocomplete="email"
+                class="mt-1 w-full rounded-md border border-forest/20 bg-white px-3 py-2 text-base text-ink" />
+            </label>
+          </div>
+          <label class="block text-sm text-slate">
+            Your note
+            <textarea name="body" required maxlength="2000" rows="4"
+              placeholder="Say hi, cheer someone on, share your Monday…"
+              class="mt-1 w-full rounded-md border border-forest/20 bg-white px-3 py-2 text-base text-ink"></textarea>
+          </label>
+          <!-- Honeypot: hidden from humans, irresistible to bots. -->
+          <div class="hp-field" aria-hidden="true">
+            <label>Website<input name="website" tabindex="-1" autocomplete="off" /></label>
+          </div>
+          <div data-turnstile-slot></div>
+          <div class="flex items-center gap-4">
+            <button type="submit" class="zen-btn px-6 py-2.5 text-sm">Post your note</button>
+            <p data-form-status class="text-sm text-slate" role="status"></p>
+          </div>
+        </form>
+      </section>
+    </div>
+
     <p class="mt-14 text-center">
       <a href="/league-life" class="text-sm text-forest underline">Back to League Life</a>
     </p>
   </article>
 </Layout>
+
+<style>
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  // Notes + hearts: fetch real data, then reveal the section (progressive
+  // enhancement — no JS or no API, no section). Turnstile guards the form.
+  const root = document.querySelector<HTMLElement>('[data-notes-root]');
+  const slug = root?.dataset.slug ?? '';
+
+  const TURNSTILE_SITEKEY = location.hostname.endsWith('ladiesonthelinksgolf.com')
+    ? '0x4AAAAAADvirCTLvLO_xrOm'
+    : '1x00000000000000000000AA'; // Cloudflare's public always-pass dev key
+
+  const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  function commentItem(c: { name: string; body: string; created_at: string }): HTMLLIElement {
+    const li = document.createElement('li');
+    li.className = 'border-b border-forest/10 pb-5';
+    const meta = document.createElement('p');
+    meta.className = 'font-serif text-lg text-forest';
+    meta.textContent = c.name;
+    const when = document.createElement('span');
+    when.className = 'ml-3 font-sans text-xs tracking-wide text-slate';
+    when.textContent = dateFmt.format(new Date(c.created_at));
+    meta.appendChild(when);
+    const text = document.createElement('p');
+    text.className = 'mt-2 leading-relaxed text-ink/85 whitespace-pre-line';
+    text.textContent = c.body;
+    li.append(meta, text);
+    return li;
+  }
+
+  async function init() {
+    if (!root || !slug) return;
+    let data: { likes: number; comments: Array<{ name: string; body: string; created_at: string }> };
+    try {
+      const res = await fetch(`/api/stories/${slug}`);
+      if (!res.ok) return;
+      data = (await res.json()) as typeof data;
+    } catch {
+      return; // API unreachable: leave the story read-only.
+    }
+
+    const list = root.querySelector<HTMLUListElement>('[data-comments-list]')!;
+    const empty = root.querySelector<HTMLElement>('[data-comments-empty]')!;
+    const likeBtn = root.querySelector<HTMLButtonElement>('[data-like-btn]')!;
+    const likeCount = root.querySelector<HTMLElement>('[data-like-count]')!;
+    const heart = root.querySelector<SVGElement>('[data-heart]')!;
+    const form = root.querySelector<HTMLFormElement>('[data-comment-form]')!;
+    const status = root.querySelector<HTMLElement>('[data-form-status]')!;
+
+    likeCount.textContent = String(data.likes);
+    for (const c of data.comments) list.appendChild(commentItem(c));
+    empty.hidden = data.comments.length > 0;
+
+    const likedKey = `lotl-liked:${slug}`;
+    const markLiked = () => {
+      heart.setAttribute('fill', 'currentColor');
+      likeBtn.disabled = true;
+      likeBtn.classList.add('text-rose', 'border-rose/40');
+    };
+    if (localStorage.getItem(likedKey)) markLiked();
+
+    likeBtn.addEventListener('click', async () => {
+      try {
+        const res = await fetch(`/api/stories/${slug}/like`, { method: 'POST' });
+        if (!res.ok) return;
+        const body = (await res.json()) as { likes: number };
+        likeCount.textContent = String(body.likes);
+        localStorage.setItem(likedKey, '1');
+        markLiked();
+      } catch {
+        /* a missed heart is not worth an error state */
+      }
+    });
+
+    // Turnstile: load on demand, render into the slot.
+    let widgetId: string | undefined;
+    const slot = root.querySelector<HTMLElement>('[data-turnstile-slot]')!;
+    const ts = document.createElement('script');
+    ts.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=__lotlTurnstile';
+    ts.async = true;
+    (window as any).__lotlTurnstile = () => {
+      widgetId = (window as any).turnstile.render(slot, { sitekey: TURNSTILE_SITEKEY });
+    };
+    document.head.appendChild(ts);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '';
+      const fields = new FormData(form);
+      const token = (window as any).turnstile?.getResponse?.(widgetId) ?? '';
+      try {
+        const res = await fetch(`/api/stories/${slug}/comments`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            name: fields.get('name'),
+            email: fields.get('email'),
+            body: fields.get('body'),
+            website: fields.get('website'),
+            'cf-turnstile-response': token,
+          }),
+        });
+        if (res.status === 201) {
+          list.appendChild(
+            commentItem({
+              name: String(fields.get('name') ?? ''),
+              body: String(fields.get('body') ?? ''),
+              created_at: new Date().toISOString(),
+            })
+          );
+          empty.hidden = true;
+          form.reset();
+          (window as any).turnstile?.reset?.(widgetId);
+          status.textContent = 'Thanks! Your note is live.';
+        } else {
+          const body = (await res
+            .json()
+            .catch(() => ({ error: 'Something went wrong — try again?' }))) as { error?: string };
+          status.textContent = body.error ?? 'Something went wrong — try again?';
+        }
+      } catch {
+        status.textContent = 'Something went wrong — try again?';
+      }
+    });
+
+    root.hidden = false;
+  }
+
+  init();
+</script>
