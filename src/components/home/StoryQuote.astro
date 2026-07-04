@@ -1,15 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 
-// Story-forward pull quote (Stacey wants Home to lead with a member's voice).
-// FILLER: the quote text and season line below are placeholders until Stacey
-// supplies a real member quote. Swap the two constants; the layout is final.
-// The story link is live: it points at the newest non-draft post that features
-// a member (has `attribution`), so it follows the collection automatically.
-const QUOTE =
-  'I was so nervous I almost did not come. Three Mondays in, I had a standing foursome and a group chat that never stops. This league gave me my favorite day of the week.';
-const QUOTE_SEASON = 'Season 1 member';
-
+// The home page's quote moment. Stacey chose this Tolkien line for the site
+// (2026-07-04, from her "courage" quote card — archived in
+// ~/Projects/LOTL/design-reference/LOTL_quote_courage.png). The section keeps
+// its route into member stories: the link points at the newest non-draft post
+// that features a member (has `attribution`), so it follows the collection.
 const posts = (await getCollection('stories', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
@@ -21,23 +17,36 @@ const linkLabel = featured ? `Read ${name}'s story` : 'Read the stories';
 
 <section class="bg-forest-deep py-24 sm:py-28">
   <div class="mx-auto max-w-4xl px-6 text-center">
-    <p class="eyebrow eyebrow-mark text-blush reveal">From the league</p>
+    <p class="eyebrow eyebrow-mark text-blush reveal">For the love of golf</p>
 
-    <blockquote class="mt-8 reveal" style="transition-delay:120ms">
-      <p class="font-serif text-3xl font-light italic leading-[1.2] text-cream sm:text-4xl lg:text-[2.75rem]">
-        &ldquo;{QUOTE}&rdquo;
+    <!-- Flag in the hole, ball just short of it: line-art motif from Stacey's quote card. -->
+    <svg
+      class="mx-auto mt-10 h-14 w-auto reveal"
+      style="transition-delay:80ms"
+      viewBox="0 0 120 64"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path d="M48 8v45" stroke="var(--color-cream)" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M48 8l26 6.5-26 6.5z" fill="var(--color-rose)" />
+      <ellipse cx="48" cy="55" rx="9" ry="2.75" stroke="var(--color-cream)" stroke-opacity="0.55" stroke-width="1.25" />
+      <path d="M8 55h29m22 0h53" stroke="var(--color-cream)" stroke-opacity="0.35" stroke-width="1.25" stroke-linecap="round" />
+      <circle cx="80" cy="50.5" r="4" stroke="var(--color-cream)" stroke-opacity="0.8" stroke-width="1.25" />
+    </svg>
+
+    <blockquote class="mt-9 reveal" style="transition-delay:160ms">
+      <p class="font-serif text-4xl font-light italic leading-[1.15] text-cream sm:text-5xl lg:text-6xl">
+        &ldquo;Courage is found in&nbsp;unlikely&nbsp;places.&rdquo;
       </p>
     </blockquote>
 
-    <div class="mt-10 flex flex-col items-center gap-6 reveal" style="transition-delay:220ms">
+    <div class="mt-10 flex flex-col items-center gap-6 reveal" style="transition-delay:240ms">
       <div class="flex w-full max-w-xs items-center gap-4" aria-hidden="true">
         <span class="h-px flex-1 bg-cream/20"></span>
         <span class="h-1.5 w-1.5 rotate-45 bg-rose"></span>
         <span class="h-px flex-1 bg-cream/20"></span>
       </div>
-      <p class="text-sm uppercase tracking-[0.18em] text-cream/70">
-        {name}, {QUOTE_SEASON}
-      </p>
+      <p class="text-sm uppercase tracking-[0.18em] text-cream/70">J.R.R. Tolkien</p>
       <a
         href={href}
         class="inline-flex items-center gap-2 text-sm font-medium tracking-wide text-blush underline-offset-4 transition-colors hover:text-cream hover:underline"
