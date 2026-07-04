@@ -122,6 +122,13 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    // Anything that isn't the API belongs to the static site — including its
+    // 404 page (see assets.not_found_handling in wrangler.jsonc). The cast
+    // bridges workers-types' Request/Response and the DOM lib's.
+    if (!url.pathname.startsWith('/api/')) {
+      return (env.ASSETS as unknown as { fetch: typeof fetch }).fetch(request);
+    }
+
     const storyMatch = url.pathname.match(/^\/api\/stories\/([^/]+)$/);
     if (storyMatch && request.method === 'GET') {
       const slug = storyMatch[1];

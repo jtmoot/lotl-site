@@ -43,7 +43,7 @@ test('weather answer matches the published policy', async ({ page }) => {
 
 test('old /faq URL redirects to /contact', async ({ page }) => {
   await page.goto('/faq');
-  await page.waitForURL('**/contact');
+  await page.waitForURL(/\/contact\/?$/);
   await expect(page.locator('#faq')).toBeVisible();
 });
 
@@ -63,7 +63,7 @@ test('submits via AJAX and shows inline success without navigating away', async 
   await fill(page);
   await page.click('button[type="submit"]');
   await expect(page.locator('[data-form-success]')).toBeVisible();
-  expect(new URL(page.url()).pathname).toBe('/contact'); // no navigation
+  expect(new URL(page.url()).pathname).toMatch(/^\/contact\/?$/); // no navigation
 });
 
 test('shows an inline error when the submission fails', async ({ page }) => {
