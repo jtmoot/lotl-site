@@ -19,9 +19,8 @@
     {
       "binding": "DB",
       "database_name": "lotl-comments",
-      // Placeholder until `wrangler d1 create lotl-comments` (needs auth);
-      // local dev/tests use miniflare's local sqlite and ignore this id.
-      "database_id": "REPLACE_AFTER_D1_CREATE",
+      // Local dev/tests use miniflare's local sqlite and ignore this id.
+      "database_id": "e3c97faa-cf7a-4ffc-bb7a-fd937b24e50f",
       "migrations_dir": "worker/migrations"
     }
   ],
