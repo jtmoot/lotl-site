@@ -137,3 +137,62 @@ const TEE_SHEET_URL =
     select('tee-times');
   })();
 </script>
+
+<!--
+  Bookwhen iframe: keep the current booking step in view, and fit the frame to
+  its content.
+
+  The embed is a cross-origin iframe, so it can never scroll our page itself.
+  The "page jumps to the top" annoyance came from a fixed 900px frame that sits
+  partway down our page: every in-app navigation (Book, checkout, back)
+  re-renders the step at the frame's OWN top, which is above the viewport once
+  the user has scrolled down into the list, so the step looks like it vanished
+  upward.
+
+  Fix, in two independent layers so neither depends on the other:
+   1. Anchor (the real fix): a genuine navigation inside the frame fires the
+      iframe `load` event. On each load after the first, if that tab is visible
+      and the frame's top is above the viewport, smooth-scroll so the step sits
+      just under the nav. Selecting a time in the list is AJAX (no `load`), so
+      it never yanks the page. `load` is reliable, so this works on its own.
+   2. Auto-height (best effort): Bookwhen posts { height } as its content
+      changes; we fit the frame to it so there is no dead space. If a message is
+      ever missed the frame just keeps its current height. No regression.
+
+  Self-hosted (mirrors Bookwhen's iframe_resizer.js) so there is no third-party
+  script tag or CSP exception.
+-->
+<script is:inline>
+  (() => {
+    const NAV_OFFSET = 80; // fixed header (h-16 = 64px) + a little breathing room
+    const seenFirstLoad = new WeakSet();
+
+    // Layer 1: anchor the step under the nav on a real in-frame navigation.
+    document.querySelectorAll('iframe[data-tab]').forEach((frame) => {
+      frame.addEventListener('load', () => {
+        // Skip the first load of each frame (initial embed / tab open): the
+        // user has not navigated inside it yet. Every later load is a step
+        // change and gets re-anchored.
+        if (!seenFirstLoad.has(frame)) { seenFirstLoad.add(frame); return; }
+        if (frame.offsetParent === null) return; // hidden tab
+        const top = frame.getBoundingClientRect().top;
+        // top < 0 means the frame's top is scrolled above the viewport. Pulling
+        // it to NAV_OFFSET makes this self-limiting: it won't fire again until
+        // the next navigation scrolls the user back down into the frame.
+        if (top < 0) {
+          window.scrollTo({ top: window.scrollY + top - NAV_OFFSET, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Layer 2: fit the frame to Bookwhen's reported content height.
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'https://bookwhen.com') return;
+      const data = event.data;
+      if (!data || typeof data.height !== 'number') return;
+      for (const f of document.querySelectorAll('iframe[src^="https://bookwhen.com"]')) {
+        if (f.contentWindow === event.source) { f.style.height = data.height + 'px'; break; }
+      }
+    });
+  })();
+</script>
