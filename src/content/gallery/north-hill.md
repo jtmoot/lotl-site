@@ -10,6 +10,7 @@ images:
   - ../../assets/photos/gallery/league-08.jpg
   - ../../assets/photos/gallery/league-09.jpg
   - ../../assets/photos/gallery/league-10.jpg
+  - ../../assets/photos/gallery/league-11.jpg
 alt: Ladies on the Links members on a Monday at North Hill Country Club in Duxbury
 event: North Hill Country Club
 date: 2026-06-18
