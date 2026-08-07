@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    # claude/** is included because Claude's PRs are opened by GITHUB_TOKEN,
+    # which cannot trigger pull_request workflows — the push-event run puts the
+    # required "test" check on the head SHA instead.
+    branches: [main, 'claude/**']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      # check + schema + build + worker + e2e (e2e seeds a fresh local D1
+      # and runs wrangler dev against the built dist — no cloud credentials).
+      - name: Run full test gate
+        run: npm test

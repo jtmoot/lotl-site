@@ -1,0 +1,35 @@
+name: Claude auto-PR
+
+# Claude Code pushes its work to claude/* branches but leaves PR creation to a
+# human. This closes that gap: any push to a claude/* branch gets a PR and
+# auto-merge (squash). The merge only completes once the required "test" check
+# passes, so nothing lands on main untested.
+#
+# CI runs on the push event for claude/** (see ci.yml) because a PR created
+# with GITHUB_TOKEN cannot trigger pull_request workflows itself — the check
+# still attaches to the head SHA, which is what auto-merge waits on.
+
+on:
+  push:
+    branches: ['claude/**']
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Create PR if missing, then enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          pr=$(gh pr list -R "$REPO" --head "$BRANCH" --state open --json number -q '.[0].number')
+          if [ -z "$pr" ]; then
+            gh pr create -R "$REPO" --head "$BRANCH" --fill \
+              --body "Automated change from Claude (branch \`$BRANCH\`). Merges automatically once CI passes."
+            pr=$(gh pr list -R "$REPO" --head "$BRANCH" --state open --json number -q '.[0].number')
+          fi
+          gh pr merge -R "$REPO" "$pr" --auto --squash
