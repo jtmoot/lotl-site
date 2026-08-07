@@ -35,6 +35,6 @@ test('Meet the Team lists the four organizers with titles', async ({ page }) => 
   await expect(team).toContainText('Melissa');
   await expect(team).toContainText('Phoebe');
   await expect(team).toContainText('Josh');
-  // Phoebe has no photo yet; her card carries the placeholder treatment.
-  await expect(team).toContainText('Photo coming soon');
+  // All four organizers have real headshots now (Phoebe's landed in PR #43).
+  await expect(team).not.toContainText('Photo coming soon');
 });

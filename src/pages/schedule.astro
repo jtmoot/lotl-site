@@ -137,8 +137,11 @@ const TEE_SHEET_URL =
       btn.classList.add(...idleClasses);
       btn.addEventListener('click', () => select(btn.getAttribute('data-tab-btn')));
     });
-    // Set initial active styling.
-    select('tee-times');
+    // Set initial active styling. /schedule#lessons deep-links to the lessons tab.
+    select(location.hash === '#lessons' ? 'lessons' : 'tee-times');
+    window.addEventListener('hashchange', () => {
+      if (location.hash === '#lessons') select('lessons');
+    });
   })();
 </script>
 
