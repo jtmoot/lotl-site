@@ -18,6 +18,16 @@ web browser on GitHub.com. See the step-by-step guide:
 
 ---
 
+## Requesting changes
+
+Prefer to just ask? League organizers can open a
+[GitHub issue](../../issues/new) describing the change and mention `@claude`
+in the issue body. Claude will make the edit, open a pull request, and once
+the automated checks pass, the PR merges and the change goes live
+automatically — no need to touch any files yourself.
+
+---
+
 ## Editing with an AI coding agent (advanced)
 
 Every push to the `main` branch **automatically rebuilds and redeploys the live
