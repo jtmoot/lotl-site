@@ -13,7 +13,7 @@ test('the strict cancellation rule is stated', async ({ page }) => {
   const c = page.locator('#cancellation');
   await expect(c).toContainText('24 hours');
   await expect(c).toContainText('locked in');
-  await expect(c).toContainText('ladiesonthelinks.league@gmail.com');
+  await expect(c).toContainText('stacey@ladiesonthelinksgolf.com');
 });
 
 test('the weather commitment is stated', async ({ page }) => {
