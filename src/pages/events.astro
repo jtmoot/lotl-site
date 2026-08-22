@@ -90,11 +90,18 @@ const dateLabel = (event: (typeof all)[number]) =>
                   <div class="mt-4 space-y-3 leading-relaxed text-slate [&_a]:text-forest [&_a]:underline">
                     <Content />
                   </div>
-                  {event.data.bookingUrl && (
-                    <p class="mt-6">
-                      <a href={event.data.bookingUrl} data-cta class="zen-btn px-6 py-2.5 text-sm">
-                        Save your spot
-                      </a>
+                  {(event.data.bookingUrl || event.data.sponsorUrl) && (
+                    <p class="mt-6 flex flex-wrap gap-3">
+                      {event.data.bookingUrl && (
+                        <a href={event.data.bookingUrl} data-cta class="zen-btn px-6 py-2.5 text-sm">
+                          Save your spot
+                        </a>
+                      )}
+                      {event.data.sponsorUrl && (
+                        <a href={event.data.sponsorUrl} class="ghost-btn px-6 py-2.5 text-sm">
+                          Sponsor this event
+                        </a>
+                      )}
                     </p>
                   )}
                 </div>

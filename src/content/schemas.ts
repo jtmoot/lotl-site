@@ -100,6 +100,8 @@ export const eventFields = {
   tagline: z.string().min(1),
   /** Booking CTA target (Bookwhen URL or /schedule). Teasers omit it. */
   bookingUrl: z.string().min(1).optional(),
+  /** Sponsorship CTA target; renders a secondary button beside the booking CTA. */
+  sponsorUrl: z.string().min(1).optional(),
   /** upcoming = announced/bookable; teaser = dream stage; past = archived. */
   status: z.enum(['upcoming', 'teaser', 'past']).default('upcoming'),
   draft: z.boolean().default(false),
