@@ -34,6 +34,9 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
   month: 'long',
   day: 'numeric',
   year: 'numeric',
+  // Frontmatter dates coerce to UTC midnight; format in UTC so the
+  // displayed day never shifts with the build machine's timezone.
+  timeZone: 'UTC',
 });
 
 const dateLabel = (event: (typeof all)[number]) =>
