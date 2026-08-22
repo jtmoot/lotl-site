@@ -11,10 +11,15 @@ test('Glo Golf and the tournament appear as upcoming events with booking CTAs', 
   await page.goto('/events');
   const upcoming = page.locator('[data-events="upcoming"]');
   await expect(upcoming).toContainText('Evening Glo Golf');
-  await expect(upcoming).toContainText('Date coming soon');
+  await expect(upcoming).toContainText('September 18, 2026');
   await expect(upcoming).toContainText('Season-End Tournament');
   await expect(upcoming).toContainText('Early October');
-  await expect(upcoming.locator('a[href="/schedule"]')).toHaveCount(2);
+  // Glo Golf books on Bookwhen; the tournament still points at /schedule.
+  await expect(
+    upcoming.locator('a[href="https://bookwhen.com/ladiesonthelinks#focus=ev-s7vbs-20260918174500"]')
+  ).toHaveCount(1);
+  await expect(upcoming.locator('a[href="/schedule"]')).toHaveCount(1);
+  await expect(upcoming.locator('a[href="/glow-golf-sponsorship.pdf"]')).toHaveCount(1);
 });
 
 test('the winter pop-ups and 2027 trip appear as teasers without booking CTAs', async ({ page }) => {
