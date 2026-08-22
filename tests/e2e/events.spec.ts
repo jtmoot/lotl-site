@@ -19,7 +19,7 @@ test('Glo Golf and the tournament appear as upcoming events with booking CTAs', 
     upcoming.locator('a[href="https://bookwhen.com/ladiesonthelinks#focus=ev-s7vbs-20260918174500"]')
   ).toHaveCount(1);
   await expect(upcoming.locator('a[href="/schedule"]')).toHaveCount(1);
-  await expect(upcoming.locator('a[href="/glow-golf-sponsorship.pdf"]')).toHaveCount(1);
+  await expect(upcoming.locator('a[href="/glow-golf-sponsorship"]')).toHaveCount(1);
 });
 
 test('the winter pop-ups and 2027 trip appear as teasers without booking CTAs', async ({ page }) => {

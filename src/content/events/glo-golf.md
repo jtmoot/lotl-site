@@ -12,4 +12,4 @@ night of glow-ball golf you will not stop talking about. Spots will go fast,
 so grab yours below. 💚
 
 Want your business under the lights? Take a look at our
-[sponsorship opportunities](/glow-golf-sponsorship.pdf).
+[sponsorship opportunities](/glow-golf-sponsorship).

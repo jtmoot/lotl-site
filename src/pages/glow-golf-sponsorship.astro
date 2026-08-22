@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+// Glow Golf sponsorship page — native version of the packet Melissa sent
+// (source PDF stays downloadable below for printing and forwarding).
+// Content mirrors the packet; update both together if tiers change.
+
+const titlePerks = [
+  'Opportunity to welcome and address attendees during the event',
+  'Prominent recognition as the Glow Golf Title Sponsor across emails, marketing & social',
+  'Prominent signage at registration and the networking/reception area',
+  'Dedicated social media recognition throughout the campaign',
+  'Opportunity to provide branded items or include materials in golfer gift bags',
+  'Representative invited to attend and engage with golfers',
+  'Recognition during the reception and/or awards portion of the evening',
+];
+
+const tiers = [
+  { name: 'Reception Sponsor', blurb: 'Logo at the reception, on cocktail napkins & signage.' },
+  { name: 'Swag Sponsor', blurb: 'Logo on the official Glow Golf event shirt alongside the LOTL logo.' },
+  { name: 'Registration Sponsor', blurb: 'First business golfers see — signage & rep opportunity at check-in.' },
+  { name: 'Beverage Hole Sponsor', blurb: 'Set up on-course with refreshments; make it a themed station.' },
+  { name: 'Specialty Drink Sponsor', blurb: "Help create Glow Golf's signature cocktail; logo on bar signage." },
+  { name: 'Putting Green Sponsor', blurb: 'Signage at the putting contest; provide the prize.' },
+  { name: 'Closest to the Pin Sponsor', blurb: "Branded signage at one of the night's most anticipated contests." },
+  { name: 'Longest Drive Sponsor', blurb: 'Branded signage at the hole; provide the prize.' },
+];
+
+const customIdeas = [
+  'Glow-themed giveaways', 'Photo booth sponsor', 'Golf ball sponsor',
+  'Dessert/sweet treat station', 'Gift bag sponsor', 'Golf cart sponsor',
+  'Hole-in-one sponsor', 'Wellness station', 'Product sampling',
+  'Interactive games', 'Branded golf accessories', 'Prize sponsor',
+];
+
+const whyUs = [
+  { title: 'A Growing Community', blurb: '300+ women and counting across the South Shore.' },
+  { title: 'All Skill Levels Welcome', blurb: 'From first-time golfers to seasoned players — community over competition.' },
+  { title: 'Connection Beyond the Course', blurb: 'Friendships, professional networks, and local business discovery.' },
+  { title: 'Women & the Golf Market', blurb: "Women are one of golf's fastest-growing, most engaged audiences." },
+];
+---
+
+<Layout
+  title="Glow Golf Sponsorship · Ladies on the Links"
+  description="Sponsor Evening Glo Golf on September 18 at North Hill Country Club in Duxbury, MA. Put your business in front of 300+ South Shore women — title sponsorship and $250 tiers available."
+>
+  <PageIntro
+    eyebrow="Glow Golf · September 18 · North Hill Country Club"
+    title="Where Women, Golf & Business Come Together"
+    lede="Ladies on the Links is a growing community of 300+ women across the South Shore who come together to play, connect, learn and build friendships — golfers of every skill level, all in one place. Glow Golf takes that experience further: an evening of golf, cocktails, competition and community under the lights, putting your business directly in front of an engaged, connected audience."
+  />
+
+  <section class="mx-auto max-w-3xl px-6 pt-4 pb-16">
+    <div class="rounded-xl bg-forest p-8 text-cream-soft reveal sm:p-10">
+      <p class="eyebrow">One available</p>
+      <h2 class="mt-2 font-serif text-3xl font-light leading-snug">Title Sponsor</h2>
+      <p class="mt-1 font-serif text-2xl text-blush">$1,500</p>
+      <p class="mt-3 font-serif text-lg italic text-cream-soft/80">
+        The premier opportunity to own the Glow Golf experience
+      </p>
+      <ul class="mt-6 space-y-2.5 leading-relaxed text-cream-soft/90">
+        {titlePerks.map((perk) => (
+          <li class="flex gap-3">
+            <span class="mt-2.5 h-1 w-3 shrink-0 bg-rose" aria-hidden="true"></span>
+            {perk}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pb-16">
+    <h2 class="eyebrow eyebrow-mark reveal">Sponsorship tiers</h2>
+    <p class="mt-4 font-serif text-3xl font-light text-forest reveal">$250 Sponsorships</p>
+    <p class="mt-2 max-w-2xl leading-relaxed text-slate reveal">
+      Every tier includes social recognition, logo on the event website, and the
+      chance to engage golfers directly.
+    </p>
+    <ul class="mt-8 grid gap-6 sm:grid-cols-2">
+      {tiers.map((tier, i) => (
+        <li
+          class="rounded-xl border border-forest/10 bg-cream-soft/60 p-6 reveal card-lift"
+          style={`transition-delay:${(i % 2) * 90}ms`}
+        >
+          <h3 class="font-serif text-xl text-forest">{tier.name}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate">{tier.blurb}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pb-16">
+    <div class="rounded-xl border border-dashed border-forest/20 bg-blush/10 p-8 reveal sm:p-10">
+      <h2 class="eyebrow eyebrow-mark">Make it your own</h2>
+      <p class="mt-4 font-serif text-3xl font-light text-forest">Create Your Own Experience</p>
+      <p class="mt-2 leading-relaxed text-slate">
+        Have an idea for a unique activation? Let's build it together — $250.
+      </p>
+      <ul class="mt-6 grid gap-x-8 gap-y-2 text-slate sm:grid-cols-2 lg:grid-cols-3">
+        {customIdeas.map((idea) => (
+          <li class="flex gap-3">
+            <span class="mt-2.5 h-1 w-3 shrink-0 bg-rose" aria-hidden="true"></span>
+            {idea}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-6 pb-16 text-center">
+    <h2 class="eyebrow eyebrow-mark reveal">Why Ladies on the Links?</h2>
+    <dl class="mt-8 space-y-6">
+      {whyUs.map((item) => (
+        <div class="reveal">
+          <dt class="font-serif text-xl text-forest">{item.title}</dt>
+          <dd class="mt-1 leading-relaxed text-slate">{item.blurb}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-6 pb-24 text-center">
+    <div class="rule mx-auto max-w-xs"></div>
+    <h2 class="mt-10 font-serif text-3xl font-light text-forest reveal">Join Us</h2>
+    <p class="mx-auto mt-3 max-w-xl leading-relaxed text-slate reveal">
+      Help us make this year's Glow Golf unforgettable. Reach out to Stacey to
+      reserve your sponsorship.
+    </p>
+    <div class="mt-7 flex flex-wrap items-center justify-center gap-4 reveal">
+      <a href="mailto:stacey@ladiesonthelinksgolf.com?subject=Glow%20Golf%20Sponsorship" data-cta class="zen-btn">
+        Email Stacey
+      </a>
+      <a href="/glow-golf-sponsorship.pdf" class="ghost-btn" download>
+        Download the packet (PDF)
+      </a>
+    </div>
+    <p class="mt-5 text-sm text-slate reveal">
+      Stacey Jordan · <a href="tel:+17744548823" class="text-forest underline-offset-4 hover:underline">774-454-8823</a>
+    </p>
+    <p class="mt-10 font-serif text-lg italic text-rose reveal">
+      Because Mondays don't have to suck. Come Sip &amp; Swing with us!
+    </p>
+  </section>
+</Layout>
