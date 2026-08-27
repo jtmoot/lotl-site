@@ -20,7 +20,7 @@ test('quick answers cover tee-time cadence, register-first, and costs', async ({
   await expect(main).toContainText('first Sunday of each month');
   await expect(main).toContainText('Register first');
   await expect(main).toContainText('$45 per round');
-  await expect(main).toContainText('$35 per lesson');
+  await expect(main).toContainText('$35 to $45 per lesson');
 });
 
 test('cancellation answer states the strict 24-hours-after-booking rule', async ({ page }) => {

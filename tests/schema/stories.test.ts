@@ -65,3 +65,17 @@ test('rejects an unparseable date', () => {
   const result = storyEntrySchema.safeParse({ ...valid, date: 'not-a-date' });
   assert.equal(result.success, false);
 });
+
+test('spotlight defaults to false; pullQuote and spotlightBlurb are optional', () => {
+  const result = storyEntrySchema.parse(valid);
+  assert.equal(result.spotlight, false);
+  assert.equal(result.pullQuote, undefined);
+  const flagged = storyEntrySchema.parse({
+    ...valid,
+    spotlight: true,
+    pullQuote: 'I actually look like a golfer.',
+    spotlightBlurb: 'Short version.',
+  });
+  assert.equal(flagged.spotlight, true);
+  assert.equal(flagged.pullQuote, 'I actually look like a golfer.');
+});

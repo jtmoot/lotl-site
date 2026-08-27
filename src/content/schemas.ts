@@ -70,6 +70,15 @@ export const storyFields = {
   author: z.string().min(1),
   /** Optional spotlighted member, FIRST NAME ONLY, opt-in. */
   attribution: z.string().min(1).optional(),
+  /** Optional short line rendered under the headline, e.g. a member's own words. */
+  pullQuote: z.string().min(1).optional(),
+  /**
+   * Member Spotlight: the newest story with `spotlight: true` is surfaced by
+   * the MemberSpotlight component (League Life, Beginners). `spotlightBlurb`
+   * is the short version of the story for that card; the story body stays long.
+   */
+  spotlight: z.boolean().default(false),
+  spotlightBlurb: z.string().min(1).optional(),
   draft: z.boolean().default(false),
 };
 
