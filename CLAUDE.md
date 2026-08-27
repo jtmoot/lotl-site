@@ -26,5 +26,14 @@ to ladiesonthelinksgolf.com via Cloudflare.
 - Conventional commits (feat:, fix:, docs:, chore:).
 - Tests live in `tests/` (schema, worker, e2e). Update tests that your change
   makes stale; add coverage for new user-visible behavior.
-- Images: process with sharp before committing (downsize, strip EXIF — source
-  photos carry GPS data).
+- Images: never commit a raw photo. Photos attached to a GitHub issue are
+  downloaded for you to `/tmp/github-images/` (paths appear in the issue
+  text). Add one to the site with
+  `node scripts/add-photo.mjs /tmp/github-images/<file> <folder>/<name>.jpg`
+  (auto-rotates, downsizes to 1600px, strips EXIF/GPS) — it writes to
+  `src/assets/photos/<folder>/<name>.jpg`. Folders: `gallery/` (League Life
+  photo wall, add the path to `src/content/gallery/*.md`), `stories/` (story
+  covers), `beginners/`, `team/`, `events/`. Then reference it with an import
+  or a `cover:` path exactly like the existing files do. Do not try to `cp` or
+  otherwise fetch images any other way; if the script fails, say so on the
+  issue.

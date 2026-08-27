@@ -46,5 +46,8 @@ jobs:
           # Optional: Add claude_args to customize behavior and configuration
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr *)'
+          # Issue attachments are downloaded by the action to /tmp/github-images/.
+          # The bot may read them and commit them ONLY via scripts/add-photo.mjs
+          # (auto-rotate, downsize, strip EXIF/GPS). npm/npx cover the test gate.
+          claude_args: '--allowed-tools "Read(/tmp/github-images/**),Bash(ls /tmp/github-images*),Bash(node scripts/add-photo.mjs *),Bash(npm *),Bash(npx *),Bash(git *)"'
 
