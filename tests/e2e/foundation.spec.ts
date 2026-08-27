@@ -5,6 +5,7 @@ const PRIMARY_NAV = [
   'Schedule',
   'Events',
   'About',
+  'Beginners',
   'League Life',
   'Merch',
   'Contact',
@@ -18,7 +19,7 @@ test('home renders through the shell', async ({ page }) => {
   await expect(page.locator('main')).toContainText('all skill levels', { ignoreCase: true });
 });
 
-test('primary nav has exactly the eight destinations and excludes the tee sheet', async ({ page }) => {
+test('primary nav has exactly the nine destinations and excludes the tee sheet', async ({ page }) => {
   await page.goto('/');
   const items = page.locator('[data-nav="primary"] a');
   await expect(items).toHaveCount(PRIMARY_NAV.length);

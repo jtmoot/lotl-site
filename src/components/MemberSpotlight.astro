@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+// Member Spotlight: surfaces the newest non-draft story flagged
+// `spotlight: true`. Renders nothing when there is none, so pages can include
+// it unconditionally. The card carries the short `spotlightBlurb`; the full
+// story lives at /stories/<slug>.
+interface Props {
+  eyebrow?: string;
+  ctaHref?: string;
+  ctaLabel?: string;
+}
+const { eyebrow = 'Member spotlight', ctaHref, ctaLabel } = Astro.props;
+
+const spotlights = (await getCollection('stories', ({ data }) => !data.draft && data.spotlight)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const post = spotlights[0];
+---
+
+{post && (
+  <section data-member-spotlight class="mx-auto max-w-5xl px-6 pb-16">
+    <div class="overflow-hidden rounded-xl border border-forest/10 bg-cream-soft/60 reveal">
+      <div class="grid gap-0 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+        <a href={`/stories/${post.id}`} class="block md:h-full">
+          <Image
+            src={post.data.cover}
+            alt={post.data.attribution ? `${post.data.attribution} mid-swing on the course` : `Cover image for ${post.data.title}`}
+            widths={[400, 800]}
+            sizes="(min-width: 768px) 40vw, 100vw"
+            class="aspect-[4/5] w-full object-cover object-[50%_60%] md:h-full md:aspect-auto"
+            loading="lazy"
+          />
+        </a>
+        <div class="p-8 sm:p-10">
+          <p class="eyebrow eyebrow-mark">{eyebrow}</p>
+          {post.data.attribution && (
+            <h2 class="mt-3 font-serif text-3xl font-light text-forest">{post.data.attribution}</h2>
+          )}
+          {post.data.pullQuote && (
+            <p class="mt-3 font-serif text-xl italic text-forest/80">&ldquo;{post.data.pullQuote}&rdquo;</p>
+          )}
+          <p class="mt-5 leading-relaxed text-slate">{post.data.spotlightBlurb ?? post.data.title}</p>
+          <div class="mt-7 flex flex-wrap items-center gap-4">
+            <a href={`/stories/${post.id}`} class="text-forest underline decoration-forest/40 underline-offset-4 hover:decoration-forest">
+              Read the full story
+            </a>
+            {ctaHref && ctaLabel && (
+              <a href={ctaHref} data-cta class="zen-btn px-6 py-2.5 text-sm">{ctaLabel}</a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+)}

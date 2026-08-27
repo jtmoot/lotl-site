@@ -17,6 +17,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
   month: 'long',
   day: 'numeric',
   year: 'numeric',
+  timeZone: 'UTC',
 });
 ---
 
@@ -34,6 +35,15 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
         {post.data.title}
       </h1>
       <p class="mt-5 text-sm text-slate rise" style="animation-delay:200ms">By {post.data.author}</p>
+      {post.data.pullQuote && (
+        <blockquote
+          data-pull-quote
+          class="mx-auto mt-8 max-w-xl font-serif text-2xl font-light italic leading-snug text-forest rise sm:text-3xl"
+          style="animation-delay:250ms"
+        >
+          &ldquo;{post.data.pullQuote}&rdquo;
+        </blockquote>
+      )}
     </header>
 
     <Image
@@ -41,7 +51,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
       alt={`Cover image for ${post.data.title}`}
       widths={[600, 1000, 1400]}
       sizes="(min-width: 768px) 768px, 100vw"
-      class="mt-10 aspect-[16/9] w-full rounded-xl border border-forest/10 object-cover rise"
+      class="mt-10 max-h-[36rem] w-full rounded-xl border border-forest/10 object-cover object-[50%_65%] rise"
       style="animation-delay:300ms"
       loading="eager"
     />

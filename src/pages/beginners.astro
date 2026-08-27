@@ -1,0 +1,138 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import MemberSpotlight from '../components/MemberSpotlight.astro';
+import lessonsChristian from '../assets/photos/beginners/lessons-christian.jpg';
+import onCourseRob from '../assets/photos/beginners/on-course-rob.jpg';
+import puttingGreen from '../assets/photos/beginners/putting-green.jpg';
+import carts from '../assets/photos/beginners/carts.jpg';
+
+// Beginner Program (Stacey, 2026-08-27). A standalone page she wants to keep
+// building out. Copy stays in her voice: show up on your own, we teach you,
+// you get better one week at a time. No em dashes anywhere.
+const BOOK_URL = 'https://bookwhen.com/ladiesonthelinks';
+
+const steps = [
+  {
+    title: 'Small-group lessons',
+    blurb:
+      'Start with our pro, Christian Grace. Grip, stance, swing, and the basics of the game, in a group of no more than six women.',
+  },
+  {
+    title: 'Short game and putting',
+    blurb:
+      'Chipping and putting clinics on the practice green, where most of the strokes in golf actually happen.',
+  },
+  {
+    title: 'On-course lessons',
+    blurb:
+      'Take what you have learned onto a real hole with a pro alongside you. This is where it clicks, and where you start to feel like a golfer.',
+  },
+];
+
+const facts = [
+  { label: 'Lessons', value: '$35 to $45' },
+  { label: 'Length', value: '50 minutes' },
+  { label: 'Group size', value: 'Six women, max' },
+  { label: 'Clubs', value: 'We have them for you' },
+];
+
+const photos = [
+  { src: lessonsChristian, alt: 'Christian Grace teaching a small group of women at the range', caption: 'A lesson with Christian' },
+  { src: puttingGreen, alt: 'Women practicing on the putting green', caption: 'Putting clinic on the practice green' },
+  { src: carts, alt: 'A group of women in golf carts heading out to an on-course lesson', caption: 'Carts loaded, heading out for an on-course lesson' },
+  { src: onCourseRob, alt: 'Rob leading an on-course lesson with a mixed group of beginners and advanced players', caption: 'On-course lesson with Rob' },
+];
+---
+
+<Layout
+  title="Beginners · Ladies on the Links"
+  description="New to golf? The Ladies on the Links beginner program in Duxbury, MA takes you from your first lesson to the course, one week at a time. No experience, no clubs, and no friend to sign up with needed."
+>
+  <PageIntro
+    eyebrow="Beginner program"
+    title="New to golf? Start here."
+    lede="You do not need experience. You do not need your own clubs. You do not need a friend to sign up with you. You show up, we teach you, and you get better one week at a time."
+  />
+
+  <!-- Quick facts -->
+  <section class="mx-auto max-w-5xl px-6 pb-16">
+    <dl data-beginner-facts class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      {facts.map((f, i) => (
+        <div
+          class="rounded-xl border border-forest/10 bg-cream-soft/60 p-5 text-center reveal"
+          style={`transition-delay:${i * 60}ms`}
+        >
+          <dt class="eyebrow">{f.label}</dt>
+          <dd class="mt-2 font-serif text-xl text-forest">{f.value}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="mt-4 text-center text-sm text-slate reveal">
+      Yes, we have clubs for our beginners, so you do not have to worry about that part.
+    </p>
+  </section>
+
+  <!-- How it works -->
+  <section class="mx-auto max-w-5xl px-6 pb-16">
+    <h2 class="eyebrow eyebrow-mark reveal">How it works</h2>
+    <p class="mt-4 max-w-2xl font-serif text-3xl font-light text-forest reveal">
+      Lesson by lesson, range to green to course.
+    </p>
+    <ol class="mt-8 grid gap-6 sm:grid-cols-3">
+      {steps.map((step, i) => (
+        <li
+          class="rounded-xl border border-forest/10 bg-cream-soft/60 p-6 reveal card-lift"
+          style={`transition-delay:${i * 90}ms`}
+        >
+          <p class="eyebrow">Step {i + 1}</p>
+          <h3 class="mt-2 font-serif text-xl text-forest">{step.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate">{step.blurb}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-6 max-w-2xl leading-relaxed text-slate reveal">
+      Our pro, <a href="/about#pro" class="text-forest underline decoration-forest/40 underline-offset-4 hover:decoration-forest">Christian Grace</a>,
+      runs beginner lessons, advanced lessons, and specialty clinics all season long. Patient, encouraging, and never the
+      type to make you feel like you are slowing anyone down.
+    </p>
+  </section>
+
+  <!-- Photos -->
+  <section class="mx-auto max-w-5xl px-6 pb-16">
+    <h2 class="eyebrow eyebrow-mark reveal">Out on the course</h2>
+    <ul data-beginner-photos class="mt-6 grid gap-6 sm:grid-cols-2">
+      {photos.map((photo, i) => (
+        <li class="overflow-hidden rounded-xl border border-forest/10 bg-cream-soft/60 reveal card-lift" style={`transition-delay:${(i % 2) * 90}ms`}>
+          <figure>
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              widths={[480, 960]}
+              sizes="(min-width: 640px) 50vw, 100vw"
+              class="aspect-[4/3] w-full object-cover"
+              loading="lazy"
+            />
+            <figcaption class="p-4 text-sm text-slate">{photo.caption}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <MemberSpotlight eyebrow="Beginner spotlight" ctaHref={BOOK_URL} ctaLabel="Book a session" />
+
+  <!-- CTA -->
+  <section class="mx-auto max-w-3xl px-6 pb-24 text-center">
+    <div class="rule mx-auto max-w-xs"></div>
+    <h2 class="mt-10 font-serif text-3xl font-light text-forest reveal">Ready to start?</h2>
+    <p class="mx-auto mt-3 max-w-xl leading-relaxed text-slate reveal">
+      Book a lesson, or register for the league and we will point you to the right first step.
+    </p>
+    <div class="mt-7 flex flex-wrap items-center justify-center gap-4 reveal">
+      <a href={BOOK_URL} data-cta class="zen-btn" target="_blank" rel="noopener">Book a session</a>
+      <a href="/register" class="ghost-btn">Register</a>
+    </div>
+  </section>
+</Layout>

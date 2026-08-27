@@ -7,6 +7,7 @@ import joshPhoto from '../assets/photos/team/josh.jpg';
 import melissaPhoto from '../assets/photos/team/melissa.jpg';
 import staceyPhoto from '../assets/photos/team/stacey.jpg';
 import phoebePhoto from '../assets/photos/team/phoebe.jpg';
+import christianPhoto from '../assets/photos/team/christian-grace.jpg';
 
 // Drafted copy (build inputs §4), used verbatim:
 //  - League story  = the Welcome / About paragraph.
@@ -15,7 +16,7 @@ import phoebePhoto from '../assets/photos/team/phoebe.jpg';
 // Never "our PGA pro", never "Class A". No em dashes anywhere.
 
 // Meet the Team. Titles and bios are drafts for Stacey to edit. A null photo
-// renders the swap-later placeholder treatment (same as Christian's below).
+// renders the swap-later placeholder treatment.
 type TeamMember = {
   name: string;
   title: string;
@@ -139,7 +140,7 @@ const team: TeamMember[] = [
   </div>
 
   <!-- Meet the Pro -->
-  <section class="mx-auto max-w-3xl px-6 pb-24">
+  <section id="pro" class="mx-auto max-w-3xl px-6 pb-24 scroll-mt-24">
     <div
       class="overflow-hidden rounded-xl border border-forest/10 bg-cream-soft/60 p-8 sm:p-10 reveal"
     >
@@ -148,45 +149,29 @@ const team: TeamMember[] = [
       <p class="mt-1 text-sm tracking-wide text-slate">PGA Associate</p>
 
       <div class="mt-8 flex flex-col gap-8 sm:flex-row sm:items-start">
-        <!--
-          Placeholder headshot. Swap-later: replace this <figure> block with
-          <Image src={...} alt="Christian Grace" ... /> once the real photo is supplied.
-          The SVG below is a tasteful on-brand silhouette so the layout is final now.
-        -->
         <figure class="shrink-0">
-          <div
-            class="flex h-40 w-40 items-center justify-center rounded-xl border border-forest/10 bg-forest/5"
-            aria-hidden="true"
-          >
-            <svg
-              width="88"
-              height="88"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="text-forest/40"
-            >
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
-            </svg>
-          </div>
-          <figcaption class="mt-2 text-center text-xs italic text-rose/80">Photo coming soon</figcaption>
+          <Image
+            src={christianPhoto}
+            alt="Christian Grace, our pro, on the course at North Hill"
+            width={480}
+            height={640}
+            class="h-56 w-44 rounded-xl border border-forest/10 object-cover object-top"
+          />
         </figure>
 
         <div class="space-y-4 text-lg leading-relaxed text-slate">
           <p>
             Meet our pro, <strong class="font-medium text-forest">Christian Grace</strong>. Christian runs small-group
-            lessons for Ladies on the Links all season long, and he is exactly who you want if you are nervous about getting
-            started. Patient, encouraging, and never the type to make you feel like you are slowing anyone down. Lessons are
-            <strong class="font-medium text-forest">$35 per person, 50 minutes, capped at six women</strong>, so there is
-            plenty of personal attention.
+            lessons for Ladies on the Links all season long, and he is exactly who you want if you are a beginner or an
+            advanced player, or someone in between. Patient, encouraging, and never the type to make you feel like you are
+            slowing anyone down. Lessons are
+            <strong class="font-medium text-forest">$35 to $45 per person, 50 minutes, capped at six women</strong>, so
+            there is plenty of personal attention.
           </p>
           <p>
-            New to golf? Start with a lesson before your first Monday. Once Christian gives you the green light, you are ready
-            to play.
+            We offer beginner lessons, advanced lessons, and specialty clinics all season long. There is something for
+            everyone. Brand new to the game? Start with our
+            <a href="/beginners" class="text-forest underline decoration-forest/40 underline-offset-4 hover:decoration-forest">beginner program</a>.
           </p>
           <p class="pt-2">
             <a href="/schedule#lessons" data-cta class="zen-btn px-6 py-2.5 text-sm">Book a lesson</a>

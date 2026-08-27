@@ -13,18 +13,19 @@ test('Meet-the-Pro section uses the correct, constrained phrasing', async ({ pag
   // Required phrasing.
   await expect(main).toContainText('our pro, Christian Grace');
   await expect(main).toContainText('PGA Associate');
-  await expect(main).toContainText('$35 per person, 50 minutes, capped at six women');
+  await expect(main).toContainText('$35 to $45 per person, 50 minutes, capped at six women');
   // Forbidden phrasing (hard copy constraint).
   await expect(main).not.toContainText('PGA pro');
   await expect(main).not.toContainText('Class A');
 });
 
-test('the league story and a swappable placeholder headshot are present', async ({ page }) => {
+test('the league story and the real pro headshot are present', async ({ page }) => {
   await page.goto('/about');
   const main = page.locator('main');
   await expect(main).toContainText('North Hill Country Club');
   await expect(main).toContainText('No judgment, just joy');
-  await expect(main).toContainText('Photo coming soon'); // placeholder, swapped for real photo later
+  await expect(main).not.toContainText('Photo coming soon');
+  await expect(main.locator('img[alt*="Christian Grace"]')).toBeVisible();
 });
 
 test('Meet the Team lists the four organizers with titles', async ({ page }) => {

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PageIntro from '../components/PageIntro.astro';
+import MemberSpotlight from '../components/MemberSpotlight.astro';
 
 // League Life: the merged Stories + Gallery page (nav consolidation, 2026-07).
 // Stories up top (dated, indexed blog cards; posts still live at
@@ -17,6 +18,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
   month: 'long',
   day: 'numeric',
   year: 'numeric',
+  timeZone: 'UTC',
 });
 
 // Anonymous photo grid (not a feed). Entries are curated Markdown files in the
@@ -43,6 +45,8 @@ const tiles = entries.flatMap((entry) =>
     title="League Life"
     lede="The women, the Mondays, the moments. Member spotlights, event recaps, the occasional tip from our pro Christian Grace, and scenes from the course."
   />
+
+  <MemberSpotlight />
 
   <!-- Stories -->
   <section class="mx-auto max-w-5xl px-6 pb-16">
