@@ -1,11 +1,21 @@
-// Story-notes API: likes + comments for /stories/<slug>, backed by D1.
-// Only /api/* reaches this Worker (run_worker_first); everything else is
-// served as static assets by the platform.
+// lotl-site Worker.
+//   fetch():  story-notes API (likes + comments) and the tee-sheet API under
+//             /api/*; everything else is served as static assets.
+//   email():  Bookwhen booking/cancellation notifications delivered by Email
+//             Routing (tee@sync.ladiesonthelinksgolf.com) -> D1.
+// All state lives in the one D1 database bound as DB.
 
 // Workers types are imported (not globally referenced) so they can't clash
 // with the DOM lib used by the Astro pages in the same TS program.
-import type { D1Database, Fetcher, ExecutionContext } from '@cloudflare/workers-types';
+import type {
+  D1Database,
+  Fetcher,
+  ExecutionContext,
+  ForwardableEmailMessage,
+} from '@cloudflare/workers-types';
 import { validateComment, signDeleteToken, verifyDeleteToken } from './lib';
+import { ingestEmail } from './teesheet/ingest';
+import { getTeeSheet, resolveRange } from './teesheet/query';
 
 export interface Env {
   DB: D1Database;
@@ -129,6 +139,21 @@ export default {
       return (env.ASSETS as unknown as { fetch: typeof fetch }).fetch(request);
     }
 
+    if (url.pathname === '/api/tee-sheet' && request.method === 'GET') {
+      const now = new Date();
+      const range = resolveRange(url.searchParams, now);
+      const sheet = await getTeeSheet(env.DB, range.from, range.to, now);
+      return new Response(JSON.stringify({ preset: range.preset, ...sheet }), {
+        status: 200,
+        headers: {
+          'content-type': 'application/json',
+          // Names change with every booking; never let a CDN or browser hold this.
+          'cache-control': 'no-store',
+          'x-robots-tag': 'noindex',
+        },
+      });
+    }
+
     const storyMatch = url.pathname.match(/^\/api\/stories\/([^/]+)$/);
     if (storyMatch && request.method === 'GET') {
       const slug = storyMatch[1];
@@ -238,5 +263,17 @@ export default {
     }
 
     return json({ error: 'not found' }, 404);
+  },
+
+  /**
+   * Email Routing hands every message for the sync address here. Storage
+   * failures propagate (so the delivery is rejected and visible in Cloudflare's
+   * logs) after being recorded in sync_state for the health line.
+   */
+  async email(message: ForwardableEmailMessage, env: Env, _ctx: ExecutionContext): Promise<void> {
+    const outcome = await ingestEmail(env.DB, message.raw as unknown as ReadableStream<Uint8Array>);
+    console.log(
+      JSON.stringify({ event: 'tee-sheet-email', from: message.from, ...outcome })
+    );
   },
 };
