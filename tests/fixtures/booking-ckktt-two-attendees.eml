@@ -1,0 +1,504 @@
+Delivered-To: jtmoorehead1@gmail.com
+Received: by 2002:a05:6a11:2826:b0:750:b977:ec6e with SMTP id xu6csp15579883pxb;
+        Thu, 24 Sep 2026 11:15:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=3; AKwUvBxuvMwHRMBs4HQu/x0iuWo08LlB28qKmXZ+zjnxlqOA8RrEWsjf/p1EZhL7c1JoxJQVmZkfhHIFgJzAVjI=@gmail.com
+X-Received: by 2002:a4a:ee0b:0:b0:6b9:3295:7712 with SMTP id 006d021491bc7-6d440a10aa3mr3595526eaf.53.1790273710366;
+        Thu, 24 Sep 2026 11:15:10 -0700 (PDT)
+ARC-Seal: i=2; a=rsa-sha256; t=1790273710; cv=pass;
+        d=google.com; s=arc-20260327;
+        b=HsTMx2mCDG+E17XHD3n4jCFqN6JtPjm4AYD3gZ3VR8o6uRs+7Kbp6FLA4mXKPrAUd0
+         JLLeUKtvviTmarzg86h/p3fWOdwQqPRllZYDN95v7n5ssoUNdG9gafVh7lpq4SJin1hb
+         yENZd5pX/PmeM/KWT3r7fXu9ZVv9F+P9wj+q/YhCWVqRmvYYyHPIpqFO6lexboRRG2tS
+         3zmmuIHy3CyUwLbXeyvqu04lZm0YDLYz2PevSmTpOU/BmZpGvyEOUurFXjVC0/3SWbem
+         lNYNZQg972y2oFwTSoZtLbI13xO7QBu2YO2cP4Q47sXgxXsD6YsmTHqzyt5I0gO0OAcD
+         f69A==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=mime-version:feedback-id:message-id:to:reply-to:subject:date:from
+         :dkim-signature:dkim-signature:dkim-signature:dkim-signature;
+        bh=AcnGYYDu4bpS583BRoBYfUJLry56aOiHbo5IONjYl7g=;
+        fh=OUD8Z0WRiUjTafKH3N5UtCw2q4oe6vK6/H2unLSf6/k=;
+        b=sDjHhP1rbdG5ZsAwj2O5BsOY4Q9vJyeIXKzKf8uORsom7mAkzBHVDtTRTjOz9loY1F
+         9tJcbQOYQUcY+VMLZt8+enoogjLL9ohAcI0m6fNUODIqW/zx5yO4mTaFWOt97GDkxaz9
+         yez5xpgFhUTVdiuWS9uUubc7tcMJpjw0R8IrLlSpq6ABSPXGH4U3UgaeAuYTD+wqMWRv
+         8RC9v4rB/NNfwsXhHLrCDWFV9Kqb+vZR2eB8hytERf0cK5h5BLPtz8o2dS+k12hVODaQ
+         Lmy1yMwvgK4t2tfnSDuBzgcdaM5CgyJyXBaa847MicA6ySCTscXEgVOSt4vBmUbEUQGf
+         eDgA==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@ladiesonthelinksgolf.com header.s=cf2024-1 header.b=SUxydjG4;
+       dkim=pass header.i=@cloudflare-email.net header.s=cf2024-1 header.b=eAGTeQI7;
+       dkim=pass header.i=@pm.mtasv.net header.s=pm20250806 header.b=mLz8vmtS;
+       dkim=pass header.i=@bookwhen.com header.s=20130529100006.pm header.b=OjY6uk8n;
+       arc=pass (i=1 spf=pass spfdomain=pmbounces.bookwhen.com dkim=pass dkdomain=pm.mtasv.net dkim=pass dkdomain=bookwhen.com dmarc=pass fromdomain=bookwhen.com);
+       spf=softfail (google.com: domain of transitioning srs0=hl95=qh=pmbounces.bookwhen.com=pm_bounces@ladiesonthelinksgolf.com does not designate 104.30.10.200 as permitted sender) smtp.mailfrom="SRS0=hL95=qh=pmbounces.bookwhen.com=pm_bounces@ladiesonthelinksgolf.com";
+       dmarc=pass (p=QUARANTINE sp=REJECT dis=NONE) header.from=bookwhen.com
+Return-Path: <SRS0=hL95=qh=pmbounces.bookwhen.com=pm_bounces@ladiesonthelinksgolf.com>
+Received: from ba-caa.cloudflare-email.net (ba-caa.cloudflare-email.net. [104.30.10.200])
+        by mx.google.com with ESMTPS id 46e09a7af769-818e843b700si41301a34.42.2026.09.24.11.15.09
+        for <jtmoorehead1@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Sep 2026 11:15:10 -0700 (PDT)
+Received-SPF: softfail (google.com: domain of transitioning srs0=hl95=qh=pmbounces.bookwhen.com=pm_bounces@ladiesonthelinksgolf.com does not designate 104.30.10.200 as permitted sender) client-ip=104.30.10.200;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@ladiesonthelinksgolf.com header.s=cf2024-1 header.b=SUxydjG4;
+       dkim=pass header.i=@cloudflare-email.net header.s=cf2024-1 header.b=eAGTeQI7;
+       dkim=pass header.i=@pm.mtasv.net header.s=pm20250806 header.b=mLz8vmtS;
+       dkim=pass header.i=@bookwhen.com header.s=20130529100006.pm header.b=OjY6uk8n;
+       arc=pass (i=1 spf=pass spfdomain=pmbounces.bookwhen.com dkim=pass dkdomain=pm.mtasv.net dkim=pass dkdomain=bookwhen.com dmarc=pass fromdomain=bookwhen.com);
+       spf=softfail (google.com: domain of transitioning srs0=hl95=qh=pmbounces.bookwhen.com=pm_bounces@ladiesonthelinksgolf.com does not designate 104.30.10.200 as permitted sender) smtp.mailfrom="SRS0=hL95=qh=pmbounces.bookwhen.com=pm_bounces@ladiesonthelinksgolf.com";
+       dmarc=pass (p=QUARANTINE sp=REJECT dis=NONE) header.from=bookwhen.com
+DKIM-Signature: v=1; a=rsa-sha256; s=cf2024-1; d=ladiesonthelinksgolf.com; c=relaxed/relaxed;
+	h=Feedback-ID:To:Reply-To:Subject:Date:From:from:cc:resent-date
+	:resent-from:resent-to:resent-cc:in-reply-to:references:list-id:list-help
+	:list-unsubscribe:list-unsubscribe-post:list-subscribe:list-post
+	:list-owner:list-archive; t=1790273710; x=1790878510; bh=AcnGYYDu4bpS583BRo
+	BYfUJLry56aOiHbo5IONjYl7g=; b=SUxydjG4/GZZ0MtlAy4hecFxtH2Vr6LEVupSXzYx40oCm
+	al9RYYx+1BLB+Nx3+ixphyjABOoQPeqXBXhc6gsBFQTYCFFVJV0BffnDico6NjdpwdgFtLBZv+h
+	XoBasEpXGj101tsA0XJ2+jh194x/+c69Rrh5iLiOXQYRgt6sYwlKKYbAoD/fZJRe/69gchLahjl
+	xT+2UflMlqdd8ZfFrfd6uBv3AovrcAzeiUudaj5lcQyIB6UyJopJcMiD2Wl/qztEzCr7Lj5pj67
+	NExGBiOAYzGzGeGZc1JYIO84ZUmS8Ykdylgc0Hpk8zCqhOExrNo/Fx/90d5OpcQVueR7hdWg==;
+DKIM-Signature: v=1; a=rsa-sha256; s=cf2024-1; d=cloudflare-email.net; c=relaxed/relaxed;
+	h=Feedback-ID:To:Reply-To:Subject:Date:From:from:cc:resent-date
+	:resent-from:resent-to:resent-cc:in-reply-to:references:list-id:list-help
+	:list-unsubscribe:list-unsubscribe-post:list-subscribe:list-post
+	:list-owner:list-archive; t=1790273710; x=1790878510; bh=AcnGYYDu4bpS583BRo
+	BYfUJLry56aOiHbo5IONjYl7g=; b=eAGTeQI7kz/4Mvt1v/Qj219hBuA8X+XTRluS6DeXiL4Fb
+	5atEdRYs0gEaTi4E/GZs5nwwjghQC5EX5/u/H4uS9ksa5sii1t/9sV1reXQWauLCErK72zgpS4o
+	q5dtNjvNRaq6pAjzKyZ0U77lggFMq+8AxNrFDVrG23zZbKq85pdRJTrpOxY948bATRzlDMhIpwh
+	/jei9Vk5Y0WYpwVQS0G9A+amOdcdKvOeVgB7ikXhIE7eMY0i+YcuAYTz4a9Wc99vlfKeCgeVcK8
+	+RxhFghDElbg/sSt1FYZBj/WgWrMpK1Rz3jzMlTLazwhBwiJMxL+Q/0yCe7BsX3RifRuKttw==;
+X-Forwarded-To: jtmoorehead1@gmail.com
+X-Forwarded-For: tee@sync.ladiesonthelinksgolf.com jtmoorehead1@gmail.com
+Received: from mta216a-ord.mtasv.net (104.245.209.216)
+        by cloudflare-email.net (cloudflare) id YZ83GzsRxnz4
+        for <tee@sync.ladiesonthelinksgolf.com>; Thu, 24 Sep 2026 18:15:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=cf2024-1; d=cloudflare-email.net; cv=none;
+	b=NX18FFAidzwpvbHouHWc+LkEj3p9WG3KXtDiavojBBN3lftA+sr6ZX3KavJlmyCVv9/PwzCrL
+	FaORFzZIktIYlJ9oGo9qy8CvMNjMEAULevnUx9pHzMM+Dct3PgbGYsVxwLLgZAWUKaXmiC1nR6q
+	OfWXRxF7pwfQP5qS/5/HQBKaHNzezuv3UJAd3Zw0bJ0QHRSd5E84VTSSaQYEtdKF1mBUWZbWNJ8
+	vBSawTNX5z85UloGEyUZP9g8leOd1+cgYERFc65sca4jVieAXucTPN6O5b9f1XS1j8PDfTLWVdq
+	bAhcSp3qAbWOubP5ZrHBPIiq1zropgJtAsIrUIQz2DqA==;
+ARC-Message-Signature: i=1; a=rsa-sha256; s=cf2024-1; d=cloudflare-email.net; c=relaxed/relaxed;
+	h=To:Reply-To:Subject:Date:From:from:cc:resent-date:resent-from:resent-to
+	:resent-cc:in-reply-to:references:list-id:list-help:list-subscribe
+	:list-post:list-owner:list-archive; t=1790273709; x=1790878509; bh=AcnGYYDu
+	4bpS583BRoBYfUJLry56aOiHbo5IONjYl7g=; b=cxE2GDTEMUk2Ae18k3k8RjXMOh5GFeb/HyG
+	1gM8A4WyIZIyNMvL6CduXjFHW1+2tW4NJ/alEvTL+5P9ehJNMGKu0aaRSdWCOfP0wzTTbitytWB
+	RFcboYXbB3eGjLGFKCowJiXnM8p9NMkfnXu/ILXJ4rXYRcLrJ0zWfsDO7v/W7df/PKM0/ZbtPGC
+	kCSuD0qJv5WcfG6VdoUoK7WeSkc3RWyMpVMRLP4wogynSzrgBmF/vTWf7tOShhd89A3Vcyj6hBr
+	ojAGtRdBnR4SRX0rS+gProrr+kYLSsbhxybC8WtPYOLCCFAgjPomfcwAeY6zQvRArIUm/LIrEMA
+	NRCuuXw==;
+ARC-Authentication-Results: i=1; mx.cloudflare.net;
+	dkim=pass header.d=pm.mtasv.net header.s=pm20250806 header.b=mLz8vmtS;
+	dkim=pass header.i=mail@bookwhen.com header.s=20130529100006.pm header.b=OjY6uk8n;
+	dmarc=pass header.from=bookwhen.com policy.dmarc=reject;
+	spf=pass (mx.cloudflare.net: domain of postmaster@mta216a-ord.mtasv.net designates 104.245.209.216 as permitted sender) smtp.helo=mta216a-ord.mtasv.net;
+	spf=pass (mx.cloudflare.net: domain of pm_bounces@pmbounces.bookwhen.com designates 104.245.209.216 as permitted sender) smtp.mailfrom=pm_bounces@pmbounces.bookwhen.com;
+	arc=none smtp.remote-ip=104.245.209.216
+Received-SPF: pass (mx.cloudflare.net: domain of pm_bounces@pmbounces.bookwhen.com designates 104.245.209.216 as permitted sender)
+	receiver=mx.cloudflare.net; client-ip=104.245.209.216; envelope-from="pm_bounces@pmbounces.bookwhen.com"; helo=mta216a-ord.mtasv.net;
+Authentication-Results: mx.cloudflare.net;
+	dkim=pass header.d=pm.mtasv.net header.s=pm20250806 header.b=mLz8vmtS;
+	dkim=pass header.i=mail@bookwhen.com header.s=20130529100006.pm header.b=OjY6uk8n;
+	dmarc=pass header.from=bookwhen.com policy.dmarc=reject;
+	spf=pass (mx.cloudflare.net: domain of postmaster@mta216a-ord.mtasv.net designates 104.245.209.216 as permitted sender) smtp.helo=mta216a-ord.mtasv.net;
+	spf=pass (mx.cloudflare.net: domain of pm_bounces@pmbounces.bookwhen.com designates 104.245.209.216 as permitted sender) smtp.mailfrom=pm_bounces@pmbounces.bookwhen.com;
+	arc=none smtp.remote-ip=104.245.209.216
+X-CF-SpamH-Score: 1
+X-KumoRef: eyJfQF8iOiJcXF8vIiwicmVjaXBpZW50IjoidGVlQHN5bmMubGFkaWVzb250aGVsaW5rc2dvbGYuY29tIn0=
+DKIM-Signature: v=1; a=rsa-sha256; d=pm.mtasv.net; s=pm20250806; c=relaxed/relaxed;
+	bh=AcnGYYDu4bpS583BRoBYfUJLry56aOiHbo5IONjYl7g=;
+	h=from:to:subject:date:mime-version:content-type:sender:cc:date:message-id;
+	t=1790273708; x=1790878508;
+	b=mLz8vmtSYGMcO58VYgd3emNNU8J/Hb0km8E/MjtOjgN9eIIDkaZ/pWUBslJzrej21lm8/KCvu
+	uHpzGO4TdFu7o/h79rhjXsPzWLX6FZpoSB/Uioci2CvNjyrf2Qc/Jo3EomIIvRcHBmDCbdteQB2
+	2b3YjHQBapviN03M4S0yxH6fZ8AUU2cZKl8/arg3P7okLfjxE1Ds3NB8iJtVCdZlPJaRz44zei1
+	f91EudRm2TH5he1XPKsNx0rnix9neOebvDvi4b2kA0aPQJ9xhHg/v9AQeLEu+L63fGdFT64rR1U
+	oJB/IGL1lbcgg5pQeR1uICyMJWBabr8nB17+jJBa82tw==;
+Received: from ip-172-26-23-218.us-east-2.compute.internal (172.26.23.218)
+  by production-pmta-useast2.internal.postmarkapp.com (KumoMTA 10.97.243.210) 
+  with ESMTP id dff6114cb84311f19ed402fffcb06ecf for <tee@sync.ladiesonthelinksgolf.com>;
+  Thu, 24 Sep 2026 18:15:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; d=bookwhen.com; s=20130529100006.pm;
+	c=relaxed/relaxed; i=mail@bookwhen.com; t=1790273708; x=1790446508;
+	h=date:date:from:from:message-id:reply-to:reply-to:sender:subject:subject:to:
+	to:cc:feedback-id:mime-version:content-type;
+	bh=AcnGYYDu4bpS583BRoBYfUJLry56aOiHbo5IONjYl7g=;
+	b=OjY6uk8nP/p+QsUSNEZC4Qc++eEmZk9Eh7s8/FD97JN4nEAlgZF80wQlpWRb9DSU5FaAuFKou+C
+	ZZaHeC8pX88JzzpOcvtW5dlFwohaBq8j5JZVAOD5pQ2Zh2cyOZN8etHVXivPlxsvB8P5roLG1ge2P
+	D23DojtzcyD+dj9G5Vc=
+From: Ladies On The Links <mail@bookwhen.com>
+Date: Thu, 24 Sep 2026 18:15:08 +0000
+Subject: [Bookwhen] New booking. Ref: CKKTT - Test - hi john - john marsh
+Reply-To: no_reply@bookwhen.com
+To: tee@sync.ladiesonthelinksgolf.com
+Message-Id: <6ab568abacd07_4ab082251f3@bgjobs-deployment-855898886d-d9t6l.mail>
+Feedback-ID: s19106-_:s19106:a32262:postmark
+X-Complaints-To: abuse@postmarkapp.com
+X-Job: 32262_19106
+X-PM-Message-Id: 537bf998-9b59-47f3-82a0-fb8c36611f25
+X-PM-RCPT: |bTB8MzIyNjJ8MTkxMDZ8dGVlQHN5bmMubGFkaWVzb250aGVsaW5rc2dvbGYuY29t|
+X-PM-Message-Options: v1;1.dyghDD1b67JMMlS-LVHotw.NWVzGMzFxM0FFI31JoB9p24O8QQSVE1Xv0yTC9TYjt03rEXHoK8xF1eJ-pKs8-KRB3glFxVnplSU8-Z0TzjGiP7NizWHF1ynm9IGHo45XljR1HUZBJNEY0Zxq7ivXwo3stIb2Q9kgIiGbbBYKrMkdC3AIEdTVZ_wpM7e8-6vw0M4_EEbkGJwUv3wNUt_gZQK
+MIME-Version: 1.0
+X-virtual-MTA: ord-104-245-209-216
+X-PM-MTA-Pool: transactional-2
+Content-Type: multipart/alternative;
+	boundary=mk3-ec787bd77d7d4efd8d3107ea78295b6b; charset=UTF-8
+
+--mk3-ec787bd77d7d4efd8d3107ea78295b6b
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+New booking: CKKTT
+
+https://ladiesonthelinks.bookwhen.com/bookings/lu816tim6j7e
+
+Booking contact: honnnn@yahoo.com
+
+
+Test
+North Hill Country Club, 29 Merry Ave #4415, Duxbury MA 02332-4415
+  Thu 1 Oct, 10:00am - 11:00am
+    2 x test ($0.00 each)
+    john marsh <jimmyjjsodjo@yahoo.com>
+    hi john <honnnn@yahoo.com>
+
+--mk3-ec787bd77d7d4efd8d3107ea78295b6b
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.=
+w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=3D"http://www.w3.org/1999/xhtml" style=3D"margin:0;padding:0;fo=
+nt-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;lin=
+e-height:1.6">
+<head style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helv=
+etica, sans-serif;font-size:100%;line-height:1.6">
+  <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D=
+1.0" style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helve=
+tica, sans-serif;font-size:100%;line-height:1.6">
+  <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF-8" =
+style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helvetica,=
+ sans-serif;font-size:100%;line-height:1.6">
+  <title style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', H=
+elvetica, sans-serif;font-size:100%;line-height:1.6">[Bookwhen] New booking=
+. Ref: CKKTT - Test - hi john - john marsh</title>
+ =20
+</head>
+
+<body bgcolor=3D"#f2f4f6" style=3D"margin:0;padding:0;font-family:Arial, 'H=
+elvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;height=
+:100%;width:100% !important">
+
+  <!-- body -->
+  <table class=3D"body-wrap" bgcolor=3D"#f2f4f6" style=3D"margin:0;padding:=
+0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%=
+;line-height:1.6;width:100%;padding:10px">
+    <tr style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', He=
+lvetica, sans-serif;font-size:100%;line-height:1.6">
+      <td style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', =
+Helvetica, sans-serif;font-size:100%;line-height:1.6"></td>
+      <td class=3D"container" bgcolor=3D"#ffffff" style=3D"margin:0;padding=
+:0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100=
+%;line-height:1.6;border:1px solid #eaecee;display:block !important;max-wid=
+th:600px !important;margin:0 auto !important;clear:both !important">
+
+        <!-- content -->
+        <div class=3D"content" style=3D"margin:0;padding:0;font-family:Aria=
+l, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;p=
+adding:15px;max-width:600px;margin:0 auto;display:block">
+        <table style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Ne=
+ue', Helvetica, sans-serif;font-size:100%;line-height:1.6;width:100%">
+          <tr style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neu=
+e', Helvetica, sans-serif;font-size:100%;line-height:1.6">
+            <td style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica N=
+eue', Helvetica, sans-serif;font-size:100%;line-height:1.6">
+             =20
+<p style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helveti=
+ca, sans-serif;font-size:100%;line-height:1.6;color:#333;margin:0 0 10px 0;=
+font-weight:normal;font-size:15px">New booking: <span class=3D"ref" style=3D=
+"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-se=
+rif;font-size:100%;line-height:1.6;font-weight:bold;font-size:18px;color:#2=
+f3133;margin:0 5px">CKKTT</span></p>
+
+<p style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helveti=
+ca, sans-serif;font-size:100%;line-height:1.6;color:#333;margin:0 0 10px 0;=
+font-weight:normal;font-size:15px"><a href=3D"https://ladiesonthelinks.book=
+when.com/bookings/lu816tim6j7e" class=3D"btn-primary" style=3D"margin:0;pad=
+ding:0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size=
+:100%;line-height:1.6;color:#3869d4;text-decoration:none;color:#fff;backgro=
+und-color:#53b17b;padding:10px 20px;font-weight:normal;margin:20px 10px 20p=
+x 0;text-align:center;cursor:pointer;display:inline-block;border-radius:5px=
+">View booking</a></p>
+
+
+<div class=3D"booking" style=3D"margin:0;padding:0;font-family:Arial, 'Helv=
+etica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;margin:20=
+px 0">
+
+    <div class=3D"contact" style=3D"margin:0;padding:0;font-family:Arial, '=
+Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;line-=
+height:1.8;font-size:13px">
+      Booking contact:
+      <a href=3D"mailto:honnnn@yahoo.com" style=3D"margin:0;padding:0;font-=
+family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-h=
+eight:1.6;color:#3869d4;text-decoration:none;margin-left:8px">honnnn@yahoo.=
+com</a>
+    </div>
+
+
+
+    <h2 class=3D"title" style=3D"margin:0;padding:0;font-size:100%;font-fam=
+ily:Arial, 'Helvetica Neue', Helvetica, sans-serif;color:#2f3133;margin:10p=
+x 0 20px 0;line-height:1.6;font-weight:bold;text-align:left;font-size:16px;=
+margin:10px 0">
+      Test
+    </h2>
+
+
+     =20
+
+      <div class=3D"occurrence_set" style=3D"margin:0;padding:0;font-family=
+:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:=
+1.6;line-height:1.8">
+
+        <ul class=3D"event_details" style=3D"padding:0;font-family:Arial, '=
+Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;color=
+:#333;margin:0 0 10px 0;font-weight:normal;font-size:15px;margin:0 0 20px 0=
+;margin:0">
+
+
+            <li style=3D"padding:0;font-family:Arial, 'Helvetica Neue', Hel=
+vetica, sans-serif;font-size:100%;line-height:1.6;font-size:14px;margin-lef=
+t:5px;list-style-position:inside;margin:0;list-style:none;font-size:13px;ma=
+rgin-bottom:5px">
+              <img class=3D"icon" width=3D"14" src=3D"https://d1abtw6bgq2xi=
+2.cloudfront.net/images/location.png" style=3D"margin:0;padding:0;font-fami=
+ly:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-heigh=
+t:1.6;vertical-align:text-top;margin:0 8px 0 0;max-width:100%;width:14px">
+              North Hill Country Club, 29 Merry Ave #4415, Duxbury MA 02332=
+-4415
+            </li>
+
+            <li style=3D"padding:0;font-family:Arial, 'Helvetica Neue', Hel=
+vetica, sans-serif;font-size:100%;line-height:1.6;font-size:14px;margin-lef=
+t:5px;list-style-position:inside;margin:0;list-style:none;font-size:13px;ma=
+rgin-bottom:5px">
+              <img class=3D"icon" width=3D"14" src=3D"https://d1abtw6bgq2xi=
+2.cloudfront.net/images/calendar_check.png" style=3D"margin:0;padding:0;fon=
+t-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line=
+-height:1.6;vertical-align:text-top;margin:0 8px 0 0;max-width:100%;width:1=
+4px">
+
+              Thu 1 Oct, 10:00am - 11:00am
+
+
+
+            </li>
+
+        </ul>
+
+        <ul style=3D"padding:0;font-family:Arial, 'Helvetica Neue', Helveti=
+ca, sans-serif;font-size:100%;line-height:1.6;color:#333;margin:0 0 10px 0;=
+font-weight:normal;font-size:15px;margin:0 0 20px 0;margin:0">
+            <li style=3D"padding:0;font-family:Arial, 'Helvetica Neue', Hel=
+vetica, sans-serif;font-size:100%;line-height:1.6;font-size:14px;margin-lef=
+t:5px;list-style-position:inside;margin:0;list-style:none;font-size:13px">
+
+              <div class=3D"ticket_summary" style=3D"margin:0;padding:0;fon=
+t-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line=
+-height:1.6;line-height:1.8;margin-bottom:5px">
+                <img class=3D"icon" width=3D"14" src=3D"https://d1abtw6bgq2=
+xi2.cloudfront.net/images/ticket.png" style=3D"margin:0;padding:0;font-fami=
+ly:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-heigh=
+t:1.6;vertical-align:text-top;margin:0 8px 0 0;max-width:100%;width:14px">
+
+                2 x test ($0.00 each)
+              </div>
+
+              <div class=3D"ticket_details" style=3D"margin:0;padding:0;fon=
+t-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line=
+-height:1.6;line-height:1.8;padding-left:28px;margin-bottom:10px">
+
+
+
+
+                    <div class=3D"attendee" style=3D"margin:0;padding:0;fon=
+t-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line=
+-height:1.6;line-height:1.8">
+                        <img class=3D"icon" width=3D"14" src=3D"https://d1a=
+btw6bgq2xi2.cloudfront.net/images/person.png" style=3D"margin:0;padding:0;f=
+ont-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;li=
+ne-height:1.6;vertical-align:text-top;margin:0 8px 0 0;max-width:100%;width=
+:14px">
+                      john marsh <span class=3D"email" style=3D"margin:0;pa=
+dding:0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-siz=
+e:100%;line-height:1.6;margin-left:.5rem"><a href=3D"/customers/g544ydh82ea=
+3" style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helveti=
+ca, sans-serif;font-size:100%;line-height:1.6;color:#3869d4;text-decoration=
+:none">jimmyjjsodjo@yahoo.com</a></span>
+                      =20
+                    </div>
+
+                     =20
+
+
+
+
+
+
+                    <div class=3D"attendee" style=3D"margin:0;padding:0;fon=
+t-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line=
+-height:1.6;line-height:1.8">
+                        <img class=3D"icon" width=3D"14" src=3D"https://d1a=
+btw6bgq2xi2.cloudfront.net/images/person.png" style=3D"margin:0;padding:0;f=
+ont-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;li=
+ne-height:1.6;vertical-align:text-top;margin:0 8px 0 0;max-width:100%;width=
+:14px">
+                      hi john <span class=3D"email" style=3D"margin:0;paddi=
+ng:0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:1=
+00%;line-height:1.6;margin-left:.5rem"><a href=3D"/customers/4venpz8hg4t0" =
+style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helvetica,=
+ sans-serif;font-size:100%;line-height:1.6;color:#3869d4;text-decoration:no=
+ne">honnnn@yahoo.com</a></span>
+                      =20
+                    </div>
+
+                     =20
+
+
+              </div>
+
+            </li>
+        </ul>
+
+      </div>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+            </td>
+          </tr>
+        </table>
+        </div>
+        <!-- /content -->
+
+      </td>
+      <td style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', =
+Helvetica, sans-serif;font-size:100%;line-height:1.6"></td>
+    </tr>
+  </table>
+  <!-- /body -->
+
+  <!-- footer -->
+<table class=3D"footer-wrap" bgcolor=3D"#f2f4f6" style=3D"margin:0;padding:=
+0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%=
+;line-height:1.6;width:100%;clear:both !important">
+  <tr style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helv=
+etica, sans-serif;font-size:100%;line-height:1.6">
+    <td style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', He=
+lvetica, sans-serif;font-size:100%;line-height:1.6"></td>
+    <td class=3D"container" style=3D"margin:0;padding:0;font-family:Arial, =
+'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;disp=
+lay:block !important;max-width:600px !important;margin:0 auto !important;cl=
+ear:both !important">
+
+      <!-- content -->
+      <div class=3D"content" style=3D"margin:0;padding:0;font-family:Arial,=
+ 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;pad=
+ding:15px;max-width:600px;margin:0 auto;display:block">
+        <table style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Ne=
+ue', Helvetica, sans-serif;font-size:100%;line-height:1.6;width:100%">
+          <tr style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neu=
+e', Helvetica, sans-serif;font-size:100%;line-height:1.6">
+            <td align=3D"center" style=3D"margin:0;padding:0;font-family:Ar=
+ial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6=
+">
+                <div class=3D"social-media-links" style=3D"margin:0;padding=
+:0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100=
+%;line-height:1.6;display:inline-block;margin:0 0 10px 0">
+                    <a target=3D"_blank" href=3D"https://www.instagram.com/=
+bookwhen/" style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue',=
+ Helvetica, sans-serif;font-size:100%;line-height:1.6;color:#3869d4;text-de=
+coration:none;margin-right:20px;color:#525252"><img width=3D"21" height=3D"=
+24" alt=3D"instagram" src=3D"https://cdn.bookwhen.com/assets/logos/instagra=
+m-brands-solid@2x-48d1a6847493aa1a71a6e678f8d24c2434af491d27869f246f74d42e3=
+6740413.png" style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue=
+', Helvetica, sans-serif;font-size:100%;line-height:1.6;max-width:100%"></a=
+>
+                    <a target=3D"_blank" href=3D"https://www.facebook.com/g=
+roups/bookwhencommunity/" style=3D"margin:0;padding:0;font-family:Arial, 'H=
+elvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;color:=
+#3869d4;text-decoration:none;margin-right:20px;color:#525252"><img width=3D=
+"23" height=3D"23" alt=3D"facebook" src=3D"https://cdn.bookwhen.com/assets/=
+logos/facebook-brands-solid@2x-4b035e6354ecb07c475c368eedfbf87d5b56fd21abf8=
+b4cbeb6ae1c9c0bbb3de.png" style=3D"margin:0;padding:0;font-family:Arial, 'H=
+elvetica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;max-wi=
+dth:100%"></a>
+                    <a target=3D"_blank" href=3D"https://www.linkedin.com/c=
+ompany/bookwhen-ltd/" style=3D"margin:0;padding:0;font-family:Arial, 'Helve=
+tica Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;color:#386=
+9d4;text-decoration:none;margin-right:20px;color:#525252;margin-right:0px">=
+<img width=3D"21" height=3D"24" alt=3D"linkedin" src=3D"https://cdn.bookwhe=
+n.com/assets/logos/linkedin-brands-solid@2x-37a8657b519693aaa698dfebdbfa223=
+46661102593096b2236b616530037aa16.png" style=3D"margin:0;padding:0;font-fam=
+ily:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-heig=
+ht:1.6;max-width:100%"></a>
+                </div>
+
+                <p class=3D"underline" style=3D"margin:0;padding:0;font-fam=
+ily:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:100%;line-heig=
+ht:1.6;color:#333;margin:0 0 10px 0;font-weight:normal;font-size:15px;text-=
+decoration:underline;font-size:12px;color:#525252">
+                  <a href=3D"https://bookwhen.com/blog" style=3D"margin:0;p=
+adding:0;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-si=
+ze:100%;line-height:1.6;color:#3869d4;text-decoration:none;color:#525252">
+                    Our blog
+                  </a>
+                </p>
+              <p style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica =
+Neue', Helvetica, sans-serif;font-size:100%;line-height:1.6;color:#333;marg=
+in:0 0 10px 0;font-weight:normal;font-size:15px;font-size:12px;color:#52525=
+2">
+                =C2=A9 2026 <a href=3D"https://bookwhen.com/?r=3Demail" sty=
+le=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', Helvetica, sa=
+ns-serif;font-size:100%;line-height:1.6;color:#3869d4;text-decoration:none;=
+color:#525252">Bookwhen Ltd</a>
+              </p>
+
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- /content -->
+
+    </td>
+    <td style=3D"margin:0;padding:0;font-family:Arial, 'Helvetica Neue', He=
+lvetica, sans-serif;font-size:100%;line-height:1.6"></td>
+  </tr>
+</table>
+<!-- /footer -->
+
+
+<img src=3D"https://ea.pstmrk.it/open?m=3Dv3_1.AG1ms2ZogKRuqCuvstUwcw.Ew-mV=
+k-lLg0G3A_5omLX7wInPIbi-Q4y89k7ICBNpO4S4EPOnAb9OyKKrQD5riCCkjIbIe_h5dDhSzYO=
+Dm0PVPZwjHHSuXScVgUYO_Ggv5lxrccTHLl5SOayx1S4w3JCSYsJhWAdt7hc4Zn6Z2x3sNjBYNo=
+QF67k-huLDKTy050WOohnCg6mNi0gE-40mEqJO3rBxYXq3oyFdVL34CFsIVbjePxIwWrHIkvzDL=
+xbdSWc5uO51MRToCQdgB7i3D2ZYerufcEEG512wrpziH7lsziotQrNYWqKCBfs8TOMHrWyqdYz8=
+XPv2zQFY60oV2VacPyFgxMTx-bwAcIzLXhqZW57ZoMa5i3I2L9QmUdLVjmw-nvFX4XEEqer488l=
+Kbt8HBxcXsGe2doCbeQPkDt1fEKGjgdpM1QxCcOKOeQ-0FaXC2s6K6W3Sqsh1ZPJBe0TonC6pgV=
+7fjkxTFZEuj2HtBS58Fvv7NtmRv5JmTw4l8ecOnsyW7wcC2QqGz9ikAZa1aIcPBhYl7u6bT9_kE=
+BkMS_HX2lDRU-rnU8zz-F6I3qZtjjMgiL0XWQVsojipB2m" width=3D"1" height=3D"1" bo=
+rder=3D"0" alt=3D"" /></body>
+</html>
+
+--mk3-ec787bd77d7d4efd8d3107ea78295b6b--
+

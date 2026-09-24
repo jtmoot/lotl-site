@@ -1,0 +1,2 @@
+# Raw email fixtures must keep their CRLF bytes exactly as received.
+tests/fixtures/*.eml -text
