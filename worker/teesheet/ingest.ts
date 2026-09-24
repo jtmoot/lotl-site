@@ -2,7 +2,7 @@
 // Nothing here is swallowed: unmatched mail lands in `unparsed`, and a storage
 // failure is recorded in `sync_state` before being rethrown.
 import type { D1Database } from '@cloudflare/workers-types';
-import { parseRawEmail, nameKey, type ParseResult } from './parse';
+import { parseRawEmail, nameKey, type ParseResult } from './parse.ts';
 
 export type IngestOutcome =
   | { outcome: 'stored'; ref: string; seats: number }
