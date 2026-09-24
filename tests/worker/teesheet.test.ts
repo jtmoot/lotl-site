@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { startWorker, stopWorker, BASE } from './harness.ts';
 
 before(async () => { await startWorker(); });
-after(() => { stopWorker(); });
+after(async () => { await stopWorker(); });
 
 // The fixtures all book "Thu 1 Oct" (received 24 Sep 2026), so query that day
 // explicitly rather than depending on today's rolling window.

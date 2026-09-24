@@ -10,7 +10,7 @@ import { startWorker, stopWorker, BASE } from './harness.ts';
 const SLUG = 'welcome-to-stories';
 
 before(async () => { await startWorker(); });
-after(() => { stopWorker(); });
+after(async () => { await stopWorker(); });
 
 function postComment(slug: string, fields: Record<string, string>) {
   return fetch(`${BASE}/api/stories/${slug}/comments`, {
