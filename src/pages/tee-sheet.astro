@@ -1,0 +1,250 @@
+---
+// Live tee sheet: who is signed up for each upcoming slot. Public by link,
+// never indexed, never in the nav. Data comes from /api/tee-sheet (names only,
+// no contact details) and is rendered client-side so the static shell stays
+// cacheable while names never are.
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+---
+
+<Layout
+  title="Tee Sheet · Ladies on the Links"
+  description="Who is signed up for each Monday tee time and lesson."
+  noindex
+>
+  <PageIntro
+    eyebrow="Who's playing"
+    title="Tee sheet"
+    lede="Names fill in automatically as bookings come through. Check back for the latest."
+  />
+
+  <section class="mx-auto max-w-4xl px-6 pb-24">
+    <div class="mb-8 flex flex-wrap items-center justify-center gap-3 print:hidden" data-controls>
+      <nav aria-label="Range" class="flex rounded-full border border-forest/15 bg-cream-soft/70 p-1 text-sm">
+        <a href="/tee-sheet" data-range="upcoming" class="rounded-full px-4 py-1.5 text-forest transition hover:bg-forest/5">Upcoming</a>
+        <a href="/tee-sheet?range=past" data-range="past" class="rounded-full px-4 py-1.5 text-forest transition hover:bg-forest/5">Past 90 days</a>
+      </nav>
+      <button type="button" class="ghost-btn" data-print>Print</button>
+    </div>
+
+    <div data-tee-sheet aria-live="polite" aria-busy="true">
+      <p class="text-center text-slate">Loading the tee sheet…</p>
+    </div>
+
+    <p class="mt-10 border-t border-forest/10 pt-5 text-center text-sm leading-relaxed text-slate" data-health>
+      Checking sync status…
+    </p>
+  </section>
+</Layout>
+
+<style>
+  [data-range][aria-current="true"] {
+    background: var(--color-forest);
+    color: var(--color-cream);
+  }
+  .day {
+    break-inside: avoid;
+  }
+  @media print {
+    :global(header),
+    :global(footer),
+    [data-controls] {
+      display: none !important;
+    }
+    :global(body) {
+      background: #fff;
+      color: #000;
+    }
+    .day {
+      page-break-inside: avoid;
+    }
+    table {
+      font-size: 11pt;
+    }
+  }
+</style>
+
+<script>
+  interface Slot {
+    slotKey: string;
+    date: string;
+    time: string;
+    title: string | null;
+    kind: string | null;
+    attendeeCount: number | null;
+    attendeeLimit: number | null;
+    eventCancelled: boolean;
+    players: string[];
+    cancelled: string[];
+  }
+  interface Health {
+    lastEmailAt: string | null;
+    emailsProcessed: number;
+    emailLastError: string | null;
+    emailLastErrorAt: string | null;
+    apiLastOkAt: string | null;
+    apiLastError: string | null;
+    apiLastErrorAt: string | null;
+    unparsedCount: number;
+    unparsedLatestSubject: string | null;
+    unparsedLatestAt: string | null;
+  }
+  interface Sheet {
+    preset: 'upcoming' | 'past' | 'custom';
+    range: { from: string; to: string };
+    slots: Slot[];
+    health: Health;
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-tee-sheet]')!;
+  const healthEl = document.querySelector<HTMLElement>('[data-health]')!;
+  const params = new URLSearchParams(location.search);
+
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+
+  const esc = (s: string) =>
+    s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+
+  function longDate(date: string): string {
+    return new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    });
+  }
+  function clock(hhmm: string): string {
+    const [h, m] = hhmm.split(':').map(Number);
+    const suffix = h >= 12 ? 'PM' : 'AM';
+    const hour = h % 12 === 0 ? 12 : h % 12;
+    return `${hour}:${String(m).padStart(2, '0')} ${suffix}`;
+  }
+  function ago(iso: string | null): string {
+    if (!iso) return 'never';
+    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins} min ago`;
+    const hrs = Math.round(mins / 60);
+    if (hrs < 48) return `${hrs} hr ago`;
+    return `${Math.round(hrs / 24)} days ago`;
+  }
+  function label(slot: Slot): string {
+    if (slot.title) return slot.title;
+    const type = slot.slotKey.split('|')[1] ?? '';
+    if (type === 'tee_time') return 'Tee Time';
+    if (type === 'oncourse_lesson') return 'On-Course Lesson';
+    if (type === 'lesson') return 'Lesson';
+    return type.replace(/^other:/, '').replace(/\b\w/g, (c) => c.toUpperCase()) || 'Booking';
+  }
+  function openSpots(slot: Slot): string {
+    if (slot.eventCancelled) return 'Cancelled';
+    if (slot.attendeeLimit === null) return '';
+    const open = Math.max(slot.attendeeLimit - (slot.attendeeCount ?? 0), 0);
+    return open === 0 ? 'Full' : `${open} open`;
+  }
+
+  function render(sheet: Sheet): void {
+    document.querySelectorAll<HTMLAnchorElement>('[data-range]').forEach((a) => {
+      a.setAttribute('aria-current', String(a.dataset.range === sheet.preset));
+    });
+
+    if (sheet.slots.length === 0) {
+      root.innerHTML = `<p class="text-center text-slate" data-empty>Nothing on the sheet for ${esc(sheet.range.from)} to ${esc(sheet.range.to)} yet.</p>`;
+      return;
+    }
+
+    const byDay = new Map<string, Slot[]>();
+    for (const s of sheet.slots) byDay.set(s.date, [...(byDay.get(s.date) ?? []), s]);
+
+    root.innerHTML = [...byDay.entries()]
+      .map(
+        ([date, slots]) => `
+      <section class="day mb-10" data-day="${esc(date)}">
+        <h2 class="font-serif text-2xl text-forest">${esc(longDate(date))}</h2>
+        <div class="mt-3 overflow-x-auto">
+          <table class="w-full border-collapse text-left text-[0.95rem]">
+            <thead>
+              <tr class="border-b border-forest/15 text-xs uppercase tracking-wider text-slate">
+                <th class="py-2 pr-4 font-medium">Time</th>
+                <th class="py-2 pr-4 font-medium">Event</th>
+                <th class="py-2 pr-4 font-medium">Players</th>
+                <th class="py-2 font-medium">Spots</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${slots
+                .map(
+                  (s) => `
+              <tr class="border-b border-forest/10 align-top ${s.eventCancelled ? 'text-slate line-through' : ''}" data-slot="${esc(s.slotKey)}">
+                <td class="whitespace-nowrap py-3 pr-4 font-medium text-forest">${esc(clock(s.time))}</td>
+                <td class="py-3 pr-4">${esc(label(s))}</td>
+                <td class="py-3 pr-4">${
+                  s.players.length
+                    ? `<ul class="space-y-0.5" data-players>${s.players.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`
+                    : '<span class="text-slate/70">Open</span>'
+                }</td>
+                <td class="whitespace-nowrap py-3 text-slate">${esc(openSpots(s))}</td>
+              </tr>`
+                )
+                .join('')}
+            </tbody>
+          </table>
+        </div>
+      </section>`
+      )
+      .join('');
+  }
+
+  function renderHealth(h: Health): void {
+    const parts: string[] = [];
+    parts.push(
+      h.lastEmailAt
+        ? `Last booking email ${esc(ago(h.lastEmailAt))}.`
+        : '<span class="text-rose">No booking emails received yet.</span>'
+    );
+    parts.push(
+      h.apiLastOkAt
+        ? `Events refreshed ${esc(ago(h.apiLastOkAt))}.`
+        : '<span class="text-rose">Events have never been refreshed.</span>'
+    );
+    if (h.apiLastError) {
+      parts.push(
+        `<span class="text-rose">Events refresh failing since ${esc(ago(h.apiLastErrorAt))}: ${esc(h.apiLastError)}</span>`
+      );
+    }
+    if (h.emailLastError) {
+      parts.push(
+        `<span class="text-rose">Email storage error ${esc(ago(h.emailLastErrorAt))}: ${esc(h.emailLastError)}</span>`
+      );
+    }
+    if (h.unparsedCount > 0) {
+      parts.push(
+        `<span class="text-rose">${h.unparsedCount} email${h.unparsedCount === 1 ? '' : 's'} could not be read in the last 30 days` +
+          (h.unparsedLatestSubject ? ` (latest: “${esc(h.unparsedLatestSubject)}”)` : '') +
+          '.</span>'
+      );
+    }
+    healthEl.innerHTML = parts.join(' ');
+  }
+
+  async function load(): Promise<void> {
+    const q = new URLSearchParams();
+    for (const k of ['range', 'from', 'to']) {
+      const v = params.get(k);
+      if (v) q.set(k, v);
+    }
+    try {
+      const res = await fetch(`/api/tee-sheet?${q}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const sheet = (await res.json()) as Sheet;
+      render(sheet);
+      renderHealth(sheet.health);
+    } catch (err) {
+      root.innerHTML = `<p class="text-center text-rose" data-error>The tee sheet could not be loaded (${esc(String(err))}). Please try again in a minute.</p>`;
+      healthEl.innerHTML = '<span class="text-rose">Sync status unavailable.</span>';
+    } finally {
+      root.removeAttribute('aria-busy');
+    }
+  }
+  load();
+</script>

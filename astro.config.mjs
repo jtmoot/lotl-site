@@ -17,8 +17,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // The only non-indexed route is /privacy (built in #11); exclude it from the sitemap.
-      filter: (page) => !page.includes('/privacy'),
+      // Non-indexed routes: /privacy and the members-only-by-link /tee-sheet.
+      filter: (page) => !page.includes('/privacy') && !page.includes('/tee-sheet'),
     }),
   ],
 });

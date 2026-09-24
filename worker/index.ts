@@ -3,6 +3,8 @@
 //             /api/*; everything else is served as static assets.
 //   email():  Bookwhen booking/cancellation notifications delivered by Email
 //             Routing (tee@sync.ladiesonthelinksgolf.com) -> D1.
+//   scheduled(): every 15 minutes, pull the next 60 days of events (times and
+//             capacity) from the Bookwhen v2 API -> D1.
 // All state lives in the one D1 database bound as DB.
 
 // Workers types are imported (not globally referenced) so they can't clash
@@ -12,10 +14,12 @@ import type {
   Fetcher,
   ExecutionContext,
   ForwardableEmailMessage,
+  ScheduledController,
 } from '@cloudflare/workers-types';
 import { validateComment, signDeleteToken, verifyDeleteToken } from './lib';
 import { ingestEmail } from './teesheet/ingest';
 import { getTeeSheet, resolveRange } from './teesheet/query';
+import { syncEvents, DEFAULT_API_BASE } from './teesheet/bookwhen';
 
 export interface Env {
   DB: D1Database;
@@ -23,6 +27,10 @@ export interface Env {
   TURNSTILE_SECRET: string;
   RESEND_API_KEY: string;
   DELETE_LINK_SECRET: string;
+  /** Bookwhen API token (secret). Read-only access to the events list. */
+  BOOKWHEN_TOKEN: string;
+  /** Overridable so tests can point the cron at a local stub. */
+  BOOKWHEN_API_BASE?: string;
 }
 
 const NOTIFY_TO = 'help@ladiesonthelinksgolf.com';
@@ -275,5 +283,20 @@ export default {
     console.log(
       JSON.stringify({ event: 'tee-sheet-email', from: message.from, ...outcome })
     );
+  },
+
+  /** Cron: refresh events. Errors are recorded to sync_state inside syncEvents, then rethrown. */
+  async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
+    const result = await syncEvents(
+      env.DB,
+      {
+        apiBase: env.BOOKWHEN_API_BASE || DEFAULT_API_BASE,
+        token: env.BOOKWHEN_TOKEN,
+        // Wrapped: a bare `fetch` reference loses its `this` in workerd ("Illegal invocation").
+        fetch: (input, init) => fetch(input, init),
+      },
+      new Date(controller.scheduledTime || Date.now())
+    );
+    console.log(JSON.stringify({ event: 'tee-sheet-events', ...result }));
   },
 };

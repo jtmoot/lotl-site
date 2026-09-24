@@ -2,7 +2,7 @@
 // Windows are rolling and computed from `now` in league time; callers may pass
 // explicit from/to dates (tests do) but nothing here hardcodes a date.
 import type { D1Database } from '@cloudflare/workers-types';
-import { LEAGUE_TZ } from './parse';
+import { LEAGUE_TZ } from './parse.ts';
 
 export const UPCOMING_DAYS = 60;
 export const PAST_DAYS = 90;
