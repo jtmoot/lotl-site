@@ -32,12 +32,14 @@ test('activating the Lessons tab loads its iframe', async ({ page }) => {
   await expect(lessons).toHaveAttribute('src', new RegExp(LESSONS.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 });
 
-test('tee sheet is a contextual link out (not embedded, not in nav)', async ({ page }) => {
+test('tee sheet is a contextual link (not embedded, not in nav)', async ({ page }) => {
   await page.goto('/schedule');
-  const teeSheet = page.locator('main a[href*="docs.google.com/spreadsheets"]');
+  const teeSheet = page.locator('main a[href="/tee-sheet"]');
   await expect(teeSheet).toHaveCount(1);
+  // Nothing on the schedule page should still point at the retired Google Sheet.
+  await expect(page.locator('a[href*="docs.google.com"]')).toHaveCount(0);
   // It must not be in the primary nav.
-  await expect(page.locator('[data-nav="primary"] a[href*="docs.google.com"]')).toHaveCount(0);
+  await expect(page.locator('[data-nav="primary"] a[href="/tee-sheet"]')).toHaveCount(0);
 });
 
 test('intro covers register-first, foursome, and loaner clubs', async ({ page }) => {

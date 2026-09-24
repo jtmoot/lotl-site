@@ -4,8 +4,8 @@ import PageIntro from '../components/PageIntro.astro';
 
 const TEE_TIMES_SRC = 'https://bookwhen.com/ladiesonthelinks/iframe';
 const LESSONS_SRC = 'https://bookwhen.com/ladiesonthelinks-lessons/iframe';
-const TEE_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1QxwULZs7nSwiVBU6x3CSJo0McFHUbhtuL_Ufa0osAGU/edit?gid=1173477351';
+// Native tee sheet (src/pages/tee-sheet.astro): noindex, names only.
+const TEE_SHEET_URL = '/tee-sheet';
 ---
 
 <Layout
@@ -89,14 +89,9 @@ const TEE_SHEET_URL =
     <div class="flex flex-col items-center gap-3 rounded-xl border border-forest/10 bg-blush/10 p-7 text-center reveal">
       <h2 class="font-serif text-2xl text-forest">See who is playing</h2>
       <p class="max-w-xl leading-relaxed text-slate">
-        The live tee sheet shows who is signed up for each time. It opens in Google Sheets.
+        The live tee sheet shows who is signed up for each time. Names only, updated as bookings come in.
       </p>
-      <a
-        href={TEE_SHEET_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="ghost-btn"
-      >
+      <a href={TEE_SHEET_URL} class="ghost-btn">
         Open the live tee sheet &rarr;
       </a>
     </div>
