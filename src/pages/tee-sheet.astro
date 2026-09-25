@@ -19,6 +19,14 @@ import PageIntro from '../components/PageIntro.astro';
   />
 
   <section class="mx-auto max-w-4xl px-6 pb-24">
+    <p
+      class="mx-auto mb-6 max-w-2xl rounded-xl border border-forest/10 bg-cream-soft/60 px-5 py-3 text-center text-sm leading-relaxed text-slate"
+      data-health
+      aria-live="polite"
+    >
+      Checking sync status…
+    </p>
+
     <div class="mb-8 flex flex-wrap items-center justify-center gap-3 print:hidden" data-controls>
       <nav aria-label="Range" class="flex rounded-full border border-forest/15 bg-cream-soft/70 p-1 text-sm">
         <a href="/tee-sheet" data-range="upcoming" class="rounded-full px-4 py-1.5 text-forest transition hover:bg-forest/5">Upcoming</a>
@@ -31,9 +39,6 @@ import PageIntro from '../components/PageIntro.astro';
       <p class="text-center text-slate">Loading the tee sheet…</p>
     </div>
 
-    <p class="mt-10 border-t border-forest/10 pt-5 text-center text-sm leading-relaxed text-slate" data-health>
-      Checking sync status…
-    </p>
   </section>
 </Layout>
 
