@@ -81,6 +81,7 @@ import PageIntro from '../components/PageIntro.astro';
     eventCancelled: boolean;
     players: string[];
     cancelled: string[];
+    countMismatch: boolean;
   }
   interface Health {
     lastEmailAt: string | null;
@@ -93,6 +94,8 @@ import PageIntro from '../components/PageIntro.astro';
     unparsedCount: number;
     unparsedLatestSubject: string | null;
     unparsedLatestAt: string | null;
+    orphanSeatsHidden: number;
+    countMismatchSlots: number;
   }
   interface Sheet {
     preset: 'upcoming' | 'past' | 'custom';
@@ -182,7 +185,7 @@ import PageIntro from '../components/PageIntro.astro';
                   (s) => `
               <tr class="border-b border-forest/10 align-top ${s.eventCancelled ? 'text-slate line-through' : ''}" data-slot="${esc(s.slotKey)}">
                 <td class="whitespace-nowrap py-3 pr-4 font-medium text-forest">${esc(clock(s.time))}</td>
-                <td class="py-3 pr-4">${esc(label(s))}</td>
+                <td class="py-3 pr-4">${esc(label(s))}${s.countMismatch ? ' <span class="text-rose" title="Bookwhen\'s count differs from the names listed">†</span>' : ''}</td>
                 <td class="py-3 pr-4">${
                   s.players.length
                     ? `<ul class="space-y-0.5" data-players>${s.players.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`
@@ -233,6 +236,16 @@ import PageIntro from '../components/PageIntro.astro';
         `<span class="text-rose">${h.unparsedCount} email${h.unparsedCount === 1 ? '' : 's'} could not be read in the last 30 days` +
           (h.unparsedLatestSubject ? ` (latest: “${esc(h.unparsedLatestSubject)}”)` : '') +
           '.</span>'
+      );
+    }
+    if (h.countMismatchSlots > 0) {
+      parts.push(
+        `<span class="text-rose">Bookwhen's booking count differs from the names listed for ${h.countMismatchSlots} slot${h.countMismatchSlots === 1 ? '' : 's'} (marked †); a booking may have changed without an email.</span>`
+      );
+    }
+    if (h.orphanSeatsHidden > 0) {
+      parts.push(
+        `${h.orphanSeatsHidden} booked name${h.orphanSeatsHidden === 1 ? ' is' : 's are'} hidden because the event no longer exists in Bookwhen.`
       );
     }
     healthEl.innerHTML = parts.join(' ');
