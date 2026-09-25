@@ -21,8 +21,9 @@ test('an empty range says so and the health line is loud about a never-synced st
   await page.goto(`/tee-sheet?${EMPTY}`);
   await expect(page.locator('[data-empty]')).toContainText('Nothing on the sheet');
   const health = page.locator('[data-health]');
-  await expect(health).toContainText(/booking email/i);
-  await expect(health).toContainText(/events/i);
+  await expect(health).toContainText(/events refresh in \d+ minutes?/i);
+  // Fresh local database: the cron has never run, and the line says so loudly.
+  await expect(health).toContainText(/never been refreshed/i);
 });
 
 test('a delivered booking email shows the name in a print-friendly table', async ({ page, request }) => {
@@ -42,7 +43,7 @@ test('a delivered booking email shows the name in a print-friendly table', async
   await expect(row.locator('[data-players] li')).toHaveText(['jimmy horn']);
   // Names only: no email address anywhere on the page.
   expect(await page.locator('main').innerText()).not.toMatch(/@/);
-  await expect(page.locator('[data-health]')).toContainText(/last booking email/i);
+  await expect(page.locator('[data-health]')).toContainText(/events refresh in/i);
 });
 
 test('range toggle marks the active preset', async ({ page }) => {
