@@ -71,36 +71,41 @@ import PageIntro from '../components/PageIntro.astro';
     background: var(--color-forest);
     color: var(--color-cream);
   }
-  details.day > summary {
+  /* Day cards are rendered by script after load, so these selectors are global:
+     Astro's scoped attribute never lands on injected markup. */
+  :global(details.day > summary) {
     list-style: none;
     cursor: pointer;
   }
-  details.day > summary::-webkit-details-marker {
+  :global(details.day > summary::-webkit-details-marker) {
     display: none;
   }
-  details.day > summary .chev {
+  :global(details.day > summary .chev) {
     transition: transform 0.15s ease;
   }
-  details.day[open] > summary .chev {
+  :global(details.day[open] > summary .chev) {
     transform: rotate(90deg);
   }
-  .day {
+  :global(.day) {
     break-inside: avoid;
   }
   @media print {
     :global(header),
     :global(footer),
-    [data-controls] {
+    [data-controls],
+    [data-filters] {
       display: none !important;
     }
     :global(body) {
       background: #fff;
       color: #000;
     }
-    .day {
+    :global(.day) {
       page-break-inside: avoid;
+      border: none;
+      background: none;
     }
-    table {
+    :global(details.day table) {
       font-size: 11pt;
     }
   }
