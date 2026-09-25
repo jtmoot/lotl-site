@@ -14,20 +14,6 @@ const TEE_SHEET_URL = '/tee-sheet';
 >
   <PageIntro eyebrow="Schedule & book" title="Book your Monday" />
 
-  <!-- Tee sheet: link out, never embedded (keeps member names off the indexed page). -->
-  <section class="mx-auto mb-8 max-w-3xl px-6">
-    <div class="flex flex-col items-center gap-3 rounded-xl border border-forest/10 bg-blush/10 p-6 text-center sm:flex-row sm:justify-between sm:text-left reveal">
-      <div>
-        <h2 class="font-serif text-2xl text-forest">See who is playing</h2>
-        <p class="mt-1 max-w-xl leading-relaxed text-slate">
-          The live tee sheet shows who is signed up for each time. Names only, updated as bookings come in.
-        </p>
-      </div>
-      <a href={TEE_SHEET_URL} class="ghost-btn shrink-0">
-        Open the live tee sheet &rarr;
-      </a>
-    </div>
-  </section>
 
   <section class="mx-auto max-w-3xl px-6">
     <div class="rounded-xl border border-forest/10 bg-cream-soft/60 p-6 text-center sm:p-8 reveal">
@@ -49,6 +35,12 @@ const TEE_SHEET_URL = '/tee-sheet';
         <a href="https://my.bookwhen.com/user/events" target="_blank" rel="noopener noreferrer" class="font-medium text-rose underline-offset-4 hover:underline">View or cancel your bookings</a> anytime.
       </p>
     </div>
+
+    <!-- Tee sheet: link out, never embedded (keeps member names off the indexed page). -->
+    <p class="mt-4 text-center text-sm text-slate reveal">
+      See who is playing:
+      <a href={TEE_SHEET_URL} class="font-medium text-forest underline-offset-4 hover:underline">open the live tee sheet &rarr;</a>
+    </p>
   </section>
 
   <section class="mx-auto max-w-4xl px-6 pt-10 pb-24">
