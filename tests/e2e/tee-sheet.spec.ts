@@ -101,3 +101,20 @@ test('days are collapsible and filters narrow by type, day, and search', async (
   await expect(page.locator('tr[data-slot]')).toHaveCount(1);
   await expect(page.locator('[data-day-filter]')).toHaveValue(DAY);
 });
+
+test('day headings, filter pills and schedule tabs show a hand cursor and the chevron rotates when open', async ({ page }) => {
+  await page.goto('/tee-sheet?from=2026-10-01&to=2026-10-02');
+  const summary = page.locator('details.day summary').first();
+  await expect(summary).toBeVisible();
+  expect(await summary.evaluate((e) => getComputedStyle(e).cursor)).toBe('pointer');
+  expect(await page.locator('[data-type="all"]').evaluate((e) => getComputedStyle(e).cursor)).toBe('pointer');
+  // Open day: chevron rotated. Closed: not.
+  const openChev = page.locator('details.day[open] summary .chev').first();
+  expect(await openChev.evaluate((e) => getComputedStyle(e).transform)).not.toBe('none');
+  await summary.click();
+  // The rotation animates over 150ms; poll until it settles.
+  await expect.poll(() => summary.locator('.chev').evaluate((e) => getComputedStyle(e).transform)).toBe('none');
+
+  await page.goto('/schedule');
+  expect(await page.getByRole('tab', { name: /lessons/i }).evaluate((e) => getComputedStyle(e).cursor)).toBe('pointer');
+});
