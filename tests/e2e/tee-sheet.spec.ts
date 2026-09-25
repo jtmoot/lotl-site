@@ -52,3 +52,52 @@ test('range toggle marks the active preset', async ({ page }) => {
   await page.goto('/tee-sheet?range=past');
   await expect(page.locator('[data-range="past"]')).toHaveAttribute('aria-current', 'true');
 });
+
+test('days are collapsible and filters narrow by type, day, and search', async ({ page, request }) => {
+  // Its own day, so the parallel test above keeps its single-name slot intact:
+  // the two-attendee fixture is re-dated to Fri 2 Oct with a fresh Message-ID.
+  const DAY = '2026-10-02';
+  const raw = readFileSync('tests/fixtures/booking-ckktt-two-attendees.eml')
+    .toString('latin1')
+    .replace('Thu 1 Oct, 10:00am - 11:00am', 'Fri 2 Oct, 10:00am - 11:00am')
+    .replace('<6ab568abacd07_4ab082251f3@bgjobs-deployment-855898886d-d9t6l.mail>', '<filters-1@test.local>');
+  const res = await request.post(
+    '/cdn-cgi/handler/email?from=mail@bookwhen.com&to=tee@sync.ladiesonthelinksgolf.com',
+    { data: Buffer.from(raw, 'latin1'), headers: { 'content-type': 'message/rfc822' } }
+  );
+  expect(res.ok()).toBeTruthy();
+
+  await page.goto(`/tee-sheet?from=${DAY}&to=${DAY}`);
+  const day = page.locator(`details[data-day="${DAY}"]`);
+  await expect(day).toHaveAttribute('open', '');
+  await expect(day.locator('[data-day-summary]')).toContainText('1 slot');
+  await expect(day.locator('[data-day-summary]')).toContainText('2 players');
+
+  // Collapse by clicking the summary; the table hides.
+  await day.locator('summary').click();
+  await expect(day).not.toHaveAttribute('open', '');
+  await expect(day.locator('table')).toBeHidden();
+
+  // Type filter: "Lessons" hides the other-type slot; "Other" brings it back.
+  await page.locator('[data-type="lesson"]').click();
+  await expect(page.locator('[data-no-match]')).toBeVisible();
+  await expect(page).toHaveURL(/type=lesson/);
+  await page.locator('[data-type="other"]').click();
+  await expect(page.locator('tr[data-slot]')).toHaveCount(1);
+
+  // Search matches a name and opens the day.
+  await page.locator('[data-search]').fill('marsh');
+  await expect(page).toHaveURL(/q=marsh/);
+  await expect(page.locator('tr[data-slot]')).toHaveCount(1);
+  await expect(page.locator(`details[data-day="${DAY}"]`)).toHaveAttribute('open', '');
+  await page.locator('[data-search]').fill('nobody-by-this-name');
+  await expect(page.locator('[data-no-match]')).toBeVisible();
+
+  // Filters arrive from the URL too.
+  await page.goto(`/tee-sheet?from=${DAY}&to=${DAY}&type=tee_time`);
+  await expect(page.locator('[data-no-match]')).toBeVisible();
+  await expect(page.locator('[data-type="tee_time"]')).toHaveAttribute('aria-pressed', 'true');
+  await page.goto(`/tee-sheet?from=${DAY}&to=${DAY}&day=${DAY}`);
+  await expect(page.locator('tr[data-slot]')).toHaveCount(1);
+  await expect(page.locator('[data-day-filter]')).toHaveValue(DAY);
+});
