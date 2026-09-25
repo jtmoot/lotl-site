@@ -195,18 +195,24 @@ import PageIntro from '../components/PageIntro.astro';
       .join('');
   }
 
+  /** The cron fires on the quarter hour; count down to the next one. */
+  function minutesToNextRefresh(now = new Date()): number {
+    const past = now.getMinutes() % 15;
+    const left = 15 - past;
+    return now.getSeconds() > 0 && left === 15 ? 15 : left;
+  }
+
   function renderHealth(h: Health): void {
     const parts: string[] = [];
-    parts.push(
-      h.lastEmailAt
-        ? `Last booking email ${esc(ago(h.lastEmailAt))}.`
-        : '<span class="text-rose">No booking emails received yet.</span>'
-    );
-    parts.push(
-      h.apiLastOkAt
-        ? `Events refreshed ${esc(ago(h.apiLastOkAt))}.`
-        : '<span class="text-rose">Events have never been refreshed.</span>'
-    );
+    const n = minutesToNextRefresh();
+    parts.push(`Events refresh in ${n} minute${n === 1 ? '' : 's'}.`);
+    if (!h.apiLastOkAt) {
+      parts.push('<span class="text-rose">Events have never been refreshed.</span>');
+    } else if (Date.now() - new Date(h.apiLastOkAt).getTime() > 45 * 60000) {
+      parts.push(
+        `<span class="text-rose">Events last refreshed ${esc(ago(h.apiLastOkAt))}; the refresh may be stuck.</span>`
+      );
+    }
     if (h.apiLastError) {
       parts.push(
         `<span class="text-rose">Events refresh failing since ${esc(ago(h.apiLastErrorAt))}: ${esc(h.apiLastError)}</span>`
