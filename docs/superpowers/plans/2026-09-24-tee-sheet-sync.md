@@ -1,6 +1,6 @@
 # Plan: Cloudflare-native tee sheet sync
 
-**Status: awaiting Josh's approval.** Nothing below is implemented yet.
+**Status: shipped 2026-09-24 (PRs #83, #84).** Deployment notes at the end record what production taught us.
 
 Replaces the dead Google Apps Script (`lotl-sync.gs`) with a pipeline that lives
 entirely in this repo and Josh's Cloudflare account. No Google services.
@@ -125,3 +125,29 @@ existing harness. Before each STOP I report exactly what was verified and how.
 1. How did `0001_init.sql` reach production D1: manual `wrangler d1 migrations apply
    --remote`, or does the Cloudflare build do it?
 2. Slice 5 default view is upcoming 60 days with a "past 90 days" link. OK?
+
+## Deployment notes (2026-09-24/25)
+
+- **Cloudflare Workers Builds deploys every branch push to production.** The
+  project's build runs `npx wrangler deploy` for non-production branches too,
+  so a PR is review, not a gate. Fix is in the dashboard: Worker > Settings >
+  Builds > non-production branch deploy command = `npx wrangler versions upload`.
+- **Builds do not run D1 migrations.** After a schema change, run
+  `npx wrangler d1 migrations apply lotl-comments --remote -c lotl-site/wrangler.jsonc`
+  by hand before the new code needs the tables. Until 0002 was applied, the
+  deployed Worker threw error 1101 on `/api/tee-sheet`.
+- **Cron trigger needs a workers.dev subdomain on the account** even though
+  `workers_dev` is false. Without one, the schedules API fails with code 10063
+  and the build reports "Some triggers failed to deploy". Create the subdomain
+  once from the Workers overview page, then `npx wrangler triggers deploy`.
+- **Wrangler OAuth expires between sessions** and Doppler holds no Cloudflare
+  token, so production writes need Josh at the keyboard (or a
+  `CLOUDFLARE_API_TOKEN` in Doppler later).
+- **Backfill ran 2026-09-25**: 1159 statements, 271 events, 888 seats from the
+  attendances export. The export included Josh's two "Test" bookings, which
+  show on the sheet until deleted.
+- **Local test endpoints in this wrangler version** are
+  `/cdn-cgi/handler/email` and `/cdn-cgi/handler/scheduled`.
+- Follow-ups not done: standing rosters / "Reserved" seats from the old script;
+  a `CLOUDFLARE_API_TOKEN` in Doppler; switching branch builds to
+  `versions upload`.
