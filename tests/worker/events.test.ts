@@ -117,3 +117,38 @@ test('a later success clears the error', async () => {
   const data = await sheet();
   assert.equal(data.health.apiLastError, null);
 });
+
+test('once the API has synced after the last change, a count that disagrees with the names is flagged', async () => {
+  // EV1 reports attendee_count 2 but only one name was ever emailed for it, and
+  // the cron has now run after that email arrived.
+  const data = await sheet();
+  const tee = data.slots.find((s: any) => s.kind === 'tee_time');
+  assert.equal(tee.countMismatch, true);
+  assert.equal(data.health.countMismatchSlots, 1);
+});
+
+test('names whose event Bookwhen no longer lists are hidden, not shown as a ghost row', async () => {
+  // A booking for "Ghost Group" at DAY 9:00am (league time), received well
+  // before the last sync, with no matching event in the stub API.
+  const dt = new Date(`${DAY}T13:00:00Z`);
+  const label = dt.toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'short', day: 'numeric', month: 'short' });
+  const [wd, mon, d] = label.replace(',', '').split(' ');
+  const raw = readFileSync('tests/fixtures/booking-hw4r2.eml')
+    .toString('latin1')
+    .replace('Thu 1 Oct, 10:00am - 11:00am', `${wd} ${d} ${mon}, 9:00am - 10:00am`)
+    .replace(/^Test\r?$/m, 'Ghost Group')
+    .replace('Date: Thu, 24 Sep 2026 17:57:29 +0000', `Date: ${new Date(Date.now() - 3 * 3600 * 1000).toUTCString()}`)
+    .replace('<6ab564889f757_7db0822402a@bgjobs-deployment-855898886d-d9t6l.mail>', '<ghost-1@test.local>');
+  const res = await fetch(`${BASE}/cdn-cgi/handler/email?from=mail@bookwhen.com&to=tee@sync.ladiesonthelinksgolf.com`, {
+    method: 'POST',
+    headers: { 'content-type': 'message/rfc822' },
+    body: raw,
+  });
+  assert.ok(res.ok);
+
+  // The email is stored, but the sheet hides it and says how many names are hidden.
+  const data = await sheet();
+  assert.equal(data.slots.some((s: any) => s.slotKey.includes('ghost group')), false);
+  assert.equal(data.health.orphanSeatsHidden, 1);
+  assert.equal(data.health.emailsProcessed, 2);
+});

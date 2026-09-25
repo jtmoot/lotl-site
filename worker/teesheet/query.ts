@@ -20,6 +20,8 @@ export interface SlotRow {
   players: string[];
   /** Names that were booked in this slot and then cancelled. */
   cancelled: string[];
+  /** Bookwhen's own count for this slot disagrees with the names listed (see getTeeSheet). */
+  countMismatch: boolean;
 }
 
 export interface Health {
@@ -33,6 +35,10 @@ export interface Health {
   unparsedCount: number;
   unparsedLatestSubject: string | null;
   unparsedLatestAt: string | null;
+  /** Booked names hidden because Bookwhen no longer lists their event. */
+  orphanSeatsHidden: number;
+  /** Slots where Bookwhen's attendee count differs from the names we list. */
+  countMismatchSlots: number;
 }
 
 export interface TeeSheet {
@@ -91,7 +97,11 @@ interface BookingRow {
   slot_key: string;
   name: string;
   status: 'booked' | 'cancelled';
+  updated_at: string;
 }
+
+/** Grace after a successful API sync before an eventless slot counts as gone. */
+const ORPHAN_GRACE_MS = 20 * 60 * 1000;
 
 export async function getTeeSheet(db: D1Database, from: string, to: string, now: Date): Promise<TeeSheet> {
   // slot_key begins with YYYY-MM-DD, so a string range on it is a date range.
@@ -108,7 +118,7 @@ export async function getTeeSheet(db: D1Database, from: string, to: string, now:
       .all<EventRow>(),
     db
       .prepare(
-        `SELECT slot_key, name, status FROM bookings
+        `SELECT slot_key, name, status, updated_at FROM bookings
          WHERE slot_key >= ? AND slot_key < ? ORDER BY slot_key, updated_at, name`
       )
       .bind(lo, hi)
@@ -133,11 +143,15 @@ export async function getTeeSheet(db: D1Database, from: string, to: string, now:
         eventCancelled: false,
         players: [],
         cancelled: [],
+        countMismatch: false,
       };
       slots.set(key, s);
     }
     return s;
   };
+  // Newest booking change per slot; drift checks only fire once the API has synced after it.
+  const lastChange = new Map<string, string>();
+  const fromApi = new Set<string>();
 
   for (const e of events.results) {
     const s = ensure(e.slot_key);
@@ -147,13 +161,46 @@ export async function getTeeSheet(db: D1Database, from: string, to: string, now:
     s.attendeeCount = (s.attendeeCount ?? 0) + e.attendee_count;
     if (e.attendee_limit !== null) s.attendeeLimit = (s.attendeeLimit ?? 0) + e.attendee_limit;
     s.eventCancelled = s.eventCancelled || e.cancelled_at !== null;
+    // Only events the cron fetched carry a limit; imported ones never do.
+    if (e.attendee_limit !== null) fromApi.add(e.slot_key);
   }
   for (const b of bookings.results) {
     const s = ensure(b.slot_key);
     (b.status === 'booked' ? s.players : s.cancelled).push(b.name);
+    const prev = lastChange.get(b.slot_key);
+    if (!prev || b.updated_at > prev) lastChange.set(b.slot_key, b.updated_at);
   }
 
-  const ordered = [...slots.values()].sort((a, b) => a.slotKey.localeCompare(b.slotKey));
+  // Drift detection. Bookwhen sends no email when an event is deleted, and
+  // none for anything else that removes a booking without cancelling it, so
+  // compare against what the API last reported. Both checks wait until the
+  // API has synced after the slot's newest booking change, otherwise a fresh
+  // booking would be flagged for the up-to-15-minutes before the cron runs.
+  const today = leagueDate(now);
+  const apiWindowEnd = addDays(today, UPCOMING_DAYS);
+  const syncedAt = health.apiLastOkAt ? new Date(health.apiLastOkAt).getTime() : null;
+  let orphanSeatsHidden = 0;
+  let countMismatchSlots = 0;
+  const visible: SlotRow[] = [];
+  for (const s of slots.values()) {
+    const changed = lastChange.get(s.slotKey);
+    const changedAt = changed ? new Date(changed).getTime() : 0;
+    const settled = syncedAt !== null && changedAt < syncedAt;
+    if (s.title === null && settled && s.date >= today && s.date <= apiWindowEnd && changedAt < syncedAt - ORPHAN_GRACE_MS) {
+      // Bookwhen no longer lists this event: hide the names rather than show a ghost row.
+      orphanSeatsHidden += s.players.length;
+      continue;
+    }
+    if (s.title !== null && fromApi.has(s.slotKey) && settled && s.attendeeCount !== null && s.attendeeCount !== s.players.length) {
+      s.countMismatch = true;
+      countMismatchSlots += 1;
+    }
+    visible.push(s);
+  }
+  health.orphanSeatsHidden = orphanSeatsHidden;
+  health.countMismatchSlots = countMismatchSlots;
+
+  const ordered = visible.sort((a, b) => a.slotKey.localeCompare(b.slotKey));
   return { range: { from, to }, generatedAt: now.toISOString(), slots: ordered, health };
 }
 
@@ -184,5 +231,7 @@ export async function getHealth(db: D1Database, now: Date): Promise<Health> {
     unparsedCount: unparsed?.n ?? 0,
     unparsedLatestSubject: latestUnparsed?.subject ?? null,
     unparsedLatestAt: latestUnparsed?.received_at ?? null,
+    orphanSeatsHidden: 0,
+    countMismatchSlots: 0,
   };
 }
