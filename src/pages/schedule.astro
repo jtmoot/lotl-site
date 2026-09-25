@@ -37,10 +37,13 @@ const TEE_SHEET_URL = '/tee-sheet';
     </div>
 
     <!-- Tee sheet: link out, never embedded (keeps member names off the indexed page). -->
-    <p class="mt-4 text-center text-sm text-slate reveal">
-      See who is playing:
-      <a href={TEE_SHEET_URL} class="font-medium text-forest underline-offset-4 hover:underline">open the live tee sheet &rarr;</a>
-    </p>
+    <div class="mt-4 flex flex-col items-center justify-between gap-3 rounded-xl border border-forest/10 bg-blush/10 px-5 py-4 text-center sm:flex-row sm:text-left reveal">
+      <p class="text-slate">
+        <span class="font-serif text-lg text-forest">See who is playing.</span>
+        <span class="text-sm"> Names only, updated as bookings come in.</span>
+      </p>
+      <a href={TEE_SHEET_URL} class="ghost-btn shrink-0 text-sm">Open the live tee sheet &rarr;</a>
+    </div>
   </section>
 
   <section class="mx-auto max-w-4xl px-6 pt-10 pb-24">
