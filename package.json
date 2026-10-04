@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/guard-branch-deploy.mjs && astro build",
     "preview": "astro preview",
     "check": "astro check",
     "test:schema": "node --test \"tests/schema/*.test.ts\"",
