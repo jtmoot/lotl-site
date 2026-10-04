@@ -7,15 +7,14 @@ test('Events page renders and is indexable', async ({ page }) => {
   await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
 });
 
-test('Boos & Birdies leads the upcoming events, followed by the tournament', async ({ page }) => {
+test('Boos & Birdies leads the upcoming events and the tournament is gone', async ({ page }) => {
   await page.goto('/events');
   const upcoming = page.locator('[data-events="upcoming"]');
   await expect(upcoming.locator('h3').first()).toHaveText(/Boos & Birdies/);
   await expect(upcoming).toContainText('October 27, 2026');
-  await expect(upcoming).toContainText('Season-End Tournament');
-  await expect(upcoming).toContainText('Early October');
+  await expect(upcoming).not.toContainText('Season-End Tournament');
   await expect(upcoming).not.toContainText('Evening Glo Golf');
-  await expect(upcoming.locator('a[href="/schedule"]')).toHaveCount(1);
+  await expect(upcoming.locator('a[href="https://bookwhen.com/ladiesonthelinks/e/ev-s43uj-20261027120000"]')).toHaveCount(1);
 });
 
 test('Glo Golf sits under Past events', async ({ page }) => {
@@ -24,6 +23,7 @@ test('Glo Golf sits under Past events', async ({ page }) => {
   await expect(past.locator('h2')).toHaveText('Past events');
   await expect(past).toContainText('Evening Glo Golf');
   await expect(past).toContainText('September 18, 2026');
+  await expect(past.locator('img[alt="Evening Glo Golf event poster"]')).toHaveCount(1);
 });
 
 test('the winter pop-ups and 2027 trip appear as teasers without booking CTAs', async ({ page }) => {
