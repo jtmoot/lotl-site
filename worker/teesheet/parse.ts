@@ -137,29 +137,44 @@ function isLocationLine(line: string): boolean {
 
 /**
  * Walk the plain-text body. The event title is the line directly above each
- * venue address line; a date/time line opens a slot under that title; each
- * "Name <email>" line under a slot is one seat, cancelled if the line ends in
- * "Cancelled". A single email may mix event types and dates.
+ * North Hill address line; for any other venue (or none) it is the first line
+ * of the blank-line-separated block the date/time sits in. A date/time line
+ * opens a slot under that title; each "Name <email>" line under a slot is one
+ * seat, cancelled if the line ends in "Cancelled". A single email may mix
+ * event types and dates.
  */
 export function parseBody(text: string, receivedAt: Date): Attendee[] {
   const out: Attendee[] = [];
   let currentTitle = '';
   let currentSlot: { date: string; hh: number; mm: number } | null = null;
   let prevLine = '';
+  // First line of the current block, and whether the block has named its event yet.
+  let blockFirst = '';
+  let blockTitled = false;
 
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim();
-    if (!line) continue;
+    if (!line) {
+      blockFirst = '';
+      blockTitled = false;
+      continue;
+    }
+    if (!blockFirst) blockFirst = line;
 
     if (isLocationLine(line)) {
       currentTitle = prevLine;
       currentSlot = null;
+      blockTitled = true;
       prevLine = line;
       continue;
     }
 
     const dt = parseDateTimeLine(line, receivedAt);
     if (dt) {
+      if (!blockTitled && blockFirst !== line) {
+        currentTitle = blockFirst;
+        blockTitled = true;
+      }
       currentSlot = dt;
       prevLine = line;
       continue;
