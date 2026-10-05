@@ -401,11 +401,8 @@ import PageIntro from '../components/PageIntro.astro';
         `<span class="mt-1 block text-rose" data-key><strong class="font-medium">† ${h.countMismatchSlots} slot${h.countMismatchSlots === 1 ? '' : 's'} to double-check.</strong> The names listed here don't add up to the number of bookings Bookwhen has for ${h.countMismatchSlots === 1 ? 'that slot' : 'those slots'}, so someone may be missing or extra. Bookwhen is the one to trust.</span>`
       );
     }
-    if (h.orphanSeatsHidden > 0) {
-      parts.push(
-        `<span class="mt-1 block">${h.orphanSeatsHidden} booked name${h.orphanSeatsHidden === 1 ? ' is' : 's are'} not shown because ${h.orphanSeatsHidden === 1 ? 'its' : 'their'} event could not be matched to one in Bookwhen (it may have been deleted or renamed).</span>`
-      );
-    }
+    // Names whose event Bookwhen no longer lists (a cancelled or deleted event)
+    // are simply left off the sheet; that is expected, so nothing is said here.
     healthEl.innerHTML = parts.join(' ');
   }
 
