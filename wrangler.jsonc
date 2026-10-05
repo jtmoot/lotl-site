@@ -21,7 +21,10 @@
     "crons": ["*/15 * * * *"]
   },
   "vars": {
-    "BOOKWHEN_API_BASE": "https://api.bookwhen.com/v2"
+    "BOOKWHEN_API_BASE": "https://api.bookwhen.com/v2",
+    // Where sync alerts open issues for the Claude agent (worker/teesheet/alerts.ts).
+    // Needs the GITHUB_ALERT_TOKEN secret; alert emails need ALERT_EMAIL.
+    "ALERT_REPO": "jtmoot/lotl-site"
   },
   "d1_databases": [
     {

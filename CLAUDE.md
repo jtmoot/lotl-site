@@ -25,6 +25,15 @@ to ladiesonthelinksgolf.com via Cloudflare.
   `#lessons` deep-links to the lessons tab). Registration is /register.
   Contact email is help@ladiesonthelinksgolf.com.
 
+## Sync alert issues
+
+Issues titled "Tee sheet sync: ..." are opened by the Worker's cron
+(`worker/teesheet/alerts.ts`) when the tee sheet's health check stays bad for
+two runs. Treat them as bug reports: look for a code cause in
+`worker/teesheet/`, fix it with a reproducing test if there is one, and
+otherwise say what Josh needs to check or run. This repo is public: never put
+member names, emails or email subjects in an issue, PR or commit.
+
 ## Conventions
 
 - Conventional commits (feat:, fix:, docs:, chore:).

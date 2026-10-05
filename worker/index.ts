@@ -20,6 +20,7 @@ import { validateComment, signDeleteToken, verifyDeleteToken } from './lib';
 import { ingestEmail } from './teesheet/ingest';
 import { getTeeSheet, resolveRange } from './teesheet/query';
 import { syncEvents, DEFAULT_API_BASE } from './teesheet/bookwhen';
+import { runAlerts } from './teesheet/alerts';
 
 export interface Env {
   DB: D1Database;
@@ -31,6 +32,10 @@ export interface Env {
   BOOKWHEN_TOKEN: string;
   /** Overridable so tests can point the cron at a local stub. */
   BOOKWHEN_API_BASE?: string;
+  /** Sync alerts (worker/teesheet/alerts.ts). Each channel is off until its secret is set. */
+  ALERT_EMAIL?: string;
+  GITHUB_ALERT_TOKEN?: string;
+  ALERT_REPO?: string;
 }
 
 const NOTIFY_TO = 'help@ladiesonthelinksgolf.com';
@@ -287,16 +292,47 @@ export default {
 
   /** Cron: refresh events. Errors are recorded to sync_state inside syncEvents, then rethrown. */
   async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
-    const result = await syncEvents(
-      env.DB,
-      {
-        apiBase: env.BOOKWHEN_API_BASE || DEFAULT_API_BASE,
-        token: env.BOOKWHEN_TOKEN,
-        // Wrapped: a bare `fetch` reference loses its `this` in workerd ("Illegal invocation").
-        fetch: (input, init) => fetch(input, init),
-      },
-      new Date(controller.scheduledTime || Date.now())
-    );
-    console.log(JSON.stringify({ event: 'tee-sheet-events', ...result }));
+    const now = new Date(controller.scheduledTime || Date.now());
+    try {
+      const result = await syncEvents(
+        env.DB,
+        {
+          apiBase: env.BOOKWHEN_API_BASE || DEFAULT_API_BASE,
+          token: env.BOOKWHEN_TOKEN,
+          // Wrapped: a bare `fetch` reference loses its `this` in workerd ("Illegal invocation").
+          fetch: (input, init) => fetch(input, init),
+        },
+        now
+      );
+      console.log(JSON.stringify({ event: 'tee-sheet-events', ...result }));
+    } finally {
+      // Runs after a failed sync too: that failure is exactly what needs announcing.
+      const range = resolveRange(new URLSearchParams(), now);
+      const sheet = await getTeeSheet(env.DB, range.from, range.to, now).catch(() => null);
+      if (sheet) {
+        const plan = await runAlerts(
+          env.DB,
+          sheet,
+          {
+            resendKey: env.RESEND_API_KEY,
+            alertEmail: env.ALERT_EMAIL,
+            githubToken: env.GITHUB_ALERT_TOKEN,
+            repo: env.ALERT_REPO,
+            fetch: (input, init) => fetch(input, init),
+          },
+          now
+        );
+        if (plan && plan.fresh.length + plan.reminders.length + plan.resolved.length > 0) {
+          console.log(
+            JSON.stringify({
+              event: 'tee-sheet-alerts',
+              fresh: plan.fresh.length,
+              reminders: plan.reminders.length,
+              resolved: plan.resolved.length,
+            })
+          );
+        }
+      }
+    }
   },
 };
