@@ -156,7 +156,7 @@ export function issueBody(problems: Problem[]): string {
 
 ${problems.map((p) => `- ${p.summary}`).join('\n')}
 
-Please investigate the sync code (\`worker/teesheet/\`: \`parse.ts\` reads Bookwhen emails, \`bookwhen.ts\` pulls events, \`query.ts\` joins them and flags drift). If a code bug explains it, fix it with a test that reproduces it. You cannot see production data or member emails: if the cause needs a look at the database, a Bookwhen setting, or a data repair, say exactly what Josh should check or run and leave the issue open.
+Please investigate the sync code (\`worker/teesheet/\`: \`parse.ts\` reads Bookwhen emails, \`bookwhen.ts\` pulls events, \`query.ts\` joins them and flags drift). Follow the "Sync alert issues" section of CLAUDE.md: check the production data read-only first, fix a code bug with a test that reproduces it, repair data only when the cause is clear, and if it needs an organizer's decision or a Bookwhen change, say exactly what Josh should check and leave the issue open.
 
 Opened automatically by the sync cron. Live status: ${SHEET_URL}`;
 }

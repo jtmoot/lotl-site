@@ -31,8 +31,25 @@ Issues titled "Tee sheet sync: ..." are opened by the Worker's cron
 (`worker/teesheet/alerts.ts`) when the tee sheet's health check stays bad for
 two runs. Treat them as bug reports: look for a code cause in
 `worker/teesheet/`, fix it with a reproducing test if there is one, and
-otherwise say what Josh needs to check or run. This repo is public: never put
-member names, emails or email subjects in an issue, PR or commit.
+otherwise say what Josh needs to check or run.
+
+You can look at production data for these issues:
+`npx wrangler d1 execute lotl-comments --remote --command "<SQL>"` (tables:
+`events`, `bookings`, `processed_messages`, `unparsed`, `sync_state`).
+
+- Read first. Work out the cause from `SELECT`s before changing anything.
+- Repairs are allowed when the cause is clear: a targeted `UPDATE` or `DELETE`
+  on `bookings` or `events` with a `WHERE` clause you have already run as a
+  `SELECT`. Post the exact SQL and the row count on the issue. Never drop or
+  empty a table, never run a statement without a `WHERE`.
+- Leave the `comments` table alone, and never select or print email addresses.
+- If the fix is something only an organizer can decide (an event deleted in
+  Bookwhen while people were booked, for example), do not "repair" it: explain
+  what you found on the issue and leave it open for Josh.
+
+Player names already appear on the public tee sheet, so they may appear in
+query output. Still keep them out of issue comments, PRs and commits: refer
+to slots by date, time and event title.
 
 ## Conventions
 

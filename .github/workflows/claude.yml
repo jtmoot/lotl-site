@@ -33,6 +33,12 @@ jobs:
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
+        env:
+          # Lets the agent query and repair the production D1 database with
+          # `npx wrangler d1 execute lotl-comments --remote` when a sync alert
+          # needs it (see CLAUDE.md). Token scope: D1 edit only.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: dfebf712211f5f9b38f8fd414a52a74b
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
