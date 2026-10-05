@@ -89,7 +89,8 @@ test('each health condition becomes a problem; old unreadable emails do not nag'
   assert.deepEqual(keys(sheet({ apiLastError: 'HTTP 500' })), ['api-failing']);
   assert.deepEqual(keys(sheet({ apiLastOkAt: null })), ['api-never']);
   assert.deepEqual(keys(sheet({ apiLastOkAt: at(-60).toISOString() })), ['api-stuck']);
-  assert.deepEqual(keys(sheet({ orphanSeatsHidden: 8 })), ['orphans']);
+  // Names hidden because their event left Bookwhen are expected, not a problem.
+  assert.deepEqual(keys(sheet({ orphanSeatsHidden: 8 })), []);
   assert.deepEqual(keys(sheet({}, [slot(), slot({ slotKey: 'x', countMismatch: false })])), [
     'mismatch:2026-10-27 12:00|other:boos & birdies',
   ]);

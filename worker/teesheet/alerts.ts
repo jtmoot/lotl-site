@@ -75,12 +75,9 @@ export function detectProblems(sheet: TeeSheet, now: Date): Problem[] {
       summary: `"${s.title}" on ${s.date} at ${s.time}: Bookwhen reports ${s.attendeeCount ?? 0} booked, the tee sheet lists ${plural(s.players.length, 'name', 'names')}.`,
     });
   }
-  if (h.orphanSeatsHidden > 0) {
-    out.push({
-      key: 'orphans',
-      summary: `${plural(h.orphanSeatsHidden, 'booked name is', 'booked names are')} hidden because the event could not be matched to one in Bookwhen (deleted, renamed, or its title was not read from the email).`,
-    });
-  }
+  // Names hidden because Bookwhen no longer lists their event are not a problem:
+  // organizers cancel events, and the sheet only shows events Bookwhen has. A
+  // booking email whose title was misread shows up as a count mismatch instead.
   return out;
 }
 
