@@ -322,12 +322,13 @@ export default {
           },
           now
         );
-        if (plan && plan.fresh.length + plan.reminders.length + plan.resolved.length > 0) {
+        if (plan && plan.fresh.length + plan.reminders.length + plan.unsent.length + plan.resolved.length > 0) {
           console.log(
             JSON.stringify({
               event: 'tee-sheet-alerts',
               fresh: plan.fresh.length,
               reminders: plan.reminders.length,
+              unsent: plan.unsent.length,
               resolved: plan.resolved.length,
             })
           );

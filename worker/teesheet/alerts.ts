@@ -19,6 +19,8 @@ interface Tracked {
   firstSeen: string;
   summary: string;
   notifiedAt?: string;
+  /** The issue went out but the email did not; retried every run until it does. */
+  emailPending?: boolean;
   issue?: number;
 }
 export type AlertState = Record<string, Tracked>;
@@ -28,6 +30,8 @@ export interface AlertPlan {
   fresh: Problem[];
   /** Announced problems still present a day later. */
   reminders: Problem[];
+  /** Announced problems whose email failed to send. */
+  unsent: Problem[];
   /** Announced problems that have cleared. */
   resolved: { key: string; summary: string; issue?: number }[];
   state: AlertState;
@@ -88,12 +92,15 @@ export function planAlerts(prev: AlertState, problems: Problem[], now: Date): Al
   const state: AlertState = {};
   const fresh: Problem[] = [];
   const reminders: Problem[] = [];
+  const unsent: Problem[] = [];
 
   for (const p of problems) {
     const was = prev[p.key];
     const entry: Tracked = was ? { ...was, summary: p.summary } : { firstSeen: iso, summary: p.summary };
     if (!entry.notifiedAt) {
       if (t - new Date(entry.firstSeen).getTime() >= CONFIRM_MS) fresh.push(p);
+    } else if (entry.emailPending) {
+      unsent.push(p);
     } else if (t - new Date(entry.notifiedAt).getTime() >= REMIND_MS) {
       reminders.push(p);
     }
@@ -102,7 +109,7 @@ export function planAlerts(prev: AlertState, problems: Problem[], now: Date): Al
   const resolved = Object.entries(prev)
     .filter(([key, was]) => !(key in state) && was.notifiedAt)
     .map(([key, was]) => ({ key, summary: was.summary, issue: was.issue }));
-  return { fresh, reminders, resolved, state };
+  return { fresh, reminders, unsent, resolved, state };
 }
 
 export interface AlertConfig {
@@ -123,14 +130,16 @@ function esc(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-async function sendEmail(cfg: AlertConfig, subject: string, html: string): Promise<void> {
-  if (!cfg.resendKey || !cfg.alertEmail) return;
+/** Resolves true when an email was actually sent, false when the channel is off. */
+async function sendEmail(cfg: AlertConfig, subject: string, html: string): Promise<boolean> {
+  if (!cfg.resendKey || !cfg.alertEmail) return false;
   const res = await cfg.fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${cfg.resendKey}`, 'content-type': 'application/json' },
     body: JSON.stringify({ from: FROM, to: [cfg.alertEmail], subject, html }),
   });
-  if (!res.ok) throw new Error(`Resend HTTP ${res.status}`);
+  if (!res.ok) throw new Error(`Resend HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  return true;
 }
 
 async function github(cfg: AlertConfig, method: string, path: string, body: unknown): Promise<any> {
@@ -183,25 +192,42 @@ export async function runAlerts(db: D1Database, sheet: TeeSheet, cfg: AlertConfi
           console.log(JSON.stringify({ event: 'alert-issue-failed', error: String(err) }));
         }
       }
-      let delivered = issue !== null;
+      let emailFailed = false;
+      let emailed = false;
       try {
-        await sendEmail(
+        emailed = await sendEmail(
           cfg,
           `Tee sheet sync needs attention (${plural(plan.fresh.length, 'problem', 'problems')})`,
           `<p>The tee sheet sync found something that did not clear on its own:</p>${list(plan.fresh, true)}` +
             (issue ? `<p>A Claude agent is looking at it: <a href="${issue.html_url}">${issue.html_url}</a></p>` : '') +
             `<p><a href="${SHEET_URL}">Open the tee sheet</a></p>`
         );
-        delivered = delivered || Boolean(cfg.resendKey && cfg.alertEmail);
       } catch (err) {
+        emailFailed = true;
         console.log(JSON.stringify({ event: 'alert-email-failed', error: String(err) }));
       }
-      // Undelivered problems stay un-notified, so the next run tries again.
-      if (delivered) {
+      // Undelivered problems stay un-notified, so the next run tries again. If
+      // only the email failed, the issue is not opened twice: the problem is
+      // marked announced and the email alone is retried.
+      if (issue !== null || emailed) {
         for (const p of plan.fresh) {
           plan.state[p.key].notifiedAt = iso;
           if (issue) plan.state[p.key].issue = issue.number;
+          if (emailFailed) plan.state[p.key].emailPending = true;
         }
+      }
+    }
+
+    if (plan.unsent.length > 0) {
+      try {
+        await sendEmail(
+          cfg,
+          `Tee sheet sync needs attention (${plural(plan.unsent.length, 'problem', 'problems')})`,
+          `<p>The tee sheet sync found something that did not clear on its own:</p>${list(plan.unsent, true)}<p><a href="${SHEET_URL}">Open the tee sheet</a></p>`
+        );
+        for (const p of plan.unsent) delete plan.state[p.key].emailPending;
+      } catch (err) {
+        console.log(JSON.stringify({ event: 'alert-email-failed', error: String(err) }));
       }
     }
 

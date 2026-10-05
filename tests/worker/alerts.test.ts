@@ -177,3 +177,31 @@ test('with no secrets set nothing is sent, and a failing channel never throws', 
   assert.ok(plan);
   assert.equal(db.state['api-failing'].notifiedAt, undefined, 'undelivered alerts are retried next run');
 });
+
+test('when the issue opens but the email fails, the email alone is retried until it sends', async () => {
+  const db = fakeDb();
+  const calls: string[] = [];
+  let emailWorks = false;
+  const fetchFn = (async (url: string) => {
+    calls.push(url);
+    if (url.includes('resend.com')) return new Response(emailWorks ? '{}' : 'rate limited', { status: emailWorks ? 200 : 429 });
+    return new Response(JSON.stringify({ number: 9, html_url: 'https://github.com/o/r/issues/9' }), { status: 200 });
+  }) as unknown as typeof fetch;
+  const bad = sheet({ apiLastError: 'HTTP 500' });
+
+  await runAlerts(db as never, bad, cfg(fetchFn), NOW);
+  await runAlerts(db as never, bad, cfg(fetchFn), at(15));
+  assert.equal(db.state['api-failing'].issue, 9);
+  assert.equal(db.state['api-failing'].emailPending, true);
+
+  await runAlerts(db as never, bad, cfg(fetchFn), at(30));
+  assert.equal(calls.filter((u) => u.endsWith('/issues')).length, 1, 'the issue is not opened twice');
+  assert.equal(db.state['api-failing'].emailPending, true, 'still failing, still pending');
+
+  emailWorks = true;
+  await runAlerts(db as never, bad, cfg(fetchFn), at(45));
+  assert.equal(db.state['api-failing'].emailPending, undefined);
+  const before = calls.length;
+  await runAlerts(db as never, bad, cfg(fetchFn), at(60));
+  assert.equal(calls.length, before, 'once sent, nothing more until the daily reminder');
+});
