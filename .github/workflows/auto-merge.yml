@@ -1,0 +1,30 @@
+name: Auto-merge
+
+# Every pull request from a branch in this repository merges itself (squash)
+# once the required "test" check passes. Josh's decision (2026-10-05): this
+# site is low-risk and nobody reviews PRs by hand, so waiting on a manual
+# merge only delays fixes. The required check still has to pass first.
+#
+# Fork PRs are excluded: only people with write access can push a branch here,
+# so outside contributions still need someone to merge them.
+# Claude's claude/* branches are handled by claude-auto-pr.yml (their PRs are
+# opened with GITHUB_TOKEN, which does not trigger pull_request workflows).
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+jobs:
+  enable:
+    if: github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: gh pr merge -R "$REPO" "$PR" --auto --squash
