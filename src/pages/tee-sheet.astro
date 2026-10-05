@@ -339,7 +339,11 @@ import PageIntro from '../components/PageIntro.astro';
                   (s) => `
               <tr class="border-b border-forest/10 align-top ${s.eventCancelled ? 'text-slate line-through' : ''}" data-slot="${esc(s.slotKey)}">
                 <td class="whitespace-nowrap py-3 pr-4 font-medium text-forest">${esc(clock(s.time))}</td>
-                <td class="py-3 pr-4">${esc(label(s))}${s.countMismatch ? ' <span class="text-rose" title="Bookwhen\'s count differs from the names listed">†</span>' : ''}</td>
+                <td class="py-3 pr-4">${esc(label(s))}${
+                  s.countMismatch
+                    ? `<span class="mt-1 block text-xs font-medium text-rose" data-mismatch>† Bookwhen shows ${s.attendeeCount ?? 0} booked, ${s.players.length} listed here</span>`
+                    : ''
+                }</td>
                 <td class="py-3 pr-4">${
                   s.players.length
                     ? `<ul class="space-y-0.5" data-players>${s.players.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`
@@ -394,12 +398,12 @@ import PageIntro from '../components/PageIntro.astro';
     }
     if (h.countMismatchSlots > 0) {
       parts.push(
-        `<span class="text-rose">Bookwhen's booking count differs from the names listed for ${h.countMismatchSlots} slot${h.countMismatchSlots === 1 ? '' : 's'} (marked †); a booking may have changed without an email.</span>`
+        `<span class="mt-1 block text-rose" data-key><strong class="font-medium">† ${h.countMismatchSlots} slot${h.countMismatchSlots === 1 ? '' : 's'} to double-check.</strong> The names listed here don't add up to the number of bookings Bookwhen has for ${h.countMismatchSlots === 1 ? 'that slot' : 'those slots'}, so someone may be missing or extra. Bookwhen is the one to trust.</span>`
       );
     }
     if (h.orphanSeatsHidden > 0) {
       parts.push(
-        `${h.orphanSeatsHidden} booked name${h.orphanSeatsHidden === 1 ? ' is' : 's are'} hidden because the event no longer exists in Bookwhen.`
+        `<span class="mt-1 block">${h.orphanSeatsHidden} booked name${h.orphanSeatsHidden === 1 ? ' is' : 's are'} not shown because ${h.orphanSeatsHidden === 1 ? 'its' : 'their'} event could not be matched to one in Bookwhen (it may have been deleted or renamed).</span>`
       );
     }
     healthEl.innerHTML = parts.join(' ');

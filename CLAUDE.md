@@ -17,6 +17,10 @@ to ladiesonthelinksgolf.com via Cloudflare.
   the cancellation/weather policy wording (client-approved legal copy), or
   anything involving secrets. If a request requires those, reply on the issue
   explaining it needs Josh instead of making the change.
+- You only see the code on `main`, not the live site. If a requester says the
+  site still shows something `main` has already changed, do not tell them to
+  refresh and do not close the request as done: say the code is correct, the
+  live site may be serving an older deploy, and that Josh needs to check it.
 - Booking is Bookwhen (embedded on /schedule: tee-times + lessons tabs,
   `#lessons` deep-links to the lessons tab). Registration is /register.
   Contact email is help@ladiesonthelinksgolf.com.

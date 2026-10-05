@@ -197,3 +197,31 @@ test('a matched subject with no attendee lines is reported as unparsed', async (
   if (r.ok) return;
   assert.match(r.reason, /no attendees/i);
 });
+
+test('an event at another venue still gets its title: first line of the block, not a North Hill address', () => {
+  const text = `New booking: AWAY1
+
+Booking contact: someone@example.com
+
+Boos & Birdies - Year End Tournament
+Indian Pond Country Club, 60 Country Club Way, Kingston MA 02364
+  Tue 27 Oct, 12:00pm - 5:00pm
+    Player ($95.00)
+    Pat Example <pat@example.com>
+
+Tee Time ⛳
+North Hill Country Club, 29 Merry Ave #4415, Duxbury MA 02332-4415
+  Mon 5 Oct, 3:40pm - 5:40pm
+    Solo Spot ($45.00)
+    Pat Example <pat@example.com>
+
+No Venue Clinic
+  Wed 7 Oct, 9:00am - 10:00am
+    Pat Example <pat@example.com>
+`;
+  assert.deepEqual(parseBody(text, RECEIVED), [
+    { name: 'Pat Example', slotKey: '2026-10-27 12:00|other:boos & birdies - year end tournament', cancelled: false },
+    { name: 'Pat Example', slotKey: '2026-10-05 15:40|tee_time', cancelled: false },
+    { name: 'Pat Example', slotKey: '2026-10-07 09:00|other:no venue clinic', cancelled: false },
+  ]);
+});
