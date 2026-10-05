@@ -20,6 +20,9 @@
   "triggers": {
     "crons": ["*/15 * * * *"]
   },
+  // Keep Worker logs (cron results, alert delivery failures) so a failed run
+  // can be looked up afterwards in the Cloudflare dashboard.
+  "observability": { "enabled": true },
   "vars": {
     "BOOKWHEN_API_BASE": "https://api.bookwhen.com/v2",
     // Where sync alerts open issues for the Claude agent (worker/teesheet/alerts.ts).
